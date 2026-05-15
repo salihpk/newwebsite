@@ -1,0 +1,177 @@
+.projects-page {
+    padding-bottom: 100px;
+}
+
+.icon-cyan,
+.icon-magenta,
+.icon-yellow,
+.card-icon {
+    color: var(--primary-color);
+    filter: drop-shadow(0 0 5px var(--primary-glow));
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-title-flex {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.page-header {
+    margin-bottom: 60px;
+}
+
+.border-title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 20px;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.project-card {
+    border: 1px solid var(--border-color);
+    background: var(--surface-color);
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 0.75rem;
+}
+
+.category {
+    color: var(--primary-color);
+}
+
+.project-card h3 {
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
+.project-card p {
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.tech-tag {
+    font-size: 0.65rem;
+    background: rgba(0, 255, 65, 0.1);
+    color: var(--primary-color);
+    padding: 4px 8px;
+    border: 0.5px solid var(--primary-color);
+}
+
+.card-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 49%, var(--primary-color) 50%, transparent 51%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.project-card:hover .card-glitch {
+    opacity: 0.05;
+    animation: glitch-sweep 2s infinite;
+}
+
+@keyframes glitch-sweep {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+@media (max-width: 1024px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+        padding: 0 10px;
+    }
+
+    .desktop-icon {
+        display: flex !important;
+        transform: scale(0.8);
+    }
+
+    .border-title {
+        font-size: 1.8rem;
+        padding-left: 15px;
+    }
+
+    .project-card {
+        padding: 20px;
+    }
+
+    .project-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    .project-card p {
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+    }
+
+    .tech-tag {
+        font-size: 0.6rem;
+        padding: 3px 6px;
+    }
+}
+
+@media (max-width: 600px) {
+    .projects-grid {
+        gap: 20px;
+        padding: 0 5px;
+    }
+
+    .project-card {
+        padding: 15px;
+    }
+
+    .project-card h3 {
+        font-size: 1rem;
+    }
+
+    .project-card p {
+        font-size: 0.75rem;
+    }
+
+    .tech-stack {
+        gap: 6px;
+        margin-bottom: 15px;
+    }
+}

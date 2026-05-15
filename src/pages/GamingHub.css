@@ -1,0 +1,766 @@
+.gaming-page {
+    padding-bottom: 100px;
+}
+
+.gaming-hero {
+    margin-bottom: 60px;
+    text-align: center;
+}
+
+.gaming-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 10px;
+}
+
+.header-left-gaming {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-cyan,
+.icon-magenta,
+.icon-yellow,
+.card-icon {
+    color: var(--primary-color) !important;
+    filter: drop-shadow(0 0 5px var(--primary-glow));
+}
+
+.node-icon-gaming {
+    margin-bottom: 8px;
+}
+
+@media (max-width: 1024px) {
+    .desktop-icon {
+        display: flex !important;
+        transform: scale(0.8);
+    }
+}
+
+.arena-title-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    line-height: 1;
+}
+
+.arena-prefix-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.8;
+}
+
+.arena-prefix {
+    font-size: 0.85rem;
+    color: #fff;
+    /* Match main title color */
+    letter-spacing: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.9;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+    transition: all 0.3s ease;
+}
+
+[data-theme='light'] .arena-prefix {
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+    opacity: 1;
+}
+
+.arena-cursor {
+    font-size: 1rem;
+    color: var(--primary-color);
+    animation: cursorBlink 1.2s step-end infinite;
+}
+
+@keyframes cursorBlink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.arena-name-wrap {
+    position: relative;
+    padding: 10px 0;
+}
+
+.arena-name {
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: 15px;
+    color: #fff;
+    margin: 0;
+    position: relative;
+    text-transform: uppercase;
+    /* High-end neon depth for Dark Mode */
+    text-shadow:
+        0 0 10px rgba(0, 255, 65, 0.4),
+        0 0 30px rgba(0, 255, 65, 0.15);
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+/* Light Theme Overrides */
+[data-theme='light'] .arena-name {
+    color: #1e293b;
+    /* Dark charcoal for contrast */
+    text-shadow:
+        0 0 15px rgba(37, 99, 235, 0.25),
+        0 0 40px rgba(37, 99, 235, 0.1);
+}
+
+[data-theme='light'] .arena-prefix,
+[data-theme='light'] .arena-cursor {
+    color: var(--primary-color);
+    background-color: transparent;
+    opacity: 1;
+}
+
+[data-theme='light'] .arena-scan-line {
+    background-color: var(--primary-color);
+    opacity: 0.9;
+}
+
+/* Subtle Light Sweep Reflection */
+.arena-name::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--primary-color);
+    clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+    animation: lightSweep 4s ease-in-out infinite;
+    opacity: 0.5;
+    filter: blur(1px);
+    z-index: 1;
+}
+
+[data-theme='light'] .arena-name::after {
+    color: #3b82f6;
+    /* Bright blue sweep for light theme */
+    opacity: 0.3;
+}
+
+@keyframes lightSweep {
+    0% {
+        clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+    }
+
+    20%,
+    100% {
+        clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+    }
+
+    5% {
+        clip-path: polygon(0 0, 30% 0, 0% 100%, -30% 100%);
+    }
+
+    15% {
+        clip-path: polygon(70% 0, 100% 0, 130% 100%, 100% 100%);
+    }
+}
+
+.arena-scan-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--primary-color);
+    box-shadow: 0 0 15px var(--primary-glow);
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.arena-sub {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 4px;
+    margin-top: 10px;
+    opacity: 0.6;
+    border-top: 1px solid rgba(0, 255, 65, 0.1);
+    padding-top: 10px;
+}
+
+[data-theme='light'] .arena-sub {
+    border-top-color: rgba(37, 99, 235, 0.15);
+}
+
+.gaming-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+.discord-profile-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    padding: 30px;
+    position: relative;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.card-body {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+}
+
+.discord-main-avatar {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--primary-color);
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-status-ring {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 4px solid;
+    background: var(--surface-color);
+}
+
+.profile-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.stats-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.stat-node {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    text-align: center;
+}
+
+.node-label {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    margin-bottom: 5px;
+}
+
+.value-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.node-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    word-break: break-word;
+    line-height: 1.2;
+    transition: all 0.3s ease;
+}
+
+.spec-link:hover {
+    color: var(--primary-color) !important;
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.link-icon {
+    font-size: 0.7rem;
+    margin-left: 5px;
+    vertical-align: super;
+}
+
+.border-title {
+    border-left: 3px solid var(--primary-color);
+    padding-left: 15px;
+    margin-bottom: 30px;
+}
+
+/* ---- Discord Activity Section ---- */
+.discord-activity-section {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    padding: 30px;
+}
+
+.discord-activity-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.discord-game-card {
+    background: rgba(0, 255, 65, 0.03);
+    border: 1px solid rgba(0, 255, 65, 0.15);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.discord-game-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.spotify-card {
+    border-color: rgba(30, 215, 96, 0.2);
+}
+
+.spotify-card::before {
+    background: #1ed760;
+    box-shadow: 0 0 10px rgba(30, 215, 96, 0.5);
+}
+
+.discord-game-header {
+    font-size: 0.65rem;
+    color: var(--primary-color);
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.game-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-glow);
+    animation: gamePulse 2s ease-in-out infinite;
+}
+
+.spotify-pulse {
+    background: #1ed760;
+    box-shadow: 0 0 8px rgba(30, 215, 96, 0.5);
+}
+
+@keyframes gamePulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(0.8);
+    }
+}
+
+.discord-game-body {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.discord-game-img {
+    width: 80px;
+    height: 80px;
+    border: 1px solid var(--border-color);
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.discord-game-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+}
+
+.discord-game-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.discord-game-detail {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.discord-game-state {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+}
+
+.discord-elapsed {
+    font-size: 0.65rem;
+    color: var(--primary-color);
+    margin-top: 4px;
+    text-shadow: 0 0 6px var(--primary-glow);
+}
+
+.discord-idle {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    padding: 20px;
+    text-align: center;
+    border: 1px dashed var(--border-color);
+}
+
+/* ---- Recent Games (inside activity section) ---- */
+.recent-games-divider {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    padding: 10px 0;
+    border-top: 1px solid var(--border-color);
+    margin-top: 5px;
+}
+
+.games-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.game-item {
+    background: rgba(0, 255, 65, 0.02);
+    border: 1px solid var(--border-color);
+    display: grid;
+    grid-template-columns: 70px 1fr 100px;
+    align-items: center;
+    padding-right: 20px;
+    overflow: hidden;
+    height: 70px;
+    transition: border-color 0.2s ease;
+}
+
+.game-item:hover {
+    border-color: var(--primary-color);
+}
+
+.game-img-wrap {
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.game-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.game-thumb-placeholder {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.game-details {
+    padding: 0 15px;
+    overflow: hidden;
+}
+
+.game-name {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.play-time {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+}
+
+.game-last-played {
+    font-size: 0.65rem;
+    color: var(--primary-color);
+    text-align: right;
+    text-shadow: 0 0 6px var(--primary-glow);
+}
+
+.no-games-msg {
+    padding: 25px;
+    text-align: center;
+    border: 1px dashed var(--border-color);
+}
+
+@media (max-width: 1024px) {
+    .gaming-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .arena-name {
+        font-size: 3.5rem;
+    }
+
+    .stats-strip {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .gaming-hero h1 {
+        font-size: 2rem;
+    }
+
+    .arena-name {
+        font-size: 2.8rem;
+        letter-spacing: 8px;
+    }
+
+    .arena-prefix {
+        font-size: 0.7rem;
+    }
+
+    .card-body {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .avatar-wrapper {
+        margin: 0 auto;
+    }
+
+    .profile-info {
+        width: 100%;
+    }
+
+    .profile-info h2 {
+        font-size: 1.4rem;
+        margin-bottom: 5px;
+    }
+
+    .profile-actions {
+        justify-content: center;
+    }
+
+    .stats-strip {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .stat-node {
+        padding: 15px;
+        min-height: auto;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+    }
+
+    .value-container {
+        width: auto;
+        align-items: flex-end;
+    }
+
+    .node-value {
+        font-size: 1rem;
+    }
+
+    .discord-activity-section {
+        padding: 20px;
+    }
+
+    .discord-game-body {
+        flex-direction: row;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .discord-game-img {
+        width: 60px;
+        height: 60px;
+        max-width: 60px;
+    }
+
+    .discord-game-details {
+        gap: 2px;
+    }
+
+    .discord-game-name {
+        font-size: 0.85rem;
+    }
+
+    .discord-game-detail,
+    .discord-game-state {
+        font-size: 0.65rem;
+    }
+
+    .discord-elapsed {
+        font-size: 0.6rem;
+    }
+
+    .recent-games-section {
+        padding: 20px;
+    }
+
+    .game-item {
+        grid-template-columns: 55px 1fr 70px;
+        height: 60px;
+    }
+
+    .game-img-wrap {
+        width: 55px;
+        height: 60px;
+    }
+
+    .game-name {
+        font-size: 0.85rem;
+    }
+
+    .game-last-played {
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .gaming-page {
+        padding-bottom: 80px;
+    }
+
+    .gaming-hero {
+        margin-bottom: 30px;
+    }
+
+    .gaming-hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .arena-name {
+        font-size: 2rem;
+        letter-spacing: 6px;
+    }
+
+    .arena-prefix {
+        font-size: 0.6rem;
+        letter-spacing: 4px;
+    }
+
+    .discord-profile-card {
+        padding: 20px;
+    }
+
+    .card-body {
+        gap: 15px;
+    }
+
+    .avatar-wrapper {
+        width: 80px;
+        height: 80px;
+    }
+
+    .stats-strip {
+        gap: 10px;
+    }
+
+    .stat-node {
+        padding: 12px;
+    }
+
+    .node-value {
+        font-size: 0.9rem;
+    }
+
+    .cyber-btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        padding: 10px;
+        font-size: 0.7rem;
+    }
+
+    .profile-actions {
+        gap: 8px;
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .game-item {
+        grid-template-columns: 50px 1fr;
+        height: 55px;
+        padding-right: 10px;
+    }
+
+    .game-img-wrap {
+        width: 50px;
+        height: 55px;
+    }
+
+    .game-last-played {
+        display: none;
+    }
+
+    .discord-game-card {
+        padding: 12px;
+    }
+
+    .discord-game-img {
+        width: 50px;
+        height: 50px;
+        max-width: 50px;
+    }
+
+    .discord-game-name {
+        font-size: 0.8rem;
+    }
+}
