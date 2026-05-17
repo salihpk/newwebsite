@@ -574,6 +574,27 @@
     border: 1px dashed var(--border-color);
 }
 
+[data-theme='light'] .discord-profile-card,
+[data-theme='light'] .discord-activity-section {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='light'] .discord-profile-card:hover,
+[data-theme='light'] .discord-activity-section:hover {
+    box-shadow: 0 20px 40px -15px rgba(var(--primary-color-rgb), 0.2);
+}
+
+[data-theme='light'] .stat-node {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme='light'] .game-img-wrap {
+    background: rgba(0, 0, 0, 0.05);
+}
+
 @media (max-width: 1024px) {
     .gaming-hero h1 {
         font-size: 2.5rem;
