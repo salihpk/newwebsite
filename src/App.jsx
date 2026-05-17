@@ -172,8 +172,6 @@ function App() {
                         </span>
                         <span className="separator">|</span>
                         <span className="footer-stat-item"><MapPin size={10} /> LOC: {locationData.toUpperCase()}</span>
-                        <span className="separator">|</span>
-                        <span className="footer-stat-item">IP: {ip}</span>
                     </div>
                 </footer>
 
