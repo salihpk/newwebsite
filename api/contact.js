@@ -33,12 +33,19 @@ export default async function handler(req, res) {
       body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: 'Markdown' }),
     });
 
-    if (!tgRes.ok) {
-      return res.status(502).json({ error: 'Delivery failed' });
+    const data = await tgRes.json().catch(() => ({}));
+
+    if (!tgRes.ok || !data.ok) {
+      console.error('Telegram API error:', data);
+      return res.status(502).json({
+        error: 'Delivery failed',
+        detail: data.description || 'Unknown Telegram error',
+      });
     }
 
     return res.status(200).json({ ok: true });
-  } catch {
+  } catch (err) {
+    console.error('Contact handler error:', err);
     return res.status(502).json({ error: 'Delivery failed' });
   }
 }
