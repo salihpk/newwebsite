@@ -16,7 +16,23 @@ const Navbar = ({ toggleMusic, isMusicPlaying, isSpidoMode, discordAvatar }) => 
 
   const toggleTheme = (e) => {
     e.preventDefault();
-    setTheme(theme === 'dark' ? 'light' : 'dark');
+    const x = e.clientX ?? window.innerWidth / 2;
+    const y = e.clientY ?? window.innerHeight / 2;
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+
+    document.documentElement.style.setProperty('--theme-x', `${x}px`);
+    document.documentElement.style.setProperty('--theme-y', `${y}px`);
+
+    if (!document.startViewTransition) {
+      setTheme(newTheme);
+      return;
+    }
+
+    document.startViewTransition(() => {
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      setTheme(newTheme);
+    });
   };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);

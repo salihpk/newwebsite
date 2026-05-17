@@ -69,6 +69,26 @@ body.spido-mode .welcome-cursor {
     background-position: center center;
 }
 
+/* ---- Circular ripple theme transition ---- */
+::view-transition-old(root) {
+    animation: none;
+    z-index: 0;
+}
+
+::view-transition-new(root) {
+    z-index: 1;
+    animation: theme-ripple 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes theme-ripple {
+    from {
+        clip-path: circle(0% at var(--theme-x, 50%) var(--theme-y, 50%));
+    }
+    to {
+        clip-path: circle(150% at var(--theme-x, 50%) var(--theme-y, 50%));
+    }
+}
+
 * {
     margin: 0;
     padding: 0;
