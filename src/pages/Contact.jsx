@@ -12,6 +12,7 @@ const Contact = () => {
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
   const [logs, setLogs] = useState([
     "> SYSTEM_INIT: COMPLETE",
     "> CONNECTING_TO_HOST...",
@@ -45,24 +46,33 @@ const Contact = () => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setTimeout(() => setCooldown(c => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [cooldown]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (cooldown > 0) return;
 
-    const GOOGLE_FORM_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfPSPD3Rw36VP0tEDpGm4x-STrA85Gui3YmNaONa-oHMm-wRg/formResponse";
+    const BOT_TOKEN = "8822661091:AAGpIV7K3YBtWxDKOGZJXVb05xw7axzunCY";
+    const CHAT_ID = "1478518009";
 
-    const formDataBody = new FormData();
-    formDataBody.append("entry.1070221655", formData.email);
-    formDataBody.append("entry.536187874", formData.subject);
-    formDataBody.append("entry.894360633", formData.message);
+    const text = `📨 <b>NEW MESSAGE</b>\n\n<b>From:</b> ${formData.email}\n<b>Subject:</b> ${formData.subject}\n\n<b>Message:</b>\n${formData.message}`;
 
     try {
-      await fetch(GOOGLE_FORM_URL, {
+      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: "POST",
-        mode: "no-cors",
-        body: formDataBody
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "HTML" })
       });
+
+      if (!res.ok) throw new Error("API error");
+
       setIsSubmitted(true);
       setFormData({ email: '', subject: '', message: '' });
+      setCooldown(60);
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch (error) {
       console.error("Transmission Error:", error);
@@ -103,7 +113,7 @@ const Contact = () => {
                 </motion.div>
                 INSTAGRAM:
               </span>
-              <a href="https://www.instagram.com/_sali___h?igsh=eXZhcm54MHQxYXhw" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.instagram.com/_sali___h" target="_blank" rel="noopener noreferrer">
                 @_sali___h <ExternalLink size={10} />
               </a>
             </div>
@@ -133,9 +143,7 @@ const Contact = () => {
                 </motion.div>
                 LOCATION:
               </span>
-              <a href="https://maps.app.goo.gl/gN8rQi3eZUN84p7d8" target="_blank" rel="noopener noreferrer">
-                11°14'55.8"N 75°47'01.9"E <ExternalLink size={10} />
-              </a>
+              <span>KOZHIKODE, KERALA</span>
             </div>
           </div>
 
@@ -191,8 +199,8 @@ const Contact = () => {
               ></textarea>
             </div>
 
-            <button type="submit" className="cyber-btn mono" disabled={isSubmitted}>
-              {isSubmitted ? "TRANSMISSION_COMPLETE" : "TRANSMIT()"}
+            <button type="submit" className="cyber-btn mono" disabled={isSubmitted || cooldown > 0}>
+              {isSubmitted ? "TRANSMISSION_COMPLETE" : cooldown > 0 ? `COOLDOWN: ${cooldown}s` : "TRANSMIT()"}
             </button>
             {isSubmitted && (
               <motion.div

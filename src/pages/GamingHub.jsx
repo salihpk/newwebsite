@@ -11,7 +11,7 @@ const GamingHub = () => {
     const [discordLoading, setDiscordLoading] = useState(true);
     const [libraryGames, setLibraryGames] = useState(() => {
         try {
-            return JSON.parse(localStorage.getItem('discord_game_library') || '[]');
+            return JSON.parse(sessionStorage.getItem('discord_game_library') || '[]');
         } catch { return []; }
     });
 
@@ -72,7 +72,7 @@ const GamingHub = () => {
 
             // Sort by last played
             updated.sort((a, b) => b.lastPlayed - a.lastPlayed);
-            localStorage.setItem('discord_game_library', JSON.stringify(updated));
+            sessionStorage.setItem('discord_game_library', JSON.stringify(updated));
             return updated;
         });
     }, [discordData]);
