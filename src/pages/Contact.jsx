@@ -56,16 +56,15 @@ const Contact = () => {
     e.preventDefault();
     if (cooldown > 0) return;
 
-    const BOT_TOKEN = "8822661091:AAGpIV7K3YBtWxDKOGZJXVb05xw7axzunCY";
-    const CHAT_ID = "1478518009";
-
-    const text = `📨 <b>NEW MESSAGE</b>\n\n<b>From:</b> ${formData.email}\n<b>Subject:</b> ${formData.subject}\n\n<b>Message:</b>\n${formData.message}`;
-
     try {
-      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "HTML" })
+        body: JSON.stringify({
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        })
       });
 
       if (!res.ok) throw new Error("API error");
@@ -90,13 +89,9 @@ const Contact = () => {
            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="header-title-flex">
-            <motion.div
-              className="desktop-icon"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-            >
+            <div className="desktop-icon">
               <TerminalIcon size={40} className="card-icon" />
-            </motion.div>
+            </div>
             <h1 className="mono">CONNECT_</h1>
           </div>
           <p className="mono terminal-text">ESTABLISHING PEER-TO-PEER ENCRYPTION...</p>
@@ -104,13 +99,9 @@ const Contact = () => {
           <div className="social-links mono">
             <div className="social-item">
               <span className="label">
-                <motion.div
-                  className="desktop-icon"
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ repeat: Infinity, duration: 3 }}
-                >
+                <div className="desktop-icon">
                   <Instagram size={16} className="card-icon" />
-                </motion.div>
+                </div>
                 INSTAGRAM:
               </span>
               <a href="https://www.instagram.com/_sali___h" target="_blank" rel="noopener noreferrer">
@@ -119,13 +110,9 @@ const Contact = () => {
             </div>
             <div className="social-item">
               <span className="label">
-                <motion.div
-                  className="desktop-icon"
-                  animate={{ y: [0, -3, 0] }}
-                  transition={{ repeat: Infinity, duration: 2.5 }}
-                >
+                <div className="desktop-icon">
                   <Linkedin size={16} className="card-icon" />
-                </motion.div>
+                </div>
                 LINKEDIN:
               </span>
               <a href="https://www.linkedin.com/in/muhammed-salih-p-k" target="_blank" rel="noopener noreferrer">
@@ -134,13 +121,9 @@ const Contact = () => {
             </div>
             <div className="social-item">
               <span className="label">
-                <motion.div
-                  className="desktop-icon"
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ repeat: Infinity, duration: 4 }}
-                >
+                <div className="desktop-icon">
                   <MapPin size={16} className="card-icon" />
-                </motion.div>
+                </div>
                 LOCATION:
               </span>
               <span>KOZHIKODE, KERALA</span>
