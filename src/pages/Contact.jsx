@@ -12,7 +12,6 @@ const Contact = () => {
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [cooldown, setCooldown] = useState(0);
   const [logs, setLogs] = useState([
     "> SYSTEM_INIT: COMPLETE",
     "> CONNECTING_TO_HOST...",
@@ -46,38 +45,20 @@ const Contact = () => {
     return () => clearInterval(timer);
   }, []);
 
-  useEffect(() => {
-    if (cooldown <= 0) return;
-    const timer = setTimeout(() => setCooldown(c => c - 1), 1000);
-    return () => clearTimeout(timer);
-  }, [cooldown]);
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (cooldown > 0) return;
 
-    const BOT_TOKEN = "8822661091:AAGpIV7K3YBtWxDKOGZJXVb05xw7axzunCY";
-    const CHAT_ID = "1478518009";
+    const RECIPIENT = "salihpk0138@gmail.com";
+    const mailSubject = encodeURIComponent(formData.subject);
+    const mailBody = encodeURIComponent(
+      `From: ${formData.email}\n\n${formData.message}`
+    );
 
-    const text = `📨 <b>NEW MESSAGE</b>\n\n<b>From:</b> ${formData.email}\n<b>Subject:</b> ${formData.subject}\n\n<b>Message:</b>\n${formData.message}`;
+    window.location.href = `mailto:${RECIPIENT}?subject=${mailSubject}&body=${mailBody}`;
 
-    try {
-      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "HTML" })
-      });
-
-      if (!res.ok) throw new Error("API error");
-
-      setIsSubmitted(true);
-      setFormData({ email: '', subject: '', message: '' });
-      setCooldown(60);
-      setTimeout(() => setIsSubmitted(false), 5000);
-    } catch (error) {
-      console.error("Transmission Error:", error);
-      alert("DATA_TRANSMISSION_FAILED_RETRY_LATER");
-    }
+    setIsSubmitted(true);
+    setFormData({ email: '', subject: '', message: '' });
+    setTimeout(() => setIsSubmitted(false), 5000);
   };
 
   return (
@@ -183,8 +164,8 @@ const Contact = () => {
               ></textarea>
             </div>
 
-            <button type="submit" className="cyber-btn mono" disabled={isSubmitted || cooldown > 0}>
-              {isSubmitted ? "TRANSMISSION_COMPLETE" : cooldown > 0 ? `COOLDOWN: ${cooldown}s` : "TRANSMIT()"}
+            <button type="submit" className="cyber-btn mono" disabled={isSubmitted}>
+              {isSubmitted ? "TRANSMISSION_COMPLETE" : "TRANSMIT()"}
             </button>
             {isSubmitted && (
               <motion.div
