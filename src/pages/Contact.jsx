@@ -56,15 +56,16 @@ const Contact = () => {
     e.preventDefault();
     if (cooldown > 0) return;
 
+    const BOT_TOKEN = "8822661091:AAGpIV7K3YBtWxDKOGZJXVb05xw7axzunCY";
+    const CHAT_ID = "1478518009";
+
+    const text = `📨 <b>NEW MESSAGE</b>\n\n<b>From:</b> ${formData.email}\n<b>Subject:</b> ${formData.subject}\n\n<b>Message:</b>\n${formData.message}`;
+
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message
-        })
+        body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: "HTML" })
       });
 
       if (!res.ok) throw new Error("API error");
