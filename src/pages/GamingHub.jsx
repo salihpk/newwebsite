@@ -275,13 +275,9 @@ const GamingHub = () => {
                 >
                     <div className="card-header mono">
                         <div className="header-left-gaming">
-                            <motion.div
-                                className="desktop-icon"
-                                animate={{ rotate: 360 }}
-                                transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-                            >
+                            <div className="desktop-icon">
                                 <ShieldCheck className="card-icon" size={14} />
-                            </motion.div>
+                            </div>
                             <span>CONNECTION: {discordData ? 'SECURE' : 'PENDING'}</span>
                         </div>
                         <div className="status-dot" style={{ background: discordStatusColor, boxShadow: `0 0 10px ${discordStatusColor}` }}></div>
@@ -334,13 +330,9 @@ const GamingHub = () => {
                                 transition: { duration: 0.2 }
                             }}
                         >
-                            <motion.div
-                                className="desktop-icon node-icon-gaming"
-                                animate={{ scale: [1, 1.2, 1] }}
-                                transition={{ repeat: Infinity, duration: 2, delay: i * 0.5 }}
-                            >
+                            <div className="desktop-icon node-icon-gaming">
                                 {s.icon}
-                            </motion.div>
+                            </div>
                             <span className="node-label mono">{s.label}</span>
                             <div className="value-container">
                                 {s.link ? (
@@ -355,7 +347,7 @@ const GamingHub = () => {
                                         <span className="link-icon">↗</span>
                                     </a>
                                 ) : (
-                                    <span className="node-value mono terminal-text">{s.value}</span>
+                                    <span className={`node-value mono terminal-text ${s.label === 'DEVICE' ? 'device-glow' : ''}`}>{s.value}</span>
                                 )}
                             </div>
                         </motion.div>

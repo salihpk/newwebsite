@@ -15,9 +15,16 @@ import MatrixRain from './components/MatrixRain';
 import { MapPin, ShieldCheck, Cpu } from 'lucide-react';
 import './App.css';
 
+const PLANETS = [
+    'MARS', 'JUPITER', 'SATURN', 'NEPTUNE', 'VENUS', 'MERCURY',
+    'TITAN', 'EUROPA', 'PROXIMA-B', 'KEPLER-442B', 'TRAPPIST-1E',
+    'PLUTO', 'GANYMEDE', 'ENCELADUS', 'TATOOINE', 'ARRAKIS'
+];
+const randomPlanet = () => PLANETS[Math.floor(Math.random() * PLANETS.length)];
+
 function App() {
     const [ip, setIp] = useState('FETCHING...');
-    const [locationData, setLocationData] = useState('FETCHING...');
+    const [locationData] = useState(randomPlanet);
     const [isMusicPlaying, setIsMusicPlaying] = useState(false);
     const [showMatrix, setShowMatrix] = useState(false);
     const [vpnWarning, setVpnWarning] = useState(false);
@@ -58,8 +65,6 @@ function App() {
 
                 if (data.ip) {
                     setIp(data.ip);
-                    const locationStr = [data.city, data.region].filter(Boolean).join(', ');
-                    setLocationData(locationStr || 'UNKNOWN');
 
                     // Basic detection for free tier providers
                     const isVPN = data.security?.is_vpn || data.security?.is_proxy ||
@@ -78,12 +83,10 @@ function App() {
                     }
                 } else {
                     setIp('UNKNOWN');
-                    setLocationData('UNKNOWN');
                 }
             } catch (error) {
                 console.error('IP/VPN Detection failed:', error);
-                setIp('ERROR');
-                setLocationData('ERROR');
+                setIp('UNKNOWN');
             }
         };
         detectVPN();
@@ -107,6 +110,10 @@ function App() {
         window.addEventListener('keypress', handleKeyPress);
         return () => window.removeEventListener('keypress', handleKeyPress);
     }, []);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }, [routerLocation.pathname]);
 
     return (
         <div className="app-container">
