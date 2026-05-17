@@ -145,6 +145,21 @@
     }
 }
 
+[data-theme='light'] .project-card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='light'] .project-card::before {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.04), transparent 50%, rgba(0, 0, 0, 0.01));
+}
+
+[data-theme='light'] .project-card:hover {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 20px 40px -15px rgba(var(--primary-color-rgb), 0.2);
+}
+
 @media (max-width: 1024px) {
     .projects-grid {
         grid-template-columns: 1fr;

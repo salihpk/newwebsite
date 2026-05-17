@@ -158,6 +158,23 @@
     margin-top: 10px;
 }
 
+[data-theme='light'] .system-status,
+[data-theme='light'] .contact-form-container {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='light'] .input-group input,
+[data-theme='light'] .input-group textarea {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme='light'] .social-item a {
+    border-bottom-color: var(--border-color);
+}
+
 @media (max-width: 1024px) {
     .contact-grid {
         grid-template-columns: 1fr;

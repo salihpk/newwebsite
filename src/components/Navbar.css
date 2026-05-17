@@ -169,6 +169,17 @@ body.scan-frozen .navbar {
     z-index: -1;
 }
 
+[data-theme='light'] .nav-item:hover {
+    color: var(--primary-color);
+    background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme='light'] .nav-underline {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 100%);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
 .desktop-only {
     display: flex;
 }
