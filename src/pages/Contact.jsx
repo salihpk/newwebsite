@@ -45,20 +45,32 @@ const Contact = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const RECIPIENT = "salihpk0138@gmail.com";
-    const mailSubject = encodeURIComponent(formData.subject);
-    const mailBody = encodeURIComponent(
-      `From: ${formData.email}\n\n${formData.message}`
-    );
+    try {
+      const res = await fetch("https://formspree.io/f/xojbqjgv", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        })
+      });
 
-    window.location.href = `mailto:${RECIPIENT}?subject=${mailSubject}&body=${mailBody}`;
+      if (!res.ok) throw new Error("Submission failed");
 
-    setIsSubmitted(true);
-    setFormData({ email: '', subject: '', message: '' });
-    setTimeout(() => setIsSubmitted(false), 5000);
+      setIsSubmitted(true);
+      setFormData({ email: '', subject: '', message: '' });
+      setTimeout(() => setIsSubmitted(false), 5000);
+    } catch (error) {
+      console.error("Transmission Error:", error);
+      alert("DATA_TRANSMISSION_FAILED_RETRY_LATER");
+    }
   };
 
   return (
