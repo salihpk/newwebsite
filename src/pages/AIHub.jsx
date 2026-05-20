@@ -10,46 +10,52 @@ import './AIHub.css';
 
 /* ─── Fetchers ───────────────────────────────────────────────────────────── */
 
-// Hacker News Algolia — truly real-time, query-specific
-const fetchHN = async (query, count = 8) => {
+const DAY_AGO = () => Math.floor((Date.now() - 86400000) / 1000); // Unix ts 24h ago
+
+// Hacker News Algolia — last 24 hours only
+const fetchHN = async (query, count = 10) => {
   const url =
     `https://hn.algolia.com/api/v1/search_by_date` +
-    `?tags=story&query=${encodeURIComponent(query)}&hitsPerPage=${count}&numericFilters=points%3E5`;
+    `?tags=story&query=${encodeURIComponent(query)}&hitsPerPage=${count}` +
+    `&numericFilters=created_at_i%3E${DAY_AGO()}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error('HN fetch failed');
   const json = await res.json();
   return json.hits
     .filter((h) => h.title && (h.url || h.objectID))
     .map((h) => ({
-      id:       `hn-${h.objectID}`,
-      source:   'HN',
-      title:    h.title,
-      desc:     null,
-      url:      h.url || `https://news.ycombinator.com/item?id=${h.objectID}`,
-      discuss:  `https://news.ycombinator.com/item?id=${h.objectID}`,
-      points:   h.points ?? 0,
-      time:     h.created_at,
-      author:   h.author,
+      id:      `hn-${h.objectID}`,
+      source:  'HN',
+      title:   h.title,
+      desc:    null,
+      url:     h.url || `https://news.ycombinator.com/item?id=${h.objectID}`,
+      discuss: `https://news.ycombinator.com/item?id=${h.objectID}`,
+      points:  h.points ?? 0,
+      time:    h.created_at,
+      author:  h.author,
     }));
 };
 
-// Dev.to — real-time tagged articles with descriptions
-const fetchDevTo = async (tag, count = 8) => {
-  const url = `https://dev.to/api/articles?tag=${tag}&per_page=${count}&top=3`;
+// Dev.to — last 24 hours only (filter by published_at after fetch)
+const fetchDevTo = async (tag, count = 10) => {
+  const url = `https://dev.to/api/articles?tag=${tag}&per_page=${count}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error('Dev.to fetch failed');
   const json = await res.json();
-  return json.map((a) => ({
-    id:      `dev-${a.id}`,
-    source:  'DEV.TO',
-    title:   a.title,
-    desc:    a.description || null,
-    url:     a.url,
-    discuss: a.url,
-    points:  a.positive_reactions_count ?? 0,
-    time:    a.published_at,
-    author:  a.user?.username || '',
-  }));
+  const cutoff = Date.now() - 86400000;
+  return json
+    .filter((a) => new Date(a.published_at).getTime() > cutoff)
+    .map((a) => ({
+      id:      `dev-${a.id}`,
+      source:  'DEV.TO',
+      title:   a.title,
+      desc:    a.description || null,
+      url:     a.url,
+      discuss: a.url,
+      points:  a.positive_reactions_count ?? 0,
+      time:    a.published_at,
+      author:  a.user?.username || '',
+    }));
 };
 
 /* ─── Categories ─────────────────────────────────────────────────────────── */
@@ -274,7 +280,7 @@ const AIHub = () => {
                 ))
               : (
                 <div className="hub-empty mono">
-                  <Wifi size={22} /><span>NO_DATA — FEED_EMPTY</span>
+                  <Wifi size={22} /><span>NO_NEWS_IN_THE_LAST_24H</span>
                 </div>
               )
           }
