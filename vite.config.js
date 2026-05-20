@@ -17,7 +17,14 @@ export default defineConfig({
             if (id.includes('framer-motion')) {
               return 'framer-vendor';
             }
-            if (id.includes('react') || id.includes('scheduler')) {
+            // Only true React core packages — NOT @formspree/react or other libs
+            // that merely have "react" in their name (causes circular chunks)
+            if (
+              id.includes('/react/') ||
+              id.includes('/react-dom/') ||
+              id.includes('/react-router') ||
+              id.includes('/scheduler/')
+            ) {
               return 'react-vendor';
             }
             return 'vendor';
