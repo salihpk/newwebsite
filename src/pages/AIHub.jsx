@@ -22,7 +22,7 @@ const fetchHN = async (query, count = 8) => {
     .filter((h) => h.title && (h.url || h.objectID))
     .map((h) => ({
       id:       `hn-${h.objectID}`,
-      source:   'HACKER NEWS',
+      source:   'HN',
       title:    h.title,
       desc:     null,
       url:      h.url || `https://news.ycombinator.com/item?id=${h.objectID}`,
@@ -72,7 +72,7 @@ const timeAgo = (iso) => {
   return `${Math.floor(h / 24)}d ago`;
 };
 
-const SRC_CLS  = { 'HACKER NEWS': 'src-hn', 'DEV.TO': 'src-dev' };
+const SRC_CLS  = { 'HN': 'src-hn', 'DEV.TO': 'src-dev' };
 const CAT_CLS  = { AI: 'cat-ai', SECURITY: 'cat-sec' };
 const CAT_LABEL = { AI: 'AI_NEWS', SECURITY: 'SECURITY' };
 
@@ -212,7 +212,7 @@ const AIHub = () => {
 
         <div className="hub-statusbar mono">
           <span className={`hub-dot ${!loading && !error ? 'online' : error ? 'err' : 'idle'}`} />
-          <span className="hub-src-label">HACKER NEWS · DEV.TO — REAL-TIME</span>
+          <span className="hub-src-label">HN · DEV.TO — REAL-TIME</span>
           {synced && !loading && (
             <span className="hub-synced">
               SYNCED {synced.toLocaleTimeString('en-US', { hour12: false })}
