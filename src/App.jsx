@@ -9,6 +9,8 @@ import AIHub from './pages/AIHub';
 
 import Navbar from './components/Navbar';
 import TerminalOverlay from './components/TerminalOverlay';
+import BootLoader from './components/BootLoader';
+import ScrollProgress from './components/ScrollProgress';
 
 import CyberBackground from './components/CyberBackground';
 import MusicPlayer from './components/MusicPlayer';
@@ -33,6 +35,7 @@ function App() {
     const [vpnInfo, setVpnInfo] = useState(null);
     const [isSpidoMode, setIsSpidoMode] = useState(false);
     const [discordAvatar, setDiscordAvatar] = useState(null);
+    const [booted, setBooted] = useState(false);
     const routerLocation = useLocation();
     const DISCORD_USER_ID = "577248513654784020";
 
@@ -112,12 +115,19 @@ function App() {
         return () => window.removeEventListener('keypress', handleKeyPress);
     }, []);
 
+    // Delay scroll-to-top by the exit animation duration (220 ms)
+    // so the outgoing page fades out before the position jumps
     useEffect(() => {
-        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        const t = setTimeout(() => {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        }, 220);
+        return () => clearTimeout(t);
     }, [routerLocation.pathname]);
 
     return (
         <div className="app-container">
+            <BootLoader onDone={() => setBooted(true)} />
+            <ScrollProgress />
             <CyberBackground />
             <div className="crt-overlay"></div>
             <div className="scanline"></div>

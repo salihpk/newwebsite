@@ -316,3 +316,127 @@ h6 {
     mix-blend-mode: overlay;
     pointer-events: none;
 }
+
+/* ============================================================
+   BOOT LOADER
+   ============================================================ */
+
+.boot-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Animated grid overlay */
+.boot-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(var(--primary-color-rgb), 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--primary-color-rgb), 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: bootGridScroll 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes bootGridScroll {
+    from { background-position: 0 0; }
+    to   { background-position: 60px 60px; }
+}
+
+.boot-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    z-index: 1;
+}
+
+.boot-logo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 6px;
+    color: var(--primary-color);
+    text-shadow: 0 0 24px var(--primary-glow), 0 0 60px rgba(var(--primary-color-rgb), 0.3);
+}
+
+.boot-sep {
+    opacity: 0.5;
+    font-weight: 300;
+}
+
+.boot-bar-track {
+    width: 260px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.boot-bar-fill {
+    height: 100%;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-glow);
+    border-radius: 2px;
+    transition: width 0.08s linear;
+}
+
+.boot-status {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 1.2em;
+}
+
+.boot-prompt {
+    color: var(--primary-color);
+    margin-right: 4px;
+}
+
+.boot-cursor {
+    display: inline-block;
+    width: 7px;
+    height: 0.85em;
+    background: var(--primary-color);
+    border-radius: 1px;
+    animation: bootBlink 0.7s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+}
+
+@keyframes bootBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+.boot-pct {
+    font-size: 0.6rem;
+    color: var(--primary-color);
+    letter-spacing: 3px;
+    opacity: 0.5;
+}
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+
+.scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-glow);
+    transform-origin: 0%;
+    z-index: 9998;
+    pointer-events: none;
+}

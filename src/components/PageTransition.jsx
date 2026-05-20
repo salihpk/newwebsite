@@ -4,36 +4,35 @@ import { motion } from 'framer-motion';
 const pageVariants = {
     initial: {
         opacity: 0,
-        y: 18,
+        y: 16,
     },
     animate: {
         opacity: 1,
         y: 0,
         transition: {
-            duration: 0.55,
-            ease: [0.16, 1, 0.3, 1], // smooth ease-out
-            staggerChildren: 0.07,
-            when: 'beforeChildren',
-        }
+            duration: 0.5,
+            ease: [0.16, 1, 0.3, 1],
+        },
     },
+    // Pure fade-out — no y movement so there's no upward jump while
+    // the scroll position also resets to 0
     exit: {
         opacity: 0,
-        y: -12,
         transition: {
-            duration: 0.3,
-            ease: [0.4, 0, 0.2, 1]
-        }
-    }
+            duration: 0.22,
+            ease: [0.4, 0, 1, 1],
+        },
+    },
 };
 
 const PageTransition = ({ children, className }) => {
     return (
         <motion.div
             className={className}
+            variants={pageVariants}
             initial="initial"
             animate="animate"
             exit="exit"
-            variants={pageVariants}
         >
             {children}
         </motion.div>
