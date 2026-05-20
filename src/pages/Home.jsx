@@ -31,7 +31,6 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
 
   const [coreScale, setCoreScale] = useState(2.4);
   const [themeColor, setThemeColor] = useState("#00ff41");
-  const [cvOpen, setCvOpen] = useState(false);
 
 
 
@@ -112,7 +111,6 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
   };
 
   return (
-    <>
     <PageTransition className="page-container home-page">
 
 
@@ -160,18 +158,20 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
             </Link>
             <AnimatePresence mode="wait">
               {!isSpidoMode ? (
-                <motion.button
+                <motion.a
                   key="cv-btn"
-                  onClick={() => setCvOpen(true)}
+                  href="https://drive.google.com/file/d/1gcZ111j45Flnmv1ONI9QW-4nryojKrH4/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="cyber-btn secondary"
-                  style={{ cursor: 'pointer', background: 'none', fontFamily: 'inherit', fontSize: 'inherit', letterSpacing: 'inherit', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}
+                  style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
                 >
                   DOWNLOAD_CV
-                </motion.button>
+                </motion.a>
               ) : (
                 <motion.div
                   key="arena-btn"
@@ -300,52 +300,6 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
       </section>
     </PageTransition>
 
-    {/* CV Modal */}
-    <AnimatePresence>
-      {cvOpen && (
-        <motion.div
-          className="cv-modal-backdrop"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          onClick={() => setCvOpen(false)}
-        >
-          <motion.div
-            className="cv-modal-inner"
-            initial={{ opacity: 0, scale: 0.92, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 30 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="cv-modal-header mono">
-              <span>CV.SYS://MUHAMMED_SALIH_PK</span>
-              <div className="cv-modal-actions">
-                <a
-                  href="https://drive.google.com/uc?export=download&id=1gcZ111j45Flnmv1ONI9QW-4nryojKrH4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cv-dl-btn mono"
-                  onClick={e => e.stopPropagation()}
-                >
-                  DOWNLOAD
-                </a>
-                <button className="cv-close-btn mono" onClick={() => setCvOpen(false)}>✕ CLOSE</button>
-              </div>
-            </div>
-            <div className="cv-modal-body">
-              <img
-                src="https://drive.google.com/uc?id=1gcZ111j45Flnmv1ONI9QW-4nryojKrH4&export=view"
-                alt="Muhammed Salih PK — CV"
-                className="cv-modal-img"
-              />
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-    </>
   );
 };
 
