@@ -170,7 +170,7 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  VIEW_CV
+                  DOWNLOAD_CV
                 </motion.button>
               ) : (
                 <motion.div
