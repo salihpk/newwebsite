@@ -9,7 +9,6 @@ import AIHub from './pages/AIHub';
 
 import Navbar from './components/Navbar';
 import TerminalOverlay from './components/TerminalOverlay';
-import BootLoader from './components/BootLoader';
 import ScrollProgress from './components/ScrollProgress';
 
 import CyberBackground from './components/CyberBackground';
@@ -35,7 +34,6 @@ function App() {
     const [vpnInfo, setVpnInfo] = useState(null);
     const [isSpidoMode, setIsSpidoMode] = useState(false);
     const [discordAvatar, setDiscordAvatar] = useState(null);
-    const [booted, setBooted] = useState(false);
     const routerLocation = useLocation();
     const DISCORD_USER_ID = "577248513654784020";
 
@@ -126,7 +124,6 @@ function App() {
 
     return (
         <div className="app-container">
-            <BootLoader onDone={() => setBooted(true)} />
             <ScrollProgress />
             <CyberBackground />
             <div className="crt-overlay"></div>
