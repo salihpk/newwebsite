@@ -158,6 +158,21 @@
     margin-top: 10px;
 }
 
+.form-feedback {
+    margin-top: 12px;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+}
+
+.form-feedback.success {
+    color: var(--primary-color);
+}
+
+.form-feedback.error {
+    color: #f87171;
+}
+
 [data-theme='light'] .system-status,
 [data-theme='light'] .contact-form-container {
     background: rgba(255, 255, 255, 0.8);

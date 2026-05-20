@@ -12,6 +12,8 @@ const Contact = () => {
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const [logs, setLogs] = useState([
     "> SYSTEM_INIT: COMPLETE",
     "> CONNECTING_TO_HOST...",
@@ -47,6 +49,8 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setErrorMsg('');
 
     try {
       const res = await fetch("https://formspree.io/f/xojbqjgv", {
@@ -62,14 +66,19 @@ const Contact = () => {
         })
       });
 
-      if (!res.ok) throw new Error("Submission failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data?.error || `HTTP_${res.status}`);
+      }
 
       setIsSubmitted(true);
       setFormData({ email: '', subject: '', message: '' });
       setTimeout(() => setIsSubmitted(false), 5000);
     } catch (error) {
       console.error("Transmission Error:", error);
-      alert("DATA_TRANSMISSION_FAILED_RETRY_LATER");
+      setErrorMsg(`TRANSMISSION_FAILED: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -176,17 +185,35 @@ const Contact = () => {
               ></textarea>
             </div>
 
-            <button type="submit" className="cyber-btn mono" disabled={isSubmitted}>
-              {isSubmitted ? "TRANSMISSION_COMPLETE" : "TRANSMIT()"}
+            <button
+              type="submit"
+              className="cyber-btn mono"
+              disabled={isSubmitted || isLoading}
+            >
+              {isLoading
+                ? 'TRANSMITTING...'
+                : isSubmitted
+                  ? 'TRANSMISSION_COMPLETE'
+                  : 'TRANSMIT()'}
             </button>
+
             {isSubmitted && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mono text-xs mt-4"
-                style={{ color: 'var(--primary-color)' }}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mono form-feedback success"
               >
                 {'>'} PACKET_RECEIVED: ENCRYPTED_AND_STORED
+              </motion.div>
+            )}
+
+            {errorMsg && (
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mono form-feedback error"
+              >
+                {'>'} {errorMsg}
               </motion.div>
             )}
           </form>
