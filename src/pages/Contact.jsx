@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useForm, ValidationError } from '@formspree/react';
 import PageTransition from '../components/PageTransition';
-import { Instagram, Linkedin, MapPin, ExternalLink, Send, MessageSquare, Terminal as TerminalIcon } from 'lucide-react';
+import { Instagram, Linkedin, MapPin, ExternalLink, Terminal as TerminalIcon } from 'lucide-react';
 import './Contact.css';
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    subject: '',
-    message: '',
-    email: ''
-  });
+  const [state, handleSubmit] = useForm('xojbqjgv');
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
   const [logs, setLogs] = useState([
     "> SYSTEM_INIT: COMPLETE",
     "> CONNECTING_TO_HOST...",
@@ -46,41 +40,6 @@ const Contact = () => {
 
     return () => clearInterval(timer);
   }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrorMsg('');
-
-    try {
-      const res = await fetch("https://formspree.io/f/xojbqjgv", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message
-        })
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data?.error || `HTTP_${res.status}`);
-      }
-
-      setIsSubmitted(true);
-      setFormData({ email: '', subject: '', message: '' });
-      setTimeout(() => setIsSubmitted(false), 5000);
-    } catch (error) {
-      console.error("Transmission Error:", error);
-      setErrorMsg(`TRANSMISSION_FAILED: ${error.message}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <PageTransition className="page-container contact-page">
@@ -153,51 +112,57 @@ const Contact = () => {
             <div className="form-header mono">SEND_DATA_PACKET</div>
 
             <div className="input-group">
-              <label className="mono">IDENTIFIER_EMAIL:</label>
+              <label htmlFor="email" className="mono">IDENTIFIER_EMAIL:</label>
               <input
+                id="email"
                 type="email"
+                name="email"
                 required
                 className="mono"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
+              <ValidationError field="email" errors={state.errors}
+                className="mono form-feedback error" />
             </div>
 
             <div className="input-group">
-              <label className="mono">DATA_SUBJECT:</label>
+              <label htmlFor="subject" className="mono">DATA_SUBJECT:</label>
               <input
+                id="subject"
                 type="text"
+                name="subject"
                 required
                 className="mono"
-                value={formData.subject}
-                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
               />
+              <ValidationError field="subject" errors={state.errors}
+                className="mono form-feedback error" />
             </div>
 
             <div className="input-group">
-              <label className="mono">PAYLOAD_MESSAGE:</label>
+              <label htmlFor="message" className="mono">PAYLOAD_MESSAGE:</label>
               <textarea
+                id="message"
+                name="message"
                 required
                 className="mono"
                 rows="5"
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               ></textarea>
+              <ValidationError field="message" errors={state.errors}
+                className="mono form-feedback error" />
             </div>
 
             <button
               type="submit"
               className="cyber-btn mono"
-              disabled={isSubmitted || isLoading}
+              disabled={state.submitting || state.succeeded}
             >
-              {isLoading
+              {state.submitting
                 ? 'TRANSMITTING...'
-                : isSubmitted
+                : state.succeeded
                   ? 'TRANSMISSION_COMPLETE'
                   : 'TRANSMIT()'}
             </button>
 
-            {isSubmitted && (
+            {state.succeeded && (
               <motion.div
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -207,13 +172,13 @@ const Contact = () => {
               </motion.div>
             )}
 
-            {errorMsg && (
+            {state.errors && state.errors.length > 0 && !state.errors[0]?.field && (
               <motion.div
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="mono form-feedback error"
               >
-                {'>'} {errorMsg}
+                {'>'} TRANSMISSION_FAILED: {state.errors[0]?.message || 'UNKNOWN_ERROR'}
               </motion.div>
             )}
           </form>
