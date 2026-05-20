@@ -10,6 +10,7 @@ import AIHub from './pages/AIHub';
 import Navbar from './components/Navbar';
 import TerminalOverlay from './components/TerminalOverlay';
 import ScrollProgress from './components/ScrollProgress';
+import BootLoader from './components/BootLoader';
 
 import CyberBackground from './components/CyberBackground';
 import MusicPlayer from './components/MusicPlayer';
@@ -25,6 +26,9 @@ const PLANETS = [
 const randomPlanet = () => PLANETS[Math.floor(Math.random() * PLANETS.length)];
 
 function App() {
+    const [isBooting, setIsBooting] = useState(() => {
+        return !sessionStorage.getItem('booted');
+    });
     const [ip, setIp] = useState('FETCHING...');
     const [locationData] = useState(randomPlanet);
     const [isMusicPlaying, setIsMusicPlaying] = useState(false);
@@ -117,82 +121,96 @@ function App() {
     // so the outgoing page fades out before the position jumps
     useEffect(() => {
         const t = setTimeout(() => {
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            // Temporarily disable smooth scroll behavior to prevent smooth-scroll jumps/stuttering during page transition
+            const originalScrollBehavior = document.documentElement.style.scrollBehavior;
+            document.documentElement.style.scrollBehavior = 'auto';
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+            
+            // Restore smooth scrolling after a small frame delay
+            requestAnimationFrame(() => {
+                document.documentElement.style.scrollBehavior = originalScrollBehavior;
+            });
         }, 220);
         return () => clearTimeout(t);
     }, [routerLocation.pathname]);
 
     return (
         <div className="app-container">
-            <ScrollProgress />
-            <CyberBackground />
-            <div className="crt-overlay"></div>
-            <div className="scanline"></div>
-
-            <AnimatePresence>
-                {vpnWarning && !vpnDismissed && (
+            <AnimatePresence mode="wait">
+                {isBooting ? (
+                    <BootLoader key="bootloader" onDone={() => setIsBooting(false)} />
+                ) : (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="vpn-status-toast mono"
+                        key="content"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.6 }}
                     >
-                        <div className="vpn-toast-content">
-                            <span className="blink">▲</span>
-                            <span>[VPN_NODE: {vpnInfo?.type}] {vpnInfo?.provider?.toUpperCase()}</span>
-                            <button className="close-toast" onClick={() => setVpnDismissed(true)}>×</button>
-                        </div>
+                        <ScrollProgress />
+                        <CyberBackground />
+                        <div className="crt-overlay"></div>
+                        <div className="scanline"></div>
+
+                        <AnimatePresence>
+                            {vpnWarning && !vpnDismissed && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                                    className="vpn-status-toast mono"
+                                >
+                                    <div className="vpn-toast-content">
+                                        <span className="blink">▲</span>
+                                        <span>[VPN_NODE: {vpnInfo?.type}] {vpnInfo?.provider?.toUpperCase()}</span>
+                                        <button className="close-toast" onClick={() => setVpnDismissed(true)}>×</button>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <Navbar
+                            toggleMusic={toggleMusic}
+                            isMusicPlaying={isMusicPlaying}
+                            isSpidoMode={isSpidoMode}
+                            discordAvatar={discordAvatar}
+                        />
+                        <main>
+                            <AnimatePresence mode="wait">
+                                <Routes location={routerLocation} key={routerLocation.pathname}>
+                                    <Route
+                                        path="/"
+                                        element={
+                                            <Home
+                                                isSpidoMode={isSpidoMode}
+                                                setIsSpidoMode={setIsSpidoMode}
+                                                discordAvatar={discordAvatar}
+                                            />
+                                        }
+                                    />
+                                    <Route path="/projects" element={<Projects />} />
+                                    <Route path="/gaming" element={<GamingHub />} />
+                                    <Route path="/ai-hub" element={<AIHub />} />
+                                    <Route path="/contact" element={<Contact />} />
+                                </Routes>
+                            </AnimatePresence>
+                        </main>
+
+                        <footer className="footer">
+                            <div className="mono text-xs opacity-50 footer-stats">
+                                <span className="footer-stat-item"><ShieldCheck size={10} /> SYSTEM: STABLE</span>
+                                <span className="separator">|</span>
+                                <span className={`footer-stat-item ${vpnWarning ? "text-warn blink" : ""}`}>
+                                    <Cpu size={10} /> GATEWAY: {vpnWarning ? `UNSECURE_${vpnInfo?.type || 'VPN'}` : "SECURE"}
+                                </span>
+                                <span className="separator">|</span>
+                                <span className="footer-stat-item"><MapPin size={10} /> LOC: {locationData.toUpperCase()}</span>
+                            </div>
+                        </footer>
+
+                        <MusicPlayer isPlaying={isMusicPlaying} />
                     </motion.div>
                 )}
             </AnimatePresence>
-
-            <motion.div
-                key="content"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1 }}
-            >
-                <Navbar
-                    toggleMusic={toggleMusic}
-                    isMusicPlaying={isMusicPlaying}
-                    isSpidoMode={isSpidoMode}
-                    discordAvatar={discordAvatar}
-                />
-                <main>
-                    <AnimatePresence mode="wait">
-                        <Routes location={routerLocation} key={routerLocation.pathname}>
-                            <Route
-                                path="/"
-                                element={
-                                    <Home
-                                        isSpidoMode={isSpidoMode}
-                                        setIsSpidoMode={setIsSpidoMode}
-                                        discordAvatar={discordAvatar}
-                                    />
-                                }
-                            />
-                            <Route path="/projects" element={<Projects />} />
-                            <Route path="/gaming" element={<GamingHub />} />
-                            <Route path="/ai-hub" element={<AIHub />} />
-                            <Route path="/contact" element={<Contact />} />
-                        </Routes>
-                    </AnimatePresence>
-                </main>
-
-                <footer className="footer">
-                    <div className="mono text-xs opacity-50 footer-stats">
-                        <span className="footer-stat-item"><ShieldCheck size={10} /> SYSTEM: STABLE</span>
-                        <span className="separator">|</span>
-                        <span className={`footer-stat-item ${vpnWarning ? "text-warn blink" : ""}`}>
-                            <Cpu size={10} /> GATEWAY: {vpnWarning ? `UNSECURE_${vpnInfo?.type || 'VPN'}` : "SECURE"}
-                        </span>
-                        <span className="separator">|</span>
-                        <span className="footer-stat-item"><MapPin size={10} /> LOC: {locationData.toUpperCase()}</span>
-                    </div>
-                </footer>
-
-                <MusicPlayer isPlaying={isMusicPlaying} />
-            </motion.div>
 
             <MatrixRain isActive={showMatrix} onClose={() => setShowMatrix(false)} />
 
