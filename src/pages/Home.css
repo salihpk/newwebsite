@@ -593,3 +593,91 @@
         line-height: 1.3;
     }
 }
+
+/* ---- CV Modal ---- */
+.cv-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.cv-modal-inner {
+    background: #050505;
+    border: 1px solid rgba(var(--primary-color-rgb), 0.4);
+    box-shadow: 0 0 40px rgba(var(--primary-color-rgb), 0.15), 0 30px 60px rgba(0,0,0,0.6);
+    width: 100%;
+    max-width: 780px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.cv-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(var(--primary-color-rgb), 0.2);
+    font-size: 0.65rem;
+    color: var(--primary-color);
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px var(--primary-glow);
+    flex-shrink: 0;
+}
+
+.cv-modal-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.cv-dl-btn {
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: var(--primary-color);
+    text-decoration: none;
+    border: 1px solid rgba(var(--primary-color-rgb), 0.4);
+    padding: 4px 10px;
+    transition: all 0.2s ease;
+}
+
+.cv-dl-btn:hover {
+    background: rgba(var(--primary-color-rgb), 0.1);
+    border-color: var(--primary-color);
+}
+
+.cv-close-btn {
+    background: none;
+    border: 1px solid rgba(var(--primary-color-rgb), 0.3);
+    color: var(--text-dim);
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cv-close-btn:hover {
+    border-color: #ff003c;
+    color: #ff003c;
+}
+
+.cv-modal-body {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.cv-modal-img {
+    width: 100%;
+    display: block;
+    object-fit: contain;
+}
+}
