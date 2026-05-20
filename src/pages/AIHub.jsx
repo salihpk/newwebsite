@@ -149,12 +149,15 @@ const SkeletonCard = ({ i }) => (
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 
+const REFRESH_INTERVAL = 5 * 60; // seconds
+
 const AIHub = () => {
-  const [active, setActive]   = useState('ALL');
-  const [feeds, setFeeds]     = useState({ AI: [], SECURITY: [] });
-  const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState(null);
-  const [synced, setSynced]   = useState(null);
+  const [active, setActive]       = useState('ALL');
+  const [feeds, setFeeds]         = useState({ AI: [], SECURITY: [] });
+  const [loading, setLoading]     = useState(true);
+  const [error, setError]         = useState(null);
+  const [synced, setSynced]       = useState(null);
+  const [countdown, setCountdown] = useState(REFRESH_INTERVAL);
 
   const loadFeeds = useCallback(async () => {
     setLoading(true);
@@ -177,6 +180,7 @@ const AIHub = () => {
         SECURITY: dedup([...hnSec, ...devSec]),
       });
       setSynced(new Date());
+      setCountdown(REFRESH_INTERVAL); // reset countdown after every successful fetch
     } catch {
       setError('FEED_SYNC_FAILED — try refresh');
     } finally {
@@ -184,7 +188,21 @@ const AIHub = () => {
     }
   }, []);
 
-  useEffect(() => { loadFeeds(); }, [loadFeeds]);
+  // Auto-refresh every REFRESH_INTERVAL seconds
+  useEffect(() => {
+    loadFeeds();
+    const interval = setInterval(loadFeeds, REFRESH_INTERVAL * 1000);
+    return () => clearInterval(interval);
+  }, [loadFeeds]);
+
+  // Countdown tick — decrements every second, resets when loadFeeds fires
+  useEffect(() => {
+    if (loading) return; // pause ticker while fetching
+    const tick = setInterval(() => {
+      setCountdown((c) => (c > 0 ? c - 1 : 0));
+    }, 1000);
+    return () => clearInterval(tick);
+  }, [loading]);
 
   const displayItems =
     active === 'ALL'
@@ -218,14 +236,23 @@ const AIHub = () => {
 
         <div className="hub-statusbar mono">
           <span className={`hub-dot ${!loading && !error ? 'online' : error ? 'err' : 'idle'}`} />
-          <span className="hub-src-label">HN · DEV.TO — REAL-TIME</span>
+          <span className="hub-src-label">HN · DEV.TO</span>
+          {loading
+            ? <span className="hub-fetching">FETCHING...</span>
+            : error
+              ? <span className="hub-fetching">{error}</span>
+              : (
+                <span className="hub-synced">
+                  NEXT_SYNC: {String(Math.floor(countdown / 60)).padStart(2, '0')}:{String(countdown % 60).padStart(2, '0')}
+                </span>
+              )
+          }
           {synced && !loading && (
-            <span className="hub-synced">
-              SYNCED {synced.toLocaleTimeString('en-US', { hour12: false })}
+            <span className="hub-synced-time">
+              LAST: {synced.toLocaleTimeString('en-US', { hour12: false })}
             </span>
           )}
-          {loading && <span className="hub-fetching">FETCHING...</span>}
-          <button className="hub-refresh mono" onClick={loadFeeds} disabled={loading}>
+          <button className="hub-refresh mono" onClick={() => { loadFeeds(); setCountdown(REFRESH_INTERVAL); }} disabled={loading}>
             <RefreshCw size={12} className={loading ? 'spin' : ''} />
             REFRESH
           </button>
