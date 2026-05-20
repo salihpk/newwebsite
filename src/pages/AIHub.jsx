@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
 import {
   Zap, Brain, Shield, Code2, ExternalLink, Clock,
-  RefreshCw, AlertTriangle, TrendingUp, Hash, Play,
+  RefreshCw, AlertTriangle, TrendingUp,
   ArrowUpRight, Wifi, WifiOff,
 } from 'lucide-react';
 import './AIHub.css';
@@ -51,37 +51,6 @@ const fetchDevTo = async (tag, count = 6) => {
     author: a.user?.username || 'unknown',
   }));
 };
-
-/* ─── External live sources (X / YouTube) ──────────────────────────────── */
-
-const EXTERNAL = [
-  {
-    platform: 'X (TWITTER)',
-    icon: Hash,
-    color: 'ext-x',
-    links: [
-      { label: '#ArtificialIntelligence', url: 'https://x.com/search?q=%23ArtificialIntelligence&f=live' },
-      { label: '#MachineLearning',         url: 'https://x.com/search?q=%23MachineLearning&f=live' },
-      { label: '#CyberSecurity',           url: 'https://x.com/search?q=%23CyberSecurity&f=live' },
-      { label: '@OpenAI',                  url: 'https://x.com/OpenAI' },
-      { label: '@AnthropicAI',             url: 'https://x.com/AnthropicAI' },
-      { label: '@GoogleDeepMind',          url: 'https://x.com/GoogleDeepMind' },
-    ],
-  },
-  {
-    platform: 'YOUTUBE',
-    icon: Play,
-    color: 'ext-yt',
-    links: [
-      { label: 'AI News — Today',          url: 'https://www.youtube.com/results?search_query=AI+news+today' },
-      { label: 'Two Minute Papers',        url: 'https://www.youtube.com/@TwoMinutePapers' },
-      { label: 'Lex Fridman Podcast',      url: 'https://www.youtube.com/@lexfridman' },
-      { label: 'Fireship',                 url: 'https://www.youtube.com/@Fireship' },
-      { label: 'NetworkChuck (Security)',  url: 'https://www.youtube.com/@NetworkChuck' },
-      { label: 'CyberSec — Search',        url: 'https://www.youtube.com/results?search_query=cybersecurity+news+2026' },
-    ],
-  },
-];
 
 /* ─── Categories ────────────────────────────────────────────────────────── */
 
@@ -356,47 +325,6 @@ const AIHub = () => {
           )}
         </motion.div>
       </AnimatePresence>
-
-      {/* ── External Sources (X + YouTube) ── */}
-      <motion.section
-        className="hub-external"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '0px 0px -50px 0px' }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="hub-ext-header mono">
-          <AlertTriangle size={16} className="card-icon" />
-          <span>LIVE_FEEDS_ON_X_AND_YOUTUBE</span>
-          <span className="hub-ext-note">// links open in new tab</span>
-        </div>
-
-        <div className="hub-ext-grid">
-          {EXTERNAL.map(({ platform, icon: PIcon, color, links }) => (
-            <div key={platform} className={`hub-ext-card ${color}`}>
-              <div className="hub-ext-card-hd mono">
-                <PIcon size={16} className="card-icon" />
-                {platform}
-              </div>
-              <ul className="hub-ext-links">
-                {links.map(({ label, url }) => (
-                  <li key={url}>
-                    <a
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hub-ext-link mono"
-                    >
-                      <ArrowUpRight size={12} />
-                      {label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </motion.section>
 
     </PageTransition>
   );
