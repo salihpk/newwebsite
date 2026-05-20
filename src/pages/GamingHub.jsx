@@ -251,14 +251,6 @@ const GamingHub = () => {
                             transition={{ duration: 0.9, delay: 0.5, ease: "easeOut" }}
                         />
                     </div>
-                    <motion.div
-                        className="arena-sub mono"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.5 }}
-                        transition={{ duration: 0.5, delay: 1.1 }}
-                    >
-                        DISCORD_PRESENCE_MONITOR — v2.0
-                    </motion.div>
                 </div>
             </motion.div>
 
