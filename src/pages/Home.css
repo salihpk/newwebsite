@@ -700,10 +700,9 @@
     border-radius: 0 0 16px 16px;
 }
 
-.cv-modal-frame {
+.cv-modal-img {
     width: 100%;
-    height: 78vh;
-    border: none;
     display: block;
+    object-fit: contain;
 }
 }

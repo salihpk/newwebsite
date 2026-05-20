@@ -335,11 +335,10 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
               </div>
             </div>
             <div className="cv-modal-body">
-              <iframe
-                src="https://drive.google.com/file/d/1gcZ111j45Flnmv1ONI9QW-4nryojKrH4/preview"
-                className="cv-modal-frame"
-                title="Muhammed Salih PK — CV"
-                allow="autoplay"
+              <img
+                src="https://drive.google.com/thumbnail?id=1gcZ111j45Flnmv1ONI9QW-4nryojKrH4&sz=w2000"
+                alt="Muhammed Salih PK — CV"
+                className="cv-modal-img"
               />
             </div>
           </motion.div>
