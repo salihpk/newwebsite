@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Layers, Gamepad2, Mail, Menu, Zap } from 'lucide-react';
+import { Home, Layers, Gamepad2, Mail, Menu } from 'lucide-react';
 import profileImg from '../assets/profile.png';
 import './Navbar.css';
 
@@ -47,7 +47,6 @@ const Navbar = ({ toggleMusic, isMusicPlaying, isSpidoMode, discordAvatar }) => 
   const navItems = [
     { name: 'HOME', path: '/', icon: <Home size={20} /> },
     { name: 'PROJECTS', path: '/projects', icon: <Layers size={20} /> },
-    { name: 'AI_HUB', path: '/ai-hub', icon: <Zap size={20} /> },
     { name: 'ARENA', path: '/gaming', icon: <Gamepad2 size={20} /> },
     { name: 'CONTACT', path: '/contact', icon: <Mail size={20} /> },
   ];

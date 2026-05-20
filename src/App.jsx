@@ -5,7 +5,6 @@ import Home from './pages/Home';
 import Projects from './pages/Projects';
 import GamingHub from './pages/GamingHub';
 import Contact from './pages/Contact';
-import AIHub from './pages/AIHub';
 
 import Navbar from './components/Navbar';
 import TerminalOverlay from './components/TerminalOverlay';
@@ -189,8 +188,7 @@ function App() {
                                     />
                                     <Route path="/projects" element={<Projects />} />
                                     <Route path="/gaming" element={<GamingHub />} />
-                                    <Route path="/ai-hub" element={<AIHub />} />
-                                    <Route path="/contact" element={<Contact />} />
+                                                    <Route path="/contact" element={<Contact />} />
                                 </Routes>
                             </AnimatePresence>
                         </main>
