@@ -164,7 +164,7 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
                   key="cv-btn"
                   onClick={() => setCvOpen(true)}
                   className="cyber-btn secondary"
-                  style={{ cursor: 'pointer', border: 'none' }}
+                  style={{ cursor: 'pointer', background: 'none', fontFamily: 'inherit', fontSize: 'inherit', letterSpacing: 'inherit', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
