@@ -2,93 +2,65 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
 import {
-  Zap, Brain, Shield, Code2, ExternalLink, Clock,
-  RefreshCw, AlertTriangle, TrendingUp,
-  ArrowUpRight, Wifi, WifiOff,
+  Zap, Globe, FlaskConical, Cpu,
+  RefreshCw, ArrowUpRight, Calendar,
+  Wifi, WifiOff, ImageOff,
 } from 'lucide-react';
 import './AIHub.css';
 
-/* ─── Data sources ──────────────────────────────────────────────────────── */
+/* ─── API ────────────────────────────────────────────────────────────────── */
 
-const fetchHN = async (query, count = 6) => {
-  const url = `https://hn.algolia.com/api/v1/search?tags=story&query=${encodeURIComponent(
-    query
-  )}&hitsPerPage=${count}&numericFilters=points%3E8`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('HN fetch failed');
+const BASE = 'https://saurav.tech/NewsAPI';
+
+const load = async (path) => {
+  const res = await fetch(`${BASE}${path}`);
+  if (!res.ok) throw new Error(`fetch failed: ${path}`);
   const json = await res.json();
-  return json.hits
-    .filter((h) => h.title && (h.url || h.objectID))
-    .map((h) => ({
-      id: `hn-${h.objectID}`,
-      source: 'HN',
-      title: h.title,
-      description: null,
-      url: h.url || `https://news.ycombinator.com/item?id=${h.objectID}`,
-      discussUrl: `https://news.ycombinator.com/item?id=${h.objectID}`,
-      points: h.points ?? 0,
-      comments: h.num_comments ?? 0,
-      time: h.created_at,
-      author: h.author,
-    }));
+  return (json.articles || []).filter((a) => a.title && a.url);
 };
 
-const fetchDevTo = async (tag, count = 6) => {
-  const url = `https://dev.to/api/articles?tag=${tag}&per_page=${count}&top=7`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error('Dev.to fetch failed');
-  const json = await res.json();
-  return json.map((a) => ({
-    id: `dev-${a.id}`,
-    source: 'DEV',
-    title: a.title,
-    description: a.description || null,
-    url: a.url,
-    discussUrl: a.url,
-    points: a.positive_reactions_count ?? 0,
-    comments: a.comments_count ?? 0,
-    time: a.published_at,
-    author: a.user?.username || 'unknown',
-  }));
-};
-
-/* ─── Categories ────────────────────────────────────────────────────────── */
+/* ─── Category config ────────────────────────────────────────────────────── */
 
 const CATEGORIES = [
-  { id: 'ALL',      label: 'ALL_FEEDS',   icon: Zap },
-  { id: 'AI',       label: 'AI_NEWS',     icon: Brain },
-  { id: 'DEV',      label: 'DEV_TIPS',    icon: Code2 },
-  { id: 'SECURITY', label: 'SECURITY',    icon: Shield },
+  { id: 'ALL',      label: 'ALL_FEEDS',   icon: Zap,          color: 'cat-all'  },
+  { id: 'TECH',     label: 'TECHNOLOGY',  icon: Cpu,          color: 'cat-tech' },
+  { id: 'SCIENCE',  label: 'SCIENCE',     icon: FlaskConical, color: 'cat-sci'  },
+  { id: 'GLOBAL',   label: 'GLOBAL_NEWS', icon: Globe,        color: 'cat-glob' },
 ];
 
-/* ─── Helpers ───────────────────────────────────────────────────────────── */
+/* ─── Helpers ────────────────────────────────────────────────────────────── */
 
-const timeAgo = (iso) => {
+const fmtDate = (iso) => {
   if (!iso) return '';
-  const diff = Date.now() - new Date(iso).getTime();
-  const m = Math.floor(diff / 60000);
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+  return new Date(iso).toLocaleDateString('en-US', {
+    month: 'short', day: 'numeric', year: 'numeric',
+  });
 };
 
-const SOURCE_META = {
-  HN:  { label: 'HACKER NEWS', cls: 'src-hn' },
-  DEV: { label: 'DEV.TO',      cls: 'src-dev' },
+/* ─── Sub-components ─────────────────────────────────────────────────────── */
+
+const ImgWithFallback = ({ src, alt }) => {
+  const [failed, setFailed] = useState(false);
+  if (!src || failed) {
+    return (
+      <div className="ai-card-no-img">
+        <ImageOff size={22} />
+      </div>
+    );
+  }
+  return (
+    <img
+      className="ai-card-img"
+      src={src}
+      alt={alt}
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
+  );
 };
 
-const CAT_META = {
-  AI:       { label: 'AI_NEWS',  cls: 'cat-ai' },
-  DEV:      { label: 'DEV_TIPS', cls: 'cat-dev' },
-  SECURITY: { label: 'SECURITY', cls: 'cat-sec' },
-};
-
-/* ─── Sub-components ────────────────────────────────────────────────────── */
-
-const NewsCard = ({ item, catKey, index }) => {
-  const src = SOURCE_META[item.source];
-  const cat = CAT_META[catKey];
+const NewsCard = ({ item, catId, index }) => {
+  const cat = CATEGORIES.find((c) => c.id === catId) || CATEGORIES[0];
 
   return (
     <motion.article
@@ -96,60 +68,58 @@ const NewsCard = ({ item, catKey, index }) => {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '0px 0px -40px 0px' }}
-      transition={{ delay: index * 0.07, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ delay: index * 0.06, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -6 }}
     >
-      {/* Gradient border effect */}
       <div className="ai-card-glow" />
 
-      {/* Top row: source + category */}
-      <div className="ai-card-top">
-        <span className={`ai-tag mono ${src.cls}`}>{src.label}</span>
-        <span className={`ai-tag mono ${cat.cls}`}>{cat.label}</span>
+      {/* Thumbnail */}
+      <div className="ai-card-thumb">
+        <ImgWithFallback src={item.urlToImage} alt={item.title} />
       </div>
 
-      {/* Title */}
-      <h3 className="ai-card-title">{item.title}</h3>
+      {/* Body */}
+      <div className="ai-card-body">
+        {/* Source + Category badges */}
+        <div className="ai-card-top">
+          {item.source?.name && (
+            <span className="ai-tag src-tag mono">{item.source.name.toUpperCase()}</span>
+          )}
+          <span className={`ai-tag mono ${cat.color}`}>{cat.label}</span>
+        </div>
 
-      {/* Description (Dev.to only) */}
-      {item.description && (
-        <p className="ai-card-desc">{item.description}</p>
-      )}
+        {/* Title */}
+        <h3 className="ai-card-title">
+          {item.title?.replace(/\s*-\s*[^-]+$/, '')}
+        </h3>
 
-      {/* Meta row */}
-      <div className="ai-card-meta mono">
-        <span className="ai-meta-item">
-          <TrendingUp size={11} />
-          {item.points}
-        </span>
-        <span className="ai-meta-item">
-          <Clock size={11} />
-          {timeAgo(item.time)}
-        </span>
-        <span className="ai-meta-author">@{item.author}</span>
-      </div>
+        {/* Description */}
+        {item.description && (
+          <p className="ai-card-desc">{item.description}</p>
+        )}
 
-      {/* Actions */}
-      <div className="ai-card-actions">
+        {/* Meta */}
+        <div className="ai-card-meta mono">
+          <span className="ai-meta-item">
+            <Calendar size={11} />
+            {fmtDate(item.publishedAt)}
+          </span>
+          {item.author && (
+            <span className="ai-meta-author">
+              {item.author.split(',')[0].slice(0, 28)}
+            </span>
+          )}
+        </div>
+
+        {/* CTA */}
         <a
           href={item.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="cyber-btn sm mono"
+          className="cyber-btn sm mono ai-read-btn"
         >
           READ_ARTICLE <ArrowUpRight size={13} />
         </a>
-        {item.discussUrl && item.discussUrl !== item.url && (
-          <a
-            href={item.discussUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ai-discuss-link mono"
-            title="View discussion"
-          >
-            DISCUSS <ExternalLink size={11} />
-          </a>
-        )}
       </div>
 
       <div className="card-glitch" />
@@ -158,21 +128,24 @@ const NewsCard = ({ item, catKey, index }) => {
 };
 
 const SkeletonCard = ({ i }) => (
-  <div className="ai-card skeleton" style={{ '--delay': `${i * 0.08}s` }}>
-    <div className="skel skel-row" />
-    <div className="skel skel-title" />
-    <div className="skel skel-title short" />
-    <div className="skel skel-desc" />
-    <div className="skel skel-meta" />
-    <div className="skel skel-btn" />
+  <div className="ai-card skeleton" style={{ '--delay': `${i * 0.07}s` }}>
+    <div className="skel skel-thumb" />
+    <div className="ai-card-body">
+      <div className="skel skel-row" />
+      <div className="skel skel-title" />
+      <div className="skel skel-title short" />
+      <div className="skel skel-desc" />
+      <div className="skel skel-meta" />
+      <div className="skel skel-btn" />
+    </div>
   </div>
 );
 
-/* ─── Main component ────────────────────────────────────────────────────── */
+/* ─── Main ───────────────────────────────────────────────────────────────── */
 
 const AIHub = () => {
   const [active, setActive] = useState('ALL');
-  const [feeds, setFeeds] = useState({ AI: [], DEV: [], SECURITY: [] });
+  const [feeds, setFeeds] = useState({ TECH: [], SCIENCE: [], GLOBAL: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [synced, setSynced] = useState(null);
@@ -181,18 +154,28 @@ const AIHub = () => {
     setLoading(true);
     setError(null);
     try {
-      const [hnAI, devAI, hnSec, devSec, hnDev, devDev] = await Promise.all([
-        fetchHN('artificial intelligence LLM GPT',  6),
-        fetchDevTo('ai',       6),
-        fetchHN('cybersecurity vulnerability hack',  5),
-        fetchDevTo('security', 5),
-        fetchHN('programming software engineering',  5),
-        fetchDevTo('webdev',   5),
+      const [techUS, techGB, sci, bbc, cnn] = await Promise.all([
+        load('/top-headlines/category/technology/us.json'),
+        load('/top-headlines/category/technology/gb.json'),
+        load('/top-headlines/category/science/us.json'),
+        load('/everything/bbc-news.json'),
+        load('/everything/cnn.json'),
       ]);
+
+      // Deduplicate by URL across sources
+      const dedup = (arr) => {
+        const seen = new Set();
+        return arr.filter((a) => {
+          if (seen.has(a.url)) return false;
+          seen.add(a.url);
+          return true;
+        });
+      };
+
       setFeeds({
-        AI:       [...hnAI,  ...devAI],
-        SECURITY: [...hnSec, ...devSec],
-        DEV:      [...hnDev, ...devDev],
+        TECH:    dedup([...techUS, ...techGB]),
+        SCIENCE: dedup([...sci]),
+        GLOBAL:  dedup([...bbc, ...cnn]),
       });
       setSynced(new Date());
     } catch (e) {
@@ -204,27 +187,26 @@ const AIHub = () => {
 
   useEffect(() => { loadFeeds(); }, [loadFeeds]);
 
-  /* Build display list */
   const displayItems =
     active === 'ALL'
       ? [
-          ...feeds.AI.slice(0, 4).map((i) => ({ ...i, _cat: 'AI' })),
-          ...feeds.DEV.slice(0, 4).map((i) => ({ ...i, _cat: 'DEV' })),
-          ...feeds.SECURITY.slice(0, 4).map((i) => ({ ...i, _cat: 'SECURITY' })),
+          ...feeds.TECH.slice(0, 4).map((i) => ({ ...i, _cat: 'TECH' })),
+          ...feeds.SCIENCE.slice(0, 4).map((i) => ({ ...i, _cat: 'SCIENCE' })),
+          ...feeds.GLOBAL.slice(0, 4).map((i) => ({ ...i, _cat: 'GLOBAL' })),
         ]
       : (feeds[active] || []).map((i) => ({ ...i, _cat: active }));
 
   const counts = {
-    ALL:      feeds.AI.length + feeds.DEV.length + feeds.SECURITY.length,
-    AI:       feeds.AI.length,
-    DEV:      feeds.DEV.length,
-    SECURITY: feeds.SECURITY.length,
+    ALL:     feeds.TECH.length + feeds.SCIENCE.length + feeds.GLOBAL.length,
+    TECH:    feeds.TECH.length,
+    SCIENCE: feeds.SCIENCE.length,
+    GLOBAL:  feeds.GLOBAL.length,
   };
 
   return (
     <PageTransition className="page-container ai-hub-page">
 
-      {/* ── Header ── */}
+      {/* Header */}
       <header className="page-header">
         <div className="header-title-flex">
           <motion.div
@@ -237,13 +219,12 @@ const AIHub = () => {
           <h1 className="mono border-title">AI_HUB://LIVE</h1>
         </div>
 
-        {/* Status bar */}
         <div className="hub-statusbar mono">
-          <span className={`hub-dot ${!loading && !error ? 'online' : error ? 'err' : ''}`} />
-          <span className="hub-src-label">SOURCES: HACKER NEWS + DEV.TO</span>
+          <span className={`hub-dot ${!loading && !error ? 'online' : error ? 'err' : 'idle'}`} />
+          <span className="hub-src-label">BBC · CNN · THE VERGE · TECHRADAR · +MORE</span>
           {synced && !loading && (
             <span className="hub-synced">
-              SYNCED: {synced.toLocaleTimeString('en-US', { hour12: false })}
+              SYNCED {synced.toLocaleTimeString('en-US', { hour12: false })}
             </span>
           )}
           {loading && <span className="hub-fetching">FETCHING...</span>}
@@ -251,7 +232,6 @@ const AIHub = () => {
             className="hub-refresh mono"
             onClick={loadFeeds}
             disabled={loading}
-            title="Refresh feeds"
           >
             <RefreshCw size={12} className={loading ? 'spin' : ''} />
             REFRESH
@@ -259,10 +239,10 @@ const AIHub = () => {
         </div>
       </header>
 
-      {/* ── Category tabs ── */}
+      {/* Tabs */}
       <motion.div
         className="hub-tabs"
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.5 }}
       >
@@ -281,12 +261,12 @@ const AIHub = () => {
         ))}
       </motion.div>
 
-      {/* ── Error banner ── */}
+      {/* Error */}
       <AnimatePresence>
         {error && (
           <motion.div
             className="hub-error mono"
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
           >
@@ -296,7 +276,7 @@ const AIHub = () => {
         )}
       </AnimatePresence>
 
-      {/* ── Feed grid ── */}
+      {/* Grid */}
       <AnimatePresence mode="wait">
         <motion.div
           key={active}
@@ -306,23 +286,19 @@ const AIHub = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          {loading ? (
-            Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} i={i} />)
-          ) : displayItems.length > 0 ? (
-            displayItems.map((item, idx) => (
-              <NewsCard
-                key={item.id}
-                item={item}
-                catKey={item._cat}
-                index={idx}
-              />
-            ))
-          ) : (
-            <div className="hub-empty mono">
-              <Wifi size={22} />
-              <span>NO_DATA — FEED_EMPTY</span>
-            </div>
-          )}
+          {loading
+            ? Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} i={i} />)
+            : displayItems.length > 0
+              ? displayItems.map((item, idx) => (
+                  <NewsCard key={item.url} item={item} catId={item._cat} index={idx} />
+                ))
+              : (
+                <div className="hub-empty mono">
+                  <Wifi size={22} />
+                  <span>NO_DATA — FEED_EMPTY</span>
+                </div>
+              )
+          }
         </motion.div>
       </AnimatePresence>
 
