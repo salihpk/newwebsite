@@ -323,8 +323,9 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
               <span>CV.SYS://MUHAMMED_SALIH_PK</span>
               <div className="cv-modal-actions">
                 <a
-                  href="https://res.cloudinary.com/dbzplt80r/image/upload/1770145046975_1_vjiwmh.jpg"
-                  download="Muhammed_Salih_PK_CV.jpg"
+                  href="https://drive.google.com/uc?export=download&id=1gcZ111j45Flnmv1ONI9QW-4nryojKrH4"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="cv-dl-btn mono"
                   onClick={e => e.stopPropagation()}
                 >
@@ -334,10 +335,11 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
               </div>
             </div>
             <div className="cv-modal-body">
-              <img
-                src="https://res.cloudinary.com/dbzplt80r/image/upload/1770145046975_1_vjiwmh.jpg"
-                alt="Muhammed Salih PK — CV"
-                className="cv-modal-img"
+              <iframe
+                src="https://drive.google.com/file/d/1gcZ111j45Flnmv1ONI9QW-4nryojKrH4/preview"
+                className="cv-modal-frame"
+                title="Muhammed Salih PK — CV"
+                allow="autoplay"
               />
             </div>
           </motion.div>
