@@ -160,9 +160,8 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
               {!isSpidoMode ? (
                 <motion.a
                   key="cv-btn"
-                  href="https://res.cloudinary.com/dbzplt80r/image/upload/1770145046975_1_vjiwmh.jpg"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/cv.pdf"
+                  download="Muhammed_Salih_PK_CV.pdf"
                   className="cyber-btn secondary"
                   style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   initial={{ opacity: 0, x: 20 }}
