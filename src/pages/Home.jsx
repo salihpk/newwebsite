@@ -336,7 +336,7 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
             </div>
             <div className="cv-modal-body">
               <img
-                src="https://drive.google.com/thumbnail?id=1gcZ111j45Flnmv1ONI9QW-4nryojKrH4&sz=w2000"
+                src="https://drive.google.com/uc?id=1gcZ111j45Flnmv1ONI9QW-4nryojKrH4&export=view"
                 alt="Muhammed Salih PK — CV"
                 className="cv-modal-img"
               />
