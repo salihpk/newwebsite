@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
 import profileDefault from '../assets/profile.png';
-import { Gamepad2, Activity, Monitor, ShieldCheck, Music2, Wifi } from 'lucide-react';
+import { Gamepad2, Monitor, ShieldCheck, Music2, Wifi } from 'lucide-react';
 import './GamingHub.css';
 
 const GamingHub = () => {
@@ -15,7 +15,6 @@ const GamingHub = () => {
     const [steamError, setSteamError] = useState(null);
     const [steamTotal, setSteamTotal] = useState(0);
 
-    // Discord Lanyard — poll every 30 s
     useEffect(() => {
         const fetchDiscord = async () => {
             try {
@@ -35,7 +34,6 @@ const GamingHub = () => {
         return () => clearInterval(interval);
     }, []);
 
-    // Steam library — fetch once
     useEffect(() => {
         const fetchSteam = async () => {
             try {
@@ -44,7 +42,7 @@ const GamingHub = () => {
                 const data = await res.json();
                 setSteamGames(data.games || []);
                 setSteamTotal(data.total || 0);
-            } catch (err) {
+            } catch {
                 setSteamError('UNABLE_TO_FETCH_LIBRARY');
             } finally {
                 setSteamLoading(false);
@@ -53,7 +51,6 @@ const GamingHub = () => {
         fetchSteam();
     }, []);
 
-    // Derived Discord values
     const discordActivity = discordData?.activities?.find(a => a.type === 0) || null;
     const discordSpotify = discordData?.listening_to_spotify ? discordData.spotify : null;
     const discordStatusColor = {
@@ -92,6 +89,8 @@ const GamingHub = () => {
     const activityLabel = discordActivity
         ? discordActivity.name.toUpperCase()
         : discordSpotify ? 'SPOTIFY' : 'IDLE';
+
+    const activityArt = getActivityImage();
 
     return (
         <PageTransition className="page-container gaming-page">
@@ -140,13 +139,13 @@ const GamingHub = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.35 }}
             >
-
-                {/* ── LEFT: Status panel ── */}
-                <div className="status-panel">
+                {/* ── TOP GRID: Operator + Live Activity ── */}
+                <div className="top-grid">
 
                     {/* Operator card */}
                     <motion.div
                         className="glass-card operator-card"
+                        style={{ '--status-color': discordStatusColor }}
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.45, type: 'spring', stiffness: 80, damping: 16 }}
@@ -190,6 +189,33 @@ const GamingHub = () => {
                             </div>
                         </div>
 
+                        {/* Inline stat rows */}
+                        <div className="op-stats">
+                            <div className="op-stat">
+                                <Gamepad2 size={11} className="op-stat-icon" />
+                                <div className="op-stat-content">
+                                    <span className="op-stat-label mono">ACTIVITY</span>
+                                    <span className="op-stat-value mono">{activityLabel}</span>
+                                </div>
+                            </div>
+                            <div className="op-stat">
+                                <Monitor size={11} className="op-stat-icon" />
+                                <div className="op-stat-content">
+                                    <span className="op-stat-label mono">DEVICE</span>
+                                    <span className="op-stat-value mono device-glow">Lenovo LOQ</span>
+                                </div>
+                            </div>
+                            <div className="op-stat">
+                                <Wifi size={11} className="op-stat-icon" />
+                                <div className="op-stat-content">
+                                    <span className="op-stat-label mono">LIBRARY</span>
+                                    <span className="op-stat-value mono">
+                                        {steamLoading ? '...' : `${steamTotal} GAMES`}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="operator-actions">
                             <a
                                 href="https://discord.gg/zcXGkH98Qk"
@@ -210,46 +236,51 @@ const GamingHub = () => {
                         </div>
                     </motion.div>
 
-                    {/* Live feed */}
+                    {/* Live activity card */}
                     <motion.div
-                        className="glass-card live-feed-card"
-                        initial={{ opacity: 0, x: -30 }}
+                        className="glass-card live-activity-card"
+                        initial={{ opacity: 0, x: 30 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.58, type: 'spring', stiffness: 80, damping: 16 }}
+                        transition={{ delay: 0.55, type: 'spring', stiffness: 80, damping: 16 }}
                     >
                         <div className="card-label-row mono live-label">
                             <span className="live-dot" />
-                            LIVE_FEED
+                            LIVE_ACTIVITY
                         </div>
 
                         <AnimatePresence mode="wait">
                             {discordActivity ? (
                                 <motion.div
                                     key="game"
-                                    className="lf-game"
+                                    className="la-game"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.25 }}
+                                    transition={{ duration: 0.3 }}
                                 >
-                                    <div className="lf-art-wrap">
-                                        {getActivityImage()
-                                            ? <img src={getActivityImage()} alt="" className="lf-art" />
-                                            : <div className="lf-art-placeholder mono">{discordActivity.name.charAt(0)}</div>
+                                    <div className="la-art-wrap">
+                                        {activityArt && (
+                                            <img src={activityArt} alt="" className="la-art-bg" />
+                                        )}
+                                        {activityArt
+                                            ? <img src={activityArt} alt="" className="la-art" />
+                                            : <div className="la-art-placeholder mono">{discordActivity.name.charAt(0)}</div>
                                         }
-                                        <div className="lf-art-overlay">
-                                            <span className="lf-game-title mono">{discordActivity.name}</span>
+                                        <div className="la-art-overlay">
+                                            <span className="la-game-title mono">{discordActivity.name}</span>
                                         </div>
                                     </div>
-                                    <div className="lf-meta">
-                                        {discordActivity.details && (
-                                            <span className="lf-detail mono">{discordActivity.details}</span>
-                                        )}
-                                        {discordActivity.state && (
-                                            <span className="lf-state mono">{discordActivity.state}</span>
-                                        )}
+                                    <div className="la-meta">
+                                        <div className="la-meta-text">
+                                            {discordActivity.details && (
+                                                <span className="la-detail mono">{discordActivity.details}</span>
+                                            )}
+                                            {discordActivity.state && (
+                                                <span className="la-state mono">{discordActivity.state}</span>
+                                            )}
+                                        </div>
                                         {discordActivity.timestamps?.start && (
-                                            <span className="lf-elapsed mono">
+                                            <span className="la-elapsed mono">
                                                 ⏱ {formatElapsed(discordActivity.timestamps.start)}
                                             </span>
                                         )}
@@ -258,74 +289,59 @@ const GamingHub = () => {
                             ) : discordSpotify ? (
                                 <motion.div
                                     key="spotify"
-                                    className="lf-spotify"
+                                    className="la-spotify"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.25 }}
+                                    transition={{ duration: 0.3 }}
                                 >
-                                    <div className="lf-spotify-body">
+                                    {discordSpotify.album_art_url && (
+                                        <img src={discordSpotify.album_art_url} alt="" className="la-spotify-bg" />
+                                    )}
+                                    <div className="la-spotify-content">
                                         {discordSpotify.album_art_url && (
-                                            <img src={discordSpotify.album_art_url} alt="" className="lf-spotify-art" />
+                                            <img src={discordSpotify.album_art_url} alt="" className="la-spotify-art" />
                                         )}
-                                        <div className="lf-spotify-info">
-                                            <span className="lf-spotify-song mono">{discordSpotify.song}</span>
-                                            <span className="lf-spotify-artist mono">BY: {discordSpotify.artist}</span>
-                                            <span className="lf-spotify-album mono">ALBUM: {discordSpotify.album}</span>
+                                        <div className="la-spotify-info">
+                                            <span className="la-spotify-badge mono">
+                                                <Music2 size={10} />
+                                                LISTENING ON SPOTIFY
+                                            </span>
+                                            <span className="la-spotify-song mono">{discordSpotify.song}</span>
+                                            <span className="la-spotify-artist mono">{discordSpotify.artist}</span>
+                                            <span className="la-spotify-album mono">{discordSpotify.album}</span>
                                         </div>
-                                    </div>
-                                    <div className="lf-spotify-footer mono">
-                                        <Music2 size={11} />
-                                        LISTENING ON SPOTIFY
                                     </div>
                                 </motion.div>
                             ) : (
                                 <motion.div
                                     key="idle"
-                                    className="lf-idle mono"
+                                    className="la-idle"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                 >
-                                    NO_ACTIVE_SESSION
+                                    <div className="la-idle-scanner">
+                                        <div className="la-idle-ring la-idle-ring-1" />
+                                        <div className="la-idle-ring la-idle-ring-2" />
+                                        <div className="la-idle-ring la-idle-ring-3" />
+                                        <div className="la-idle-sweep" />
+                                        <Gamepad2 size={22} className="la-idle-icon" />
+                                    </div>
+                                    <span className="la-idle-text mono">NO_ACTIVE_SESSION</span>
+                                    <span className="la-idle-sub mono">AWAITING_INPUT</span>
                                 </motion.div>
                             )}
                         </AnimatePresence>
                     </motion.div>
-
-                    {/* Quick stats */}
-                    <motion.div
-                        className="glass-card quick-stats"
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.7, type: 'spring', stiffness: 80, damping: 16 }}
-                    >
-                        {[
-                            { icon: <Activity size={12} />, label: 'STATUS', value: statusLabel, color: discordStatusColor },
-                            { icon: <Gamepad2 size={12} />, label: 'ACTIVITY', value: activityLabel },
-                            { icon: <Monitor size={12} />, label: 'DEVICE', value: 'Lenovo LOQ', glow: true },
-                            { icon: <Wifi size={12} />, label: 'LIBRARY', value: steamLoading ? '...' : `${steamTotal} GAMES` },
-                        ].map((s, i) => (
-                            <div key={i} className="stat-row mono">
-                                <span className="stat-row-icon">{s.icon}</span>
-                                <span className="stat-row-label">{s.label}</span>
-                                <span
-                                    className={`stat-row-value${s.glow ? ' device-glow' : ''}`}
-                                    style={s.color ? { color: s.color } : undefined}
-                                >
-                                    {s.value}
-                                </span>
-                            </div>
-                        ))}
-                    </motion.div>
                 </div>
 
-                {/* ── RIGHT: Steam library ── */}
+                {/* ── BOTTOM: Steam library full-width ── */}
                 <motion.div
                     className="glass-card library-panel"
-                    initial={{ opacity: 0, x: 30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5, type: 'spring', stiffness: 70, damping: 16 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.65, type: 'spring', stiffness: 70, damping: 16 }}
                 >
                     <div className="library-header mono">
                         <span className="header-accent" />
@@ -355,7 +371,7 @@ const GamingHub = () => {
                                     className="steam-card"
                                     initial={{ opacity: 0, scale: 0.94 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ delay: Math.min(i * 0.025, 0.5), duration: 0.28 }}
+                                    transition={{ delay: Math.min(i * 0.02, 0.4), duration: 0.28 }}
                                     whileHover={{ scale: 1.04, transition: { duration: 0.15 } }}
                                     whileTap={{ scale: 0.97 }}
                                 >
@@ -384,7 +400,6 @@ const GamingHub = () => {
                         </div>
                     )}
                 </motion.div>
-
             </motion.div>
         </PageTransition>
     );
