@@ -5,7 +5,7 @@ const CyberBackground = () => {
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { willReadFrequently: false, alpha: true });
         let animationFrameId;
 
         // Read theme color once, refresh only when the theme actually changes

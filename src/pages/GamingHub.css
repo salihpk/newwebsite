@@ -179,6 +179,7 @@
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
+    contain: layout style;
 }
 
 .glass-card:hover {
@@ -236,6 +237,7 @@
     animation: livePulse 2s ease-in-out infinite;
     display: inline-block;
     flex-shrink: 0;
+    will-change: opacity, transform;
 }
 
 @keyframes livePulse {
@@ -381,6 +383,7 @@
 /* Device glow animation */
 .device-glow {
     animation: devicePulse 2.6s ease-in-out infinite;
+    will-change: opacity;
 }
 
 @keyframes devicePulse {
@@ -594,6 +597,7 @@
                 0 8px 28px rgba(0, 0, 0, 0.55);
     flex-shrink: 0;
     animation: vinylSpin 4s linear infinite;
+    will-change: transform;
 }
 
 .la-spotify-info {
@@ -684,6 +688,7 @@
     border-top-color: var(--primary-color);
     animation: idleSweep 2.4s linear infinite;
     box-shadow: 0 0 10px var(--primary-glow);
+    will-change: transform;
 }
 
 @keyframes idleSweep {

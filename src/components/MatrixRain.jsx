@@ -18,13 +18,20 @@ const MatrixRain = ({ isActive, onClose }) => {
         const columns = canvas.width / fontSize;
         const drops = Array(Math.floor(columns)).fill(1);
 
+        // Cache color once; update only on theme change via MutationObserver
+        let matrixColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || '#00ff41';
+        const colorObserver = new MutationObserver(() => {
+            matrixColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || '#00ff41';
+        });
+        colorObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
         let animationId;
 
         const draw = () => {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary-color') || '#00ff41';
+            ctx.fillStyle = matrixColor;
             ctx.font = `${fontSize}px monospace`;
 
             for (let i = 0; i < drops.length; i++) {
@@ -52,6 +59,7 @@ const MatrixRain = ({ isActive, onClose }) => {
         return () => {
             cancelAnimationFrame(animationId);
             window.removeEventListener('resize', handleResize);
+            colorObserver.disconnect();
         };
     }, [isActive]);
 
