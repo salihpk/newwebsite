@@ -5,9 +5,25 @@ import { Home, Layers, Gamepad2, Mail, Menu } from 'lucide-react';
 import profileImg from '../assets/profile.png';
 import './Navbar.css';
 
+const DISCORD_USER_ID = '577248513654784020';
+
 const Navbar = ({ toggleMusic, isMusicPlaying }) => {
   const location = useLocation();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [discordAvatar, setDiscordAvatar] = useState(null);
+
+  useEffect(() => {
+    fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(json => {
+        if (json?.success && json.data.discord_user.avatar) {
+          setDiscordAvatar(
+            `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${json.data.discord_user.avatar}.png?size=128`
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -82,11 +98,11 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
           whileTap={{ scale: 0.9 }}
         >
           <motion.img
-            src={profileImg}
+            src={discordAvatar || profileImg}
             alt="System Controls"
             className={`nav-avatar ${isMusicPlaying ? 'playing' : ''}`}
+            onError={e => { e.target.src = profileImg; }}
             animate={{
-              filter: 'grayscale(100%)',
               rotate: isMusicPlaying ? 360 : 0,
             }}
             transition={{
