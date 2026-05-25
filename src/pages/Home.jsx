@@ -1,31 +1,15 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Sphere, MeshDistortMaterial, Float } from '@react-three/drei';
 import { Link } from 'react-router-dom';
 import profileImg from '../assets/profile.png';
 import PageTransition from '../components/PageTransition';
 import { ShieldAlert, BrainCircuit, ShieldCheck, Zap, Search, Fingerprint } from 'lucide-react';
 import './Home.css';
 
-const DigitalCore = ({ scale = 2.4, color = "#00ff41" }) => {
-  return (
-    <Float speed={0.8} rotationIntensity={0.5} floatIntensity={1}>
-      <Sphere args={[1, 100, 200]} scale={scale}>
-        <MeshDistortMaterial
-          color={color}
-          attach="material"
-          distort={0.4}
-          speed={1.5}
-          roughness={0}
-          emissive={color}
-          emissiveIntensity={1.2}
-          wireframe
-        />
-      </Sphere>
-    </Float>
-  );
-};
+// Lazy-load Three.js — only downloaded when Home page is visited
+const ThreeCanvas = lazy(() =>
+  import('./HomeThreeCanvas')
+);
 
 const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
 
@@ -194,17 +178,9 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
         </div>
 
         <div className="hero-visual">
-          <Canvas
-            camera={{ position: [0, 0, 5], fov: 75 }}
-            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'none' }}
-          >
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} color={themeColor} />
-            <Suspense fallback={null}>
-              <DigitalCore scale={coreScale} color={themeColor} />
-            </Suspense>
-            <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
-          </Canvas>
+          <Suspense fallback={null}>
+            <ThreeCanvas scale={coreScale} color={themeColor} />
+          </Suspense>
           <div className="profile-container">
             <AnimatePresence mode="wait">
               {!isSpidoMode ? (

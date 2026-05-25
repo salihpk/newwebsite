@@ -7,7 +7,6 @@ import GamingHub from './pages/GamingHub';
 import Contact from './pages/Contact';
 
 import Navbar from './components/Navbar';
-import TerminalOverlay from './components/TerminalOverlay';
 import ScrollProgress from './components/ScrollProgress';
 import BootLoader from './components/BootLoader';
 

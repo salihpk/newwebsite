@@ -111,9 +111,20 @@ const CyberBackground = () => {
 
         animate();
 
+        // Pause animation when tab is hidden to save CPU
+        const handleVisibility = () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationFrameId);
+            } else {
+                animate();
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibility);
+
         return () => {
             window.removeEventListener('resize', resizeCanvas);
             cancelAnimationFrame(animationFrameId);
+            document.removeEventListener('visibilitychange', handleVisibility);
             themeObserver.disconnect();
         };
     }, []);
