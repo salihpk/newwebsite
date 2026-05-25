@@ -8,9 +8,25 @@ import './Home.css';
 
 const ThreeCanvas = lazy(() => import('./HomeThreeCanvas'));
 
+const DISCORD_USER_ID = '577248513654784020';
+
 const Home = () => {
   const [coreScale, setCoreScale] = useState(2.4);
   const [themeColor, setThemeColor] = useState('#00ff41');
+  const [discordAvatar, setDiscordAvatar] = useState(null);
+
+  useEffect(() => {
+    fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(json => {
+        if (json?.success && json.data.discord_user.avatar) {
+          setDiscordAvatar(
+            `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${json.data.discord_user.avatar}.png?size=512`
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const updateThemeColor = () => {
@@ -97,12 +113,13 @@ const Home = () => {
           </Suspense>
           <div className="profile-container">
             <motion.img
-              src={profileImg}
+              src={discordAvatar || profileImg}
               alt="Muhammad Salih P.K."
               className="profile-img"
-              initial={{ opacity: 0, scale: 0.8, filter: 'grayscale(100%)' }}
-              animate={{ opacity: 1, scale: 1, filter: 'grayscale(100%)' }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, ease: 'easeInOut' }}
+              onError={e => { e.target.src = profileImg; }}
             />
             <div className="profile-shader"></div>
           </div>
