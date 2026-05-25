@@ -168,8 +168,10 @@
     border: 1px solid rgba(255, 255, 255, 0.055);
     border-radius: 16px;
     transition: box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Guarantee identical width behaviour on every card */
+    box-sizing: border-box;
+    width: 100%;
     min-width: 0;
-    max-width: 100%;
 }
 
 .glass-card:hover {
@@ -544,8 +546,9 @@
 }
 
 /* ── Library panel (right column) ───────────────────── */
+/* Use same horizontal rhythm (20px) as the status-panel cards */
 .library-panel {
-    padding: 26px 26px 30px;
+    padding: 20px 20px 24px;
 }
 
 .library-header {
@@ -675,10 +678,14 @@
 }
 
 .steam-card-footer {
-    padding: 8px 10px 10px;
+    /* Fixed height footer keeps every card the same total size */
+    height: 46px;
+    padding: 7px 10px 8px;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    justify-content: center;
+    gap: 3px;
+    flex-shrink: 0;
 }
 
 .steam-name {
@@ -693,175 +700,112 @@
 .steam-time {
     font-size: 0.58rem;
     color: var(--text-dim);
+    white-space: nowrap;
 }
 
 /* ── Responsive ─────────────────────────────────────── */
 
-/* Wide desktop: 4-col Steam grid */
+/* 1300 px +  →  wide desktop: 4-col library, wider left rail */
 @media (min-width: 1300px) {
     .dashboard-layout {
         grid-template-columns: 330px 1fr;
     }
-
     .steam-grid {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
-/* Standard desktop: 3-col Steam grid (default above) */
-@media (max-width: 1140px) {
+/* 961 – 1299 px  →  standard desktop: 3-col library */
+/* (default above, no override needed) */
+
+/* 821 – 960 px  →  narrow desktop / landscape tablet */
+@media (max-width: 960px) {
+    .dashboard-layout {
+        grid-template-columns: 280px 1fr;
+        gap: 16px;
+    }
     .steam-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 960px) {
-    .dashboard-layout {
-        grid-template-columns: 290px 1fr;
-        gap: 18px;
-    }
-}
-
+/* ≤ 820 px  →  single-column stacked layout */
 @media (max-width: 820px) {
     .dashboard-layout {
         grid-template-columns: 1fr;
+        gap: 14px;
     }
 
-    /* Disable sticky on mobile — no need, stacks vertically */
+    /* Disable sticky — panel stacks vertically, no need to fix it */
     .status-panel {
         position: static;
     }
 
+    /* All glass-cards are already width:100%; just make sure padding
+       is uniform so every card appears the same width on-screen */
+    .operator-body        { padding: 18px 18px 14px; }
+    .operator-actions     { padding: 0 18px 18px; }
+    .card-label-row       { padding: 13px 18px 11px; }
+    .stat-row             { padding: 12px 18px; }
+    .library-panel        { padding: 18px 18px 22px; }
+
     .steam-grid {
         grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
     }
 
-    .arena-name {
-        font-size: 3.5rem;
-    }
+    .arena-name { font-size: 3.5rem; }
 }
 
+/* ≤ 640 px  →  large phone / small tablet */
 @media (max-width: 640px) {
     .steam-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
-
-    .library-panel {
-        padding: 20px 18px 24px;
-    }
-
-    .arena-name {
-        font-size: 2.8rem;
-        letter-spacing: 8px;
-    }
-
-    .arena-prefix {
-        font-size: 0.7rem;
-    }
+    .arena-name   { font-size: 2.8rem; letter-spacing: 8px; }
+    .arena-prefix { font-size: 0.7rem; }
 }
 
+/* ≤ 480 px  →  standard phone */
 @media (max-width: 480px) {
-    .gaming-page {
-        padding-bottom: 80px;
-        overflow-x: hidden;
-    }
+    .gaming-page  { padding-bottom: 80px; overflow-x: hidden; }
+    .gaming-hero  { margin-bottom: 36px; }
 
-    .gaming-hero {
-        margin-bottom: 36px;
-    }
+    .arena-name   { font-size: 2.1rem; letter-spacing: 5px; }
+    .arena-prefix { font-size: 0.6rem; letter-spacing: 3px; }
 
-    .arena-name {
-        font-size: 2.1rem;
-        letter-spacing: 6px;
-    }
+    /* Uniform 16px horizontal padding on every card */
+    .operator-body        { gap: 12px; padding: 14px 16px 12px; }
+    .operator-actions     { padding: 0 16px 16px; gap: 8px; }
+    .card-label-row       { padding: 11px 16px 10px; }
+    .stat-row             { padding: 10px 16px; gap: 8px; }
+    .lf-meta              { padding: 10px 16px 14px; }
+    .lf-spotify-body      { padding: 12px 16px; }
+    .library-panel        { padding: 14px 16px 18px; }
 
-    .arena-prefix {
-        font-size: 0.6rem;
-        letter-spacing: 4px;
-    }
+    /* Keep avatar proportional */
+    .avatar-wrap          { width: 56px; height: 56px; }
+    .operator-name        { font-size: 0.88rem; }
 
-    /* Operator card */
-    .operator-body {
-        gap: 12px;
-        padding: 16px 16px 12px;
-    }
-
-    .avatar-wrap {
-        width: 58px;
-        height: 58px;
-    }
-
-    .operator-name {
-        font-size: 0.9rem;
-    }
-
-    .operator-actions {
-        flex-direction: row;
-        align-items: center;
-        padding: 0 16px 16px;
-        gap: 10px;
-    }
-
+    /* Button fits within card */
     .operator-actions .cyber-btn {
         flex: 1;
-        font-size: 0.65rem;
-        padding: 9px 10px;
-        text-align: center;
+        font-size: 0.64rem;
+        padding: 8px 10px;
         justify-content: center;
     }
+    .subtle-link { font-size: 0.54rem; flex-shrink: 0; }
 
-    .subtle-link {
-        font-size: 0.55rem;
-        flex-shrink: 0;
-    }
-
-    /* Stat rows */
-    .stat-row {
-        padding: 11px 16px;
-        gap: 8px;
-    }
-
-    .stat-row-label {
-        min-width: 58px;
-        font-size: 0.6rem;
-    }
-
-    .stat-row-value {
-        font-size: 0.6rem;
-        max-width: 50%;
-    }
-
-    /* Live feed */
-    .card-label-row {
-        padding: 12px 16px 10px;
-    }
-
-    .lf-meta {
-        padding: 10px 14px 14px;
-    }
-
-    .lf-spotify-body {
-        padding: 12px 14px;
-    }
+    /* Stat text */
+    .stat-row-label { min-width: 56px; font-size: 0.59rem; }
+    .stat-row-value { font-size: 0.59rem; max-width: 52%; }
 
     /* Library */
-    .library-panel {
-        padding: 16px 14px 20px;
-    }
+    .library-count-pill   { font-size: 0.54rem; padding: 2px 8px; flex-shrink: 0; }
+    .library-header       { margin-bottom: 14px; }
 
-    .library-count-pill {
-        font-size: 0.55rem;
-        padding: 2px 8px;
-        flex-shrink: 0;
-    }
-
-    .steam-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
-
-    .steam-name {
-        font-size: 0.62rem;
-    }
+    .steam-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .steam-name { font-size: 0.62rem; }
+    .steam-card-footer { height: 42px; padding: 6px 8px 7px; }
 }

@@ -187,7 +187,7 @@ function App() {
                                     />
                                     <Route path="/projects" element={<Projects />} />
                                     <Route path="/gaming" element={<GamingHub />} />
-                                                    <Route path="/contact" element={<Contact />} />
+                                    <Route path="/contact" element={<Contact />} />
                                 </Routes>
                             </AnimatePresence>
                         </main>
