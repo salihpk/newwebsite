@@ -24,58 +24,27 @@ const PLANETS = [
 const randomPlanet = () => PLANETS[Math.floor(Math.random() * PLANETS.length)];
 
 function App() {
-    const [isBooting, setIsBooting] = useState(() => {
-        return !sessionStorage.getItem('booted');
-    });
-    const [ip, setIp] = useState('FETCHING...');
+    const [isBooting, setIsBooting] = useState(() => !sessionStorage.getItem('booted'));
     const [locationData] = useState(randomPlanet);
     const [isMusicPlaying, setIsMusicPlaying] = useState(false);
     const [showMatrix, setShowMatrix] = useState(false);
     const [vpnWarning, setVpnWarning] = useState(false);
     const [vpnDismissed, setVpnDismissed] = useState(false);
     const [vpnInfo, setVpnInfo] = useState(null);
-    const [isSpidoMode, setIsSpidoMode] = useState(false);
-    const [discordAvatar, setDiscordAvatar] = useState(null);
     const routerLocation = useLocation();
-    const DISCORD_USER_ID = "577248513654784020";
 
-    const toggleMusic = () => setIsMusicPlaying(!isMusicPlaying);
-
-    useEffect(() => {
-        const fetchDiscordAvatar = async () => {
-            try {
-                const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
-                if (res.ok) {
-                    const json = await res.json();
-                    if (json.success && json.data.discord_user.avatar) {
-                        setDiscordAvatar(
-                            `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${json.data.discord_user.avatar}.png?size=512`
-                        );
-                    }
-                }
-            } catch (e) {
-                console.warn('Lanyard API error:', e);
-            }
-        };
-        fetchDiscordAvatar();
-    }, []);
+    const toggleMusic = () => setIsMusicPlaying(p => !p);
 
     useEffect(() => {
         const detectVPN = async () => {
             try {
-                // Using ipapi.co which is more reliable for free lookups
                 const res = await fetch('https://ipapi.co/json/');
                 const data = await res.json();
-
                 if (data.ip) {
-                    setIp(data.ip);
-
-                    // Basic detection for free tier providers
                     const isVPN = data.security?.is_vpn || data.security?.is_proxy ||
                         data.org?.toLowerCase().includes('vpn') ||
                         data.org?.toLowerCase().includes('proxy') ||
                         data.org?.toLowerCase().includes('hosting');
-
                     if (isVPN) {
                         setVpnWarning(true);
                         setVpnInfo({
@@ -85,12 +54,9 @@ function App() {
                             country: data.country_name || 'Unknown',
                         });
                     }
-                } else {
-                    setIp('UNKNOWN');
                 }
-            } catch (error) {
-                console.error('IP/VPN Detection failed:', error);
-                setIp('UNKNOWN');
+            } catch {
+                // silent — VPN detection is best-effort
             }
         };
         detectVPN();
@@ -99,34 +65,26 @@ function App() {
     useEffect(() => {
         let keySequence = '';
         const secretCode = 'matrix';
-
         const handleKeyPress = (e) => {
             keySequence += e.key.toLowerCase();
-            if (keySequence.length > secretCode.length) {
+            if (keySequence.length > secretCode.length)
                 keySequence = keySequence.slice(-secretCode.length);
-            }
             if (keySequence === secretCode) {
                 setShowMatrix(true);
                 keySequence = '';
             }
         };
-
         window.addEventListener('keypress', handleKeyPress);
         return () => window.removeEventListener('keypress', handleKeyPress);
     }, []);
 
-    // Delay scroll-to-top by the exit animation duration (220 ms)
-    // so the outgoing page fades out before the position jumps
     useEffect(() => {
         const t = setTimeout(() => {
-            // Temporarily disable smooth scroll behavior to prevent smooth-scroll jumps/stuttering during page transition
-            const originalScrollBehavior = document.documentElement.style.scrollBehavior;
+            const orig = document.documentElement.style.scrollBehavior;
             document.documentElement.style.scrollBehavior = 'auto';
             window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-            
-            // Restore smooth scrolling after a small frame delay
             requestAnimationFrame(() => {
-                document.documentElement.style.scrollBehavior = originalScrollBehavior;
+                document.documentElement.style.scrollBehavior = orig;
             });
         }, 220);
         return () => clearTimeout(t);
@@ -166,25 +124,12 @@ function App() {
                             )}
                         </AnimatePresence>
 
-                        <Navbar
-                            toggleMusic={toggleMusic}
-                            isMusicPlaying={isMusicPlaying}
-                            isSpidoMode={isSpidoMode}
-                            discordAvatar={discordAvatar}
-                        />
+                        <Navbar toggleMusic={toggleMusic} isMusicPlaying={isMusicPlaying} />
+
                         <main>
                             <AnimatePresence mode="wait">
                                 <Routes location={routerLocation} key={routerLocation.pathname}>
-                                    <Route
-                                        path="/"
-                                        element={
-                                            <Home
-                                                isSpidoMode={isSpidoMode}
-                                                setIsSpidoMode={setIsSpidoMode}
-                                                discordAvatar={discordAvatar}
-                                            />
-                                        }
-                                    />
+                                    <Route path="/" element={<Home />} />
                                     <Route path="/projects" element={<Projects />} />
                                     <Route path="/gaming" element={<GamingHub />} />
                                     <Route path="/contact" element={<Contact />} />
@@ -196,8 +141,8 @@ function App() {
                             <div className="mono text-xs opacity-50 footer-stats">
                                 <span className="footer-stat-item"><ShieldCheck size={10} /> SYSTEM: STABLE</span>
                                 <span className="separator">|</span>
-                                <span className={`footer-stat-item ${vpnWarning ? "text-warn blink" : ""}`}>
-                                    <Cpu size={10} /> GATEWAY: {vpnWarning ? `UNSECURE_${vpnInfo?.type || 'VPN'}` : "SECURE"}
+                                <span className={`footer-stat-item ${vpnWarning ? 'text-warn blink' : ''}`}>
+                                    <Cpu size={10} /> GATEWAY: {vpnWarning ? `UNSECURE_${vpnInfo?.type || 'VPN'}` : 'SECURE'}
                                 </span>
                                 <span className="separator">|</span>
                                 <span className="footer-stat-item"><MapPin size={10} /> LOC: {locationData.toUpperCase()}</span>
@@ -223,9 +168,7 @@ function App() {
                     border-radius: 4px;
                     box-shadow: 0 4px 20px rgba(0,0,0,0.5);
                 }
-                .vpn-toast-content {
-                    display: flex; align-items: center; gap: 10px;
-                }
+                .vpn-toast-content { display: flex; align-items: center; gap: 10px; }
                 .close-toast {
                     background: none; border: none; color: #ff003c;
                     font-size: 1rem; cursor: pointer; padding: 0 0 0 5px;
@@ -234,20 +177,15 @@ function App() {
                 .close-toast:hover { opacity: 1; }
                 .text-warn { color: #ff003c; text-shadow: 0 0 5px rgba(255,0,60,0.5); }
                 .blink { animation: vpnBlink 1.5s infinite; }
-                @keyframes vpnBlink {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.4; }
-                }
+                @keyframes vpnBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
                 .footer-stats {
                     display: flex; align-items: center; justify-content: center; gap: 10px;
                     flex-wrap: wrap; padding: 0 10px;
                 }
-                .footer-stat-item {
-                    display: flex; align-items: center; gap: 5px;
-                }
+                .footer-stat-item { display: flex; align-items: center; gap: 5px; }
                 .footer-stats span { transition: all 0.3s ease; }
             `}</style>
-        </div >
+        </div>
     );
 }
 

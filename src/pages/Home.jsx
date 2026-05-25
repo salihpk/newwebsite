@@ -1,131 +1,70 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import profileImg from '../assets/profile.png';
 import PageTransition from '../components/PageTransition';
-import { ShieldAlert, BrainCircuit, ShieldCheck, Zap, Search, Fingerprint } from 'lucide-react';
+import { ShieldAlert, BrainCircuit, ShieldCheck } from 'lucide-react';
 import './Home.css';
 
-// Lazy-load Three.js — only downloaded when Home page is visited
-const ThreeCanvas = lazy(() =>
-  import('./HomeThreeCanvas')
-);
+const ThreeCanvas = lazy(() => import('./HomeThreeCanvas'));
 
-const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
-
+const Home = () => {
   const [coreScale, setCoreScale] = useState(2.4);
-  const [themeColor, setThemeColor] = useState("#00ff41");
-
-
-
+  const [themeColor, setThemeColor] = useState('#00ff41');
 
   useEffect(() => {
     const updateThemeColor = () => {
-      if (isSpidoMode) {
-        setThemeColor("#ff003c");
-        return;
-      }
       const theme = document.documentElement.getAttribute('data-theme');
       setThemeColor(theme === 'light' ? '#2563eb' : '#00ff41');
     };
-
     updateThemeColor();
-
     const observer = new MutationObserver(updateThemeColor);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
     return () => observer.disconnect();
-  }, [isSpidoMode]);
-
-  useEffect(() => {
-    if (isSpidoMode) {
-      document.body.classList.add('spido-mode');
-    } else {
-      document.body.classList.remove('spido-mode');
-    }
-  }, [isSpidoMode]);
-
-
-
-
-
-
-
-
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setCoreScale(2.8); // Further decreased for mobile visibility
-      } else if (window.innerWidth < 1024) {
-        setCoreScale(3.2);
-      } else {
-        setCoreScale(2.4);
-      }
+      if (window.innerWidth < 768) setCoreScale(2.8);
+      else if (window.innerWidth < 1024) setCoreScale(3.2);
+      else setCoreScale(2.4);
     };
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-
-
   const triggerGlitch = (target, targetText) => {
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let iteration = 0;
     if (target.interval) clearInterval(target.interval);
-
     target.interval = setInterval(() => {
       target.innerText = targetText
-        .split("")
+        .split('')
         .map((letter, index) => {
-          if (index < iteration) {
-            return targetText[index];
-          }
+          if (index < iteration) return targetText[index];
           return letters[Math.floor(Math.random() * 26)];
         })
-        .join("");
-
-      if (iteration >= targetText.length) {
-        clearInterval(target.interval);
-      }
-
+        .join('');
+      if (iteration >= targetText.length) clearInterval(target.interval);
       iteration += 1 / 3;
     }, 30);
   };
 
   return (
     <PageTransition className="page-container home-page">
-
-
       <div className="hero-section">
         <div className="hero-content">
-
           <motion.h1
             className="glitch-text"
-            data-value={isSpidoMode ? "SPIDO" : "MUHAMMED SALIH"}
+            data-value="MUHAMMED SALIH"
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            onClick={(event) => {
-              const newMode = !isSpidoMode;
-              setIsSpidoMode(newMode);
-              triggerGlitch(event.target, newMode ? "SPIDO" : "MUHAMMED SALIH");
-              if (newMode) {
-                const sfx = new Audio('/newsound.wav');
-                sfx.volume = 0.6;
-                sfx.play().catch(() => { });
-              }
-            }}
-            onMouseEnter={(event) => {
-              if (!isSpidoMode) triggerGlitch(event.target, "SPIDO");
-            }}
-            onMouseLeave={(event) => {
-              if (!isSpidoMode) triggerGlitch(event.target, "MUHAMMED SALIH");
-            }}
-            style={{ cursor: 'pointer' }}
+            onMouseEnter={(e) => triggerGlitch(e.target, 'MUHAMMED SALIH')}
+            onMouseLeave={(e) => triggerGlitch(e.target, 'MUHAMMED SALIH')}
           >
-            {isSpidoMode ? "SPIDO" : "MUHAMMED SALIH"}
+            MUHAMMED SALIH
           </motion.h1>
           <motion.p
             className="hero-subtext"
@@ -140,40 +79,15 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
               <span className="btn-glitch"></span>
               VIEW_PROJECTS()
             </Link>
-            <AnimatePresence mode="wait">
-              {!isSpidoMode ? (
-                <motion.a
-                  key="cv-btn"
-                  href="https://drive.google.com/file/d/1gcZ111j45Flnmv1ONI9QW-4nryojKrH4/view?usp=sharing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cyber-btn secondary"
-                  style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  DOWNLOAD_CV
-                </motion.a>
-              ) : (
-                <motion.div
-                  key="arena-btn"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Link
-                    to="/gaming"
-                    className="cyber-btn"
-                    style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                  >
-                    ENTER_ARENA
-                  </Link>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <a
+              href="https://drive.google.com/file/d/1gcZ111j45Flnmv1ONI9QW-4nryojKrH4/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cyber-btn secondary"
+              style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              DOWNLOAD_CV
+            </a>
           </div>
         </div>
 
@@ -182,31 +96,14 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
             <ThreeCanvas scale={coreScale} color={themeColor} />
           </Suspense>
           <div className="profile-container">
-            <AnimatePresence mode="wait">
-              {!isSpidoMode ? (
-                <motion.img
-                  key="normal-profile"
-                  src={profileImg}
-                  alt="Muhammad Salih P.K."
-                  className="profile-img"
-                  initial={{ opacity: 0, scale: 0.8, filter: 'grayscale(100%)' }}
-                  animate={{ opacity: 1, scale: 1, filter: 'grayscale(100%)' }}
-                  exit={{ opacity: 0, scale: 1.1, filter: 'grayscale(0%)' }}
-                  transition={{ duration: 1.2, ease: "easeInOut" }}
-                />
-              ) : (
-                <motion.img
-                  key="spido-profile"
-                  src={discordAvatar || profileImg}
-                  alt="SPIDO"
-                  className="profile-img spido-avatar"
-                  initial={{ opacity: 0, scale: 1.2, filter: 'grayscale(0%)' }}
-                  animate={{ opacity: 1, scale: 1, filter: 'grayscale(0%)' }}
-                  exit={{ opacity: 0, scale: 0.9, filter: 'grayscale(100%)' }}
-                  transition={{ duration: 1.2, ease: "easeInOut" }}
-                />
-              )}
-            </AnimatePresence>
+            <motion.img
+              src={profileImg}
+              alt="Muhammad Salih P.K."
+              className="profile-img"
+              initial={{ opacity: 0, scale: 0.8, filter: 'grayscale(100%)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'grayscale(100%)' }}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
+            />
             <div className="profile-shader"></div>
           </div>
         </div>
@@ -217,16 +114,12 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
           className="info-card"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "0px 0px -50px 0px" }}
+          viewport={{ once: true, margin: '0px 0px -50px 0px' }}
           transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           whileHover={{ scale: 1.02, y: -8 }}
         >
           <div className="card-icon-header">
-            <motion.div
-              className="desktop-icon"
-              animate={{ rotate: [0, 5, -5, 0] }}
-              transition={{ repeat: Infinity, duration: 4 }}
-            >
+            <motion.div className="desktop-icon" animate={{ rotate: [0, 5, -5, 0] }} transition={{ repeat: Infinity, duration: 4 }}>
               <ShieldAlert className="card-icon" size={24} />
             </motion.div>
             <h3 className="mono">01_VULN_RESEARCH</h3>
@@ -237,16 +130,12 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
           className="info-card"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "0px 0px -50px 0px" }}
+          viewport={{ once: true, margin: '0px 0px -50px 0px' }}
           transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           whileHover={{ scale: 1.02, y: -8 }}
         >
           <div className="card-icon-header">
-            <motion.div
-              className="desktop-icon"
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ repeat: Infinity, duration: 3 }}
-            >
+            <motion.div className="desktop-icon" animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 3 }}>
               <BrainCircuit className="card-icon" size={24} />
             </motion.div>
             <h3 className="mono">02_AI_LOGIC</h3>
@@ -257,16 +146,12 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
           className="info-card"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "0px 0px -50px 0px" }}
+          viewport={{ once: true, margin: '0px 0px -50px 0px' }}
           transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           whileHover={{ scale: 1.02, y: -8 }}
         >
           <div className="card-icon-header">
-            <motion.div
-              className="desktop-icon"
-              animate={{ y: [0, -4, 0] }}
-              transition={{ repeat: Infinity, duration: 2.5 }}
-            >
+            <motion.div className="desktop-icon" animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 2.5 }}>
               <ShieldCheck className="card-icon" size={24} />
             </motion.div>
             <h3 className="mono">03_SECURE_BUILD</h3>
@@ -275,7 +160,6 @@ const Home = ({ isSpidoMode, setIsSpidoMode, discordAvatar }) => {
         </motion.div>
       </section>
     </PageTransition>
-
   );
 };
 

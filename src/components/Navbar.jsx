@@ -5,7 +5,7 @@ import { Home, Layers, Gamepad2, Mail, Menu } from 'lucide-react';
 import profileImg from '../assets/profile.png';
 import './Navbar.css';
 
-const Navbar = ({ toggleMusic, isMusicPlaying, isSpidoMode, discordAvatar }) => {
+const Navbar = ({ toggleMusic, isMusicPlaying }) => {
   const location = useLocation();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 
@@ -36,10 +36,8 @@ const Navbar = ({ toggleMusic, isMusicPlaying, isSpidoMode, discordAvatar }) => 
   };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
@@ -79,66 +77,30 @@ const Navbar = ({ toggleMusic, isMusicPlaying, isSpidoMode, discordAvatar }) => 
               isLongPressActive.current = true;
             }, 600);
           }}
-          onPointerUp={() => {
-            clearTimeout(pressTimerRef.current);
-          }}
-          onPointerLeave={() => {
-            clearTimeout(pressTimerRef.current);
-          }}
+          onPointerUp={() => clearTimeout(pressTimerRef.current)}
+          onPointerLeave={() => clearTimeout(pressTimerRef.current)}
           whileTap={{ scale: 0.9 }}
         >
-          <AnimatePresence mode="wait">
-            {!isSpidoMode ? (
-              <motion.img
-                key="normal-nav"
-                src={profileImg}
-                alt="System Controls"
-                className={`nav-avatar ${isMusicPlaying ? 'playing' : ''}`}
-                initial={{ opacity: 0, scale: 0.8, filter: 'grayscale(100%)' }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  filter: 'grayscale(100%)',
-                  rotate: isMusicPlaying ? 360 : 0
-                }}
-                exit={{ opacity: 0, scale: 1.1, filter: 'grayscale(0%)' }}
-                transition={{
-                  rotate: isMusicPlaying ? { duration: 4, repeat: Infinity, ease: "linear" } : { duration: 0.5 },
-                  opacity: { duration: 0.3 },
-                  scale: { duration: 0.3 }
-                }}
-              />
-            ) : (
-              <motion.img
-                key="spido-nav"
-                src={discordAvatar || profileImg}
-                alt="SPIDO"
-                className={`nav-avatar ${isMusicPlaying ? 'playing' : ''} spido-nav-avatar`}
-                initial={{ opacity: 0, scale: 1.2, filter: 'grayscale(0%)' }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  filter: 'grayscale(0%)',
-                  rotate: isMusicPlaying ? 360 : 0
-                }}
-                exit={{ opacity: 0, scale: 0.9, filter: 'grayscale(100%)' }}
-                transition={{
-                  rotate: isMusicPlaying ? { duration: 4, repeat: Infinity, ease: "linear" } : { duration: 0.5 },
-                  opacity: { duration: 0.3 },
-                  scale: { duration: 0.3 }
-                }}
-              />
-            )}
-          </AnimatePresence>
+          <motion.img
+            src={profileImg}
+            alt="System Controls"
+            className={`nav-avatar ${isMusicPlaying ? 'playing' : ''}`}
+            animate={{
+              filter: 'grayscale(100%)',
+              rotate: isMusicPlaying ? 360 : 0,
+            }}
+            transition={{
+              rotate: isMusicPlaying ? { duration: 4, repeat: Infinity, ease: 'linear' } : { duration: 0.5 },
+            }}
+          />
           <span className={`mono status-indicator ${isMusicPlaying ? 'active' : ''}`}></span>
           <div className="theme-tooltip mono">
-            <span className="desktop-info">{isMusicPlaying ? "L: THEME | R: PAUSE" : "L: THEME | R: PLAY"}</span>
-            <span className="mobile-info">{isMusicPlaying ? "TAP: THEME | HOLD: PAUSE" : "TAP: THEME | HOLD: PLAY"}</span>
+            <span className="desktop-info">{isMusicPlaying ? 'L: THEME | R: PAUSE' : 'L: THEME | R: PLAY'}</span>
+            <span className="mobile-info">{isMusicPlaying ? 'TAP: THEME | HOLD: PAUSE' : 'TAP: THEME | HOLD: PLAY'}</span>
           </div>
         </motion.div>
       </div>
 
-      {/* Mobile Menu Toggle */}
       <div className="mobile-toggle" onClick={toggleMenu}>
         <div className={`hamburger ${isMenuOpen ? 'open' : ''}`}>
           <span></span>
@@ -147,7 +109,6 @@ const Navbar = ({ toggleMusic, isMusicPlaying, isSpidoMode, discordAvatar }) => 
         </div>
       </div>
 
-      {/* Desktop Menu */}
       <div className="nav-links desktop-only">
         {navItems.map((item) => (
           <Link
@@ -157,17 +118,12 @@ const Navbar = ({ toggleMusic, isMusicPlaying, isSpidoMode, discordAvatar }) => 
           >
             {item.name}
             {location.pathname === item.path && (
-              <motion.div
-                layoutId="nav-underline"
-                className="nav-underline"
-                initial={false}
-              />
+              <motion.div layoutId="nav-underline" className="nav-underline" initial={false} />
             )}
           </Link>
         ))}
       </div>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -177,24 +133,11 @@ const Navbar = ({ toggleMusic, isMusicPlaying, isSpidoMode, discordAvatar }) => 
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             onClick={(e) => {
-              // Close menu when clicking the overlay background
-              if (e.target.classList.contains('mobile-menu-overlay')) {
-                setIsMenuOpen(false);
-              }
+              if (e.target.classList.contains('mobile-menu-overlay')) setIsMenuOpen(false);
             }}
           >
             <div className="mobile-menu-bg-graphic">
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={isSpidoMode ? 'spido-bg' : 'normal-bg'}
-                  src={isSpidoMode ? (discordAvatar || profileImg) : profileImg}
-                  alt=""
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                />
-              </AnimatePresence>
+              <img src={profileImg} alt="" style={{ opacity: 0.1 }} />
             </div>
 
             <div className="mobile-menu-content">
@@ -228,10 +171,7 @@ const Navbar = ({ toggleMusic, isMusicPlaying, isSpidoMode, discordAvatar }) => 
                     <span className="item-name">{item.name}</span>
                     <div className="hover-indicator"></div>
                     {location.pathname === item.path && (
-                      <motion.div
-                        className="active-badge mono"
-                        layoutId="active-badge"
-                      >
+                      <motion.div className="active-badge mono" layoutId="active-badge">
                         ACTIVE
                       </motion.div>
                     )}

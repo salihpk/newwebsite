@@ -225,12 +225,7 @@
     transition: filter 1.2s ease;
 }
 
-.spido-avatar {
-    filter: grayscale(0%) !important;
-    border-radius: 50%;
-}
-
-.profile-container:hover .profile-img:not(.spido-avatar) {
+.profile-container:hover .profile-img {
     filter: grayscale(0%);
 }
 
