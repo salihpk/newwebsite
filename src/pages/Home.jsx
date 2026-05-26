@@ -112,12 +112,13 @@ const Home = () => {
           </Suspense>
           <div className="profile-container">
             <motion.img
-              src={discordAvatar}
+              src={discordAvatar || '/profile2.png'}
               alt="Muhammad Salih P.K."
               className="profile-img"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, ease: 'easeInOut' }}
+              onError={e => { e.target.src = '/profile2.png'; }}
             />
             <div className="profile-shader"></div>
           </div>

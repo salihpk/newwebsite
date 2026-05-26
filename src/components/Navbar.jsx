@@ -97,9 +97,10 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
           whileTap={{ scale: 0.9 }}
         >
           <motion.img
-            src={discordAvatar}
+            src={discordAvatar || '/profile2.png'}
             alt="System Controls"
             className={`nav-avatar ${isMusicPlaying ? 'playing' : ''}`}
+            onError={e => { e.target.src = '/profile2.png'; }}
             animate={{
               rotate: isMusicPlaying ? 360 : 0,
             }}
@@ -151,7 +152,7 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
             }}
           >
             <div className="mobile-menu-bg-graphic">
-              <img src={discordAvatar} alt="" style={{ opacity: 0.1 }} />
+              <img src={discordAvatar || '/profile2.png'} alt="" style={{ opacity: 0.1 }} />
             </div>
 
             <div className="mobile-menu-content">
