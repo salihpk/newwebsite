@@ -115,6 +115,43 @@ const GamingHub = () => {
         <PageTransition className="page-container gaming-page">
             <div className="gaming-layout">
 
+                {/* ── Hero ── */}
+                <motion.div
+                    className="gaming-hero"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.6 }}
+                >
+                    <div className="arena-title-wrap">
+                        <motion.div
+                            className="arena-prefix-row"
+                            initial={{ opacity: 0, x: -30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                        >
+                            <span className="arena-prefix mono">SPIDO://</span>
+                            <span className="arena-cursor mono">_</span>
+                        </motion.div>
+                        <div className="arena-name-wrap">
+                            <motion.h1
+                                className="mono arena-name"
+                                data-text="ARENA"
+                                initial={{ opacity: 0, y: 40, scale: 0.85 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                                ARENA
+                            </motion.h1>
+                            <motion.div
+                                className="arena-scan-line"
+                                initial={{ scaleX: 0, opacity: 0.8 }}
+                                animate={{ scaleX: 1, opacity: 0 }}
+                                transition={{ duration: 0.9, delay: 0.5 }}
+                            />
+                        </div>
+                    </div>
+                </motion.div>
+
                 {/* ── Profile Banner ── */}
                 <motion.div
                     className="profile-banner"

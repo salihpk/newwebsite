@@ -6,6 +6,133 @@
     padding-bottom: 100px;
 }
 
+/* ── Hero ───────────────────────────────────────────── */
+.gaming-hero {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.arena-title-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    line-height: 1;
+}
+
+.arena-prefix-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.8;
+}
+
+.arena-prefix {
+    font-size: 0.85rem;
+    color: #fff;
+    letter-spacing: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    opacity: 0.9;
+    text-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.3);
+    transition: all 0.3s ease;
+}
+
+[data-theme='light'] .arena-prefix {
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+    opacity: 1;
+}
+
+.arena-cursor {
+    font-size: 1rem;
+    color: var(--primary-color);
+    animation: cursorBlink 1.2s step-end infinite;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+.arena-name-wrap {
+    position: relative;
+    padding: 10px 0;
+}
+
+.arena-name {
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: 15px;
+    color: #fff;
+    margin: 0;
+    position: relative;
+    text-transform: uppercase;
+    text-shadow:
+        0 0 10px rgba(var(--primary-color-rgb), 0.4),
+        0 0 30px rgba(var(--primary-color-rgb), 0.15);
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+[data-theme='light'] .arena-name {
+    color: #1e293b;
+    text-shadow:
+        0 0 15px rgba(37, 99, 235, 0.25),
+        0 0 40px rgba(37, 99, 235, 0.1);
+}
+
+[data-theme='light'] .arena-prefix,
+[data-theme='light'] .arena-cursor {
+    color: var(--primary-color);
+    background-color: transparent;
+    opacity: 1;
+}
+
+[data-theme='light'] .arena-scan-line {
+    background-color: var(--primary-color);
+    opacity: 0.9;
+}
+
+.arena-name::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--primary-color);
+    clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+    animation: lightSweep 4s ease-in-out infinite;
+    opacity: 0.5;
+    filter: blur(1px);
+    z-index: 1;
+}
+
+[data-theme='light'] .arena-name::after {
+    color: #3b82f6;
+    opacity: 0.3;
+}
+
+@keyframes lightSweep {
+    0%        { clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%); }
+    5%        { clip-path: polygon(0 0, 30% 0, 0% 100%, -30% 100%); }
+    15%       { clip-path: polygon(70% 0, 100% 0, 130% 100%, 100% 100%); }
+    20%, 100% { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); }
+}
+
+.arena-scan-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--primary-color);
+    box-shadow: 0 0 15px var(--primary-glow);
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
 /* ── Outer layout wrapper ───────────────────────────── */
 .gaming-layout {
     display: flex;
@@ -1107,6 +1234,8 @@
         padding: 9px 10px;
     }
 
+    .arena-name { font-size: 3.5rem; }
+
     .la-game, .la-spotify, .la-idle { min-height: 170px; }
     .la-game-body      { padding: 18px 18px; gap: 16px; }
     .la-thumb-wrap     { width: 90px; height: 90px; }
@@ -1123,6 +1252,9 @@
 
 /* ≤ 640px — large phone */
 @media (max-width: 640px) {
+    .arena-name   { font-size: 2.8rem; letter-spacing: 8px; }
+    .arena-prefix { font-size: 0.7rem; }
+
     .pb-content       { padding: 20px 16px 18px; gap: 16px; }
     .pb-avatar-wrap   { width: 78px; height: 78px; }
     .pb-avatar-img    { width: 78px; height: 78px; }
@@ -1145,7 +1277,9 @@
 
 /* ≤ 480px — standard phone */
 @media (max-width: 480px) {
-    .gaming-page { padding-bottom: 80px; overflow-x: hidden; }
+    .gaming-page  { padding-bottom: 80px; overflow-x: hidden; }
+    .arena-name   { font-size: 2.1rem; letter-spacing: 5px; }
+    .arena-prefix { font-size: 0.6rem; letter-spacing: 3px; }
 
     .pb-content       { padding: 18px 14px 16px; gap: 14px; }
     .pb-avatar-wrap   { width: 68px; height: 68px; }
