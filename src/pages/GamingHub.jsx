@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
+import profileDefault from '../assets/profile.png';
 import { Gamepad2, Monitor, ShieldCheck, Music2, Wifi } from 'lucide-react';
 import './GamingHub.css';
 
@@ -94,25 +95,42 @@ const GamingHub = () => {
     return (
         <PageTransition className="page-container gaming-page">
 
-            {/* ── Page Header ── */}
-            <motion.header
-                className="page-header"
-                initial={{ opacity: 0, y: -16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            {/* ── Hero ── */}
+            <motion.div
+                className="gaming-hero"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
             >
-                <div className="header-title-flex">
+                <div className="arena-title-wrap">
                     <motion.div
-                        className="desktop-icon"
-                        animate={{ rotate: [0, 8, -8, 0] }}
-                        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+                        className="arena-prefix-row"
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                        <Gamepad2 size={32} className="card-icon" />
+                        <span className="arena-prefix mono">SPIDO://</span>
+                        <span className="arena-cursor mono">_</span>
                     </motion.div>
-                    <h1 className="mono border-title">ARENA_</h1>
+                    <div className="arena-name-wrap">
+                        <motion.h1
+                            className="mono arena-name"
+                            data-text="ARENA"
+                            initial={{ opacity: 0, y: 40, scale: 0.85 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            ARENA
+                        </motion.h1>
+                        <motion.div
+                            className="arena-scan-line"
+                            initial={{ scaleX: 0, opacity: 0.8 }}
+                            animate={{ scaleX: 1, opacity: 0 }}
+                            transition={{ duration: 0.9, delay: 0.5 }}
+                        />
+                    </div>
                 </div>
-                <p className="mono opacity-50">OPERATOR_DASHBOARD // LIVE_FEED_ACTIVE</p>
-            </motion.header>
+            </motion.div>
 
             {/* ── Dashboard ── */}
             <motion.div
@@ -147,11 +165,11 @@ const GamingHub = () => {
                                     src={
                                         discordData?.discord_user?.avatar
                                             ? `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${discordData.discord_user.avatar}.png?size=256`
-                                            : '/profile2.png'
+                                            : profileDefault
                                     }
                                     alt="Avatar"
                                     className="operator-avatar"
-                                    onError={e => { e.target.src = '/profile2.png'; }}
+                                    onError={e => { e.target.src = profileDefault; }}
                                 />
                                 <span
                                     className="avatar-ring"
