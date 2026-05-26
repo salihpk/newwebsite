@@ -453,9 +453,6 @@ const GamingHub = () => {
                     <div className="library-header mono">
                         <span className="header-accent" />
                         <span className="library-title">STEAM.LIB</span>
-                        {steamTotal > 0 && (
-                            <span className="library-count-pill">{steamTotal} GAMES</span>
-                        )}
                     </div>
 
                     {steamLoading ? (
