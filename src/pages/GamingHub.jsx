@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
-import { Gamepad2, Monitor, ShieldCheck, Music2, Wifi } from 'lucide-react';
+import { Gamepad2, Monitor, ShieldCheck, Music2, Trophy, Clock, Smartphone } from 'lucide-react';
 import './GamingHub.css';
 
 const GamingHub = () => {
@@ -90,6 +90,29 @@ const GamingHub = () => {
         : discordSpotify ? 'SPOTIFY' : 'IDLE';
 
     const activityArt = getActivityImage();
+
+    // Custom Discord status (type 4 = custom status activity)
+    const customStatus = discordData?.activities?.find(a => a.type === 4)?.state || null;
+
+    // Active platform
+    const platform = discordData?.active_on_discord_mobile
+        ? 'MOBILE'
+        : discordData?.active_on_discord_desktop
+        ? 'DESKTOP'
+        : discordData?.active_on_discord_web
+        ? 'WEB'
+        : discordData ? '—' : '...';
+
+    // Steam aggregates
+    const topGame = !steamLoading && steamGames.length > 0
+        ? steamGames.reduce((a, b) => (b.playtime > a.playtime ? b : a))
+        : null;
+    const totalHours = !steamLoading && steamGames.length > 0
+        ? Math.floor(steamGames.reduce((sum, g) => sum + (g.playtime || 0), 0) / 60)
+        : 0;
+    const totalHoursDisplay = totalHours >= 1000
+        ? `${(totalHours / 1000).toFixed(1)}K HRS`
+        : `${totalHours} HRS`;
 
     return (
         <PageTransition className="page-container gaming-page">
@@ -199,15 +222,25 @@ const GamingHub = () => {
                                 <span className="op-status-pip" style={{ background: discordStatusColor }} />
                                 {statusLabel}
                             </span>
+                            {customStatus && (
+                                <p className="op-custom-status mono">
+                                    <span className="op-custom-status-quote">"</span>
+                                    {customStatus}
+                                    <span className="op-custom-status-quote">"</span>
+                                </p>
+                            )}
                         </div>
 
-                        {/* Inline stat rows */}
+                        {/* Stat rows */}
                         <div className="op-stats">
                             <div className="op-stat">
-                                <Gamepad2 size={11} className="op-stat-icon" />
+                                {discordData?.active_on_discord_mobile
+                                    ? <Smartphone size={11} className="op-stat-icon" />
+                                    : <Monitor size={11} className="op-stat-icon" />
+                                }
                                 <div className="op-stat-content">
-                                    <span className="op-stat-label mono">ACTIVITY</span>
-                                    <span className="op-stat-value mono">{activityLabel}</span>
+                                    <span className="op-stat-label mono">PLATFORM</span>
+                                    <span className="op-stat-value mono">{platform}</span>
                                 </div>
                             </div>
                             <div className="op-stat">
@@ -218,11 +251,33 @@ const GamingHub = () => {
                                 </div>
                             </div>
                             <div className="op-stat">
-                                <Wifi size={11} className="op-stat-icon" />
+                                <Gamepad2 size={11} className="op-stat-icon" />
                                 <div className="op-stat-content">
                                     <span className="op-stat-label mono">LIBRARY</span>
                                     <span className="op-stat-value mono">
                                         {steamLoading ? '...' : `${steamTotal} GAMES`}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="op-stat">
+                                <Clock size={11} className="op-stat-icon" />
+                                <div className="op-stat-content">
+                                    <span className="op-stat-label mono">TOTAL_HRS</span>
+                                    <span className="op-stat-value mono">
+                                        {steamLoading ? '...' : totalHoursDisplay}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="op-stat">
+                                <Trophy size={11} className="op-stat-icon" />
+                                <div className="op-stat-content">
+                                    <span className="op-stat-label mono">TOP_GAME</span>
+                                    <span className="op-stat-value mono op-top-game">
+                                        {steamLoading
+                                            ? '...'
+                                            : topGame
+                                            ? topGame.name
+                                            : '—'}
                                     </span>
                                 </div>
                             </div>

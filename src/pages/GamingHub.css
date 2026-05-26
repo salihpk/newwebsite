@@ -367,6 +367,29 @@
     flex-shrink: 0;
 }
 
+/* Custom Discord status line */
+.op-custom-status {
+    font-size: 0.57rem;
+    letter-spacing: 0.4px;
+    color: var(--text-dim);
+    margin: 4px 0 0;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 10px;
+    opacity: 0.8;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.op-custom-status-quote {
+    color: var(--primary-color);
+    opacity: 0.6;
+    font-size: 0.65rem;
+    margin: 0 2px;
+}
+
 /* Op-stats: inline stat rows inside operator card */
 .op-stats {
     display: flex;
@@ -440,6 +463,16 @@
     0%, 100% { text-shadow: 0 0 5px rgba(var(--primary-color-rgb), 0.3); }
     50%       { text-shadow: 0 0 14px rgba(var(--primary-color-rgb), 0.75),
                              0 0 24px rgba(var(--primary-color-rgb), 0.35); }
+}
+
+/* Top game value — truncate long names */
+.op-top-game {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    color: var(--primary-color);
+    text-shadow: 0 0 6px rgba(var(--primary-color-rgb), 0.4);
 }
 
 .operator-actions {
