@@ -2,11 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useForm, ValidationError } from '@formspree/react';
 import PageTransition from '../components/PageTransition';
-import { Instagram, Linkedin, MapPin, ExternalLink, Terminal as TerminalIcon } from 'lucide-react';
+import { Instagram, Linkedin, MapPin, ExternalLink, Terminal as TerminalIcon, Radio } from 'lucide-react';
 import './Contact.css';
 
 const Contact = () => {
   const [state, handleSubmit] = useForm('xojbqjgv');
+
+  const [pingState, setPingState]     = useState('idle'); // idle | sending | sent | error
+  const [cooldown,  setCooldown]      = useState(0);
+
+  const handlePing = async () => {
+    if (pingState === 'sending' || cooldown > 0) return;
+    setPingState('sending');
+    try {
+      const res = await fetch('/api/ping', { method: 'POST' });
+      if (!res.ok) throw new Error('failed');
+      setPingState('sent');
+      let secs = 60;
+      setCooldown(secs);
+      const timer = setInterval(() => {
+        secs -= 1;
+        setCooldown(secs);
+        if (secs <= 0) {
+          clearInterval(timer);
+          setPingState('idle');
+        }
+      }, 1000);
+    } catch {
+      setPingState('error');
+      setTimeout(() => setPingState('idle'), 3000);
+    }
+  };
 
   const [logs, setLogs] = useState([
     "> SYSTEM_INIT: COMPLETE",
@@ -90,6 +116,26 @@ const Contact = () => {
               </span>
               <span>KOZHIKODE, KERALA</span>
             </div>
+          </div>
+
+          {/* ── Ping button ── */}
+          <div className="ping-section">
+            <button
+              className={`ping-btn mono ${pingState}`}
+              onClick={handlePing}
+              disabled={pingState === 'sending' || cooldown > 0}
+            >
+              <Radio size={13} className="ping-icon" />
+              {pingState === 'sending' && 'TRANSMITTING_PING...'}
+              {pingState === 'sent'    && (cooldown > 0 ? `PING_SENT ✓  [${cooldown}s]` : 'PING_SENT ✓')}
+              {pingState === 'error'   && 'TRANSMISSION_FAILED'}
+              {pingState === 'idle'    && (cooldown > 0 ? `COOLDOWN: ${cooldown}s` : 'PING_ME()')}
+            </button>
+            <p className="ping-hint mono">
+              {pingState === 'sent'
+                ? '> SIGNAL_DELIVERED: awaiting response on Discord'
+                : '> Fires a live Discord alert — I\'ll know you were here'}
+            </p>
           </div>
 
           <div className="system-status mono">
