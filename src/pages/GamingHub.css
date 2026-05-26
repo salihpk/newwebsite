@@ -236,131 +236,41 @@
     color: var(--primary-color);
 }
 
-/* ── Profile Banner ─────────────────────────────────── */
+/* ── Profile Card (glassmorphism) ───────────────────── */
+
+/* The card itself reuses .glass-card — only layout overrides needed */
 .profile-banner {
-    position: relative;
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    transition: box-shadow 0.45s ease;
-    box-shadow: 0 12px 48px -10px rgba(0, 0, 0, 0.65);
+    padding: 0;
+    overflow: visible;
 }
 
-.profile-banner:hover {
-    box-shadow:
-        0 20px 55px -14px rgba(var(--primary-color-rgb), 0.16),
-        0 0 24px rgba(var(--primary-color-rgb), 0.05);
-}
-
-/* Blurred background layer */
-.pb-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.pb-bg-img {
-    position: absolute;
-    inset: -8%;
-    width: 116%;
-    height: 116%;
-    object-fit: cover;
-    filter: blur(44px) brightness(0.22) saturate(1.5);
-    pointer-events: none;
-}
-
-.pb-bg-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(8, 8, 13, 0.88) 0%,
-        rgba(8, 8, 13, 0.58) 60%,
-        rgba(8, 8, 13, 0.72) 100%
-    );
-}
-
-.pb-bg-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(var(--primary-color-rgb), 0.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(var(--primary-color-rgb), 0.055) 1px, transparent 1px);
-    background-size: 28px 28px;
-    mask-image: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, transparent 85%);
-    -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, transparent 85%);
-    pointer-events: none;
-}
-
-[data-theme='light'] .pb-bg-img {
-    filter: blur(44px) brightness(0.6) saturate(0.7);
-}
-
-[data-theme='light'] .pb-bg-overlay {
-    background: linear-gradient(
-        135deg,
-        rgba(240, 242, 248, 0.92) 0%,
-        rgba(240, 242, 248, 0.70) 60%,
-        rgba(240, 242, 248, 0.82) 100%
-    );
-}
-
-/* Content */
-.pb-content {
-    position: relative;
-    z-index: 1;
+/* Top section: avatar + identity side by side */
+.pb-top {
     display: flex;
     align-items: center;
-    gap: 32px;
-    padding: 36px 36px 32px;
+    gap: 28px;
+    padding: 30px 30px 24px;
 }
 
-/* ── Avatar column ──────────────────────────────────── */
-.pb-avatar-col {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    flex-shrink: 0;
-}
-
+/* ── Avatar ─────────────────────────────────────────── */
 .pb-avatar-zone {
     position: relative;
     display: inline-flex;
-}
-
-/* Pulsing ring around avatar */
-.pb-avatar-zone::after {
-    content: '';
-    position: absolute;
-    inset: -7px;
-    border-radius: 50%;
-    border: 1.5px solid var(--status-color, var(--primary-color));
-    opacity: 0.28;
-    animation: avatarRingPulse 2.8s ease-in-out infinite;
-    pointer-events: none;
-    will-change: transform, opacity;
-}
-
-@keyframes avatarRingPulse {
-    0%, 100% { opacity: 0.28; transform: scale(1); }
-    50%       { opacity: 0.07; transform: scale(1.08); }
+    flex-shrink: 0;
 }
 
 .pb-avatar-wrap {
-    width: 110px;
-    height: 110px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     overflow: hidden;
     transition: box-shadow 0.45s ease;
     position: relative;
-    flex-shrink: 0;
 }
 
 .pb-avatar-img {
-    width: 110px;
-    height: 110px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
     display: block;
     border-radius: 50%;
@@ -370,77 +280,60 @@
     position: absolute;
     bottom: 4px;
     right: 4px;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    border: 3px solid #0a0a0c;
+    border: 2.5px solid var(--bg-color, #0c0c0f);
     transition: background 0.45s ease, box-shadow 0.45s ease;
     z-index: 2;
 }
 
 [data-theme='light'] .pb-status-dot {
-    border-color: #eef0f5;
+    border-color: #fff;
 }
 
-.pb-arena-tag {
-    font-size: 0.48rem;
-    letter-spacing: 2.5px;
-    color: var(--primary-color);
-    opacity: 0.6;
-    text-align: center;
-    white-space: nowrap;
-    text-shadow: 0 0 8px rgba(var(--primary-color-rgb), 0.3);
-}
-
-/* ── Info column ────────────────────────────────────── */
-.pb-info-col {
+/* ── Identity ───────────────────────────────────────── */
+.pb-identity {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
-/* Name row */
 .pb-name-row {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .pb-name {
-    font-size: 1.85rem;
+    font-size: 1.75rem;
     font-weight: 800;
-    letter-spacing: 3.5px;
+    letter-spacing: 3px;
     margin: 0;
-    color: #fff;
-    text-shadow: 0 2px 22px rgba(0, 0, 0, 0.85);
-    line-height: 1;
-}
-
-[data-theme='light'] .pb-name {
     color: var(--text-color);
-    text-shadow: none;
+    line-height: 1;
 }
 
 .pb-status-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.52rem;
+    font-size: 0.5rem;
     letter-spacing: 2px;
-    padding: 4px 12px;
+    padding: 4px 11px;
     border: 1px solid;
     border-radius: 20px;
-    background: rgba(0, 0, 0, 0.32);
+    background: rgba(var(--primary-color-rgb), 0.06);
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     flex-shrink: 0;
 }
 
 [data-theme='light'] .pb-status-badge {
-    background: rgba(255, 255, 255, 0.65);
+    background: rgba(var(--primary-color-rgb), 0.07);
 }
 
 .pb-status-pip {
@@ -452,59 +345,56 @@
 }
 
 .pb-username {
-    font-size: 0.63rem;
-    color: rgba(255, 255, 255, 0.42);
+    font-size: 0.62rem;
+    color: var(--text-dim);
     letter-spacing: 1.5px;
     margin: 0;
 }
 
-[data-theme='light'] .pb-username {
-    color: var(--text-dim);
-}
-
 .pb-operator-id {
-    color: rgba(255, 255, 255, 0.22);
+    opacity: 0.5;
     font-size: 0.58rem;
-    letter-spacing: 1.5px;
-}
-
-[data-theme='light'] .pb-operator-id {
-    color: rgba(0, 0, 0, 0.25);
 }
 
 .pb-custom-status {
-    font-size: 0.62rem;
-    color: rgba(255, 255, 255, 0.52);
+    font-size: 0.6rem;
+    color: var(--text-dim);
     letter-spacing: 0.3px;
     margin: 0;
     line-height: 1.5;
     font-style: italic;
 }
 
-[data-theme='light'] .pb-custom-status {
-    color: var(--text-dim);
-}
-
 .pb-quote {
     color: var(--primary-color);
-    opacity: 0.55;
+    opacity: 0.5;
     font-style: normal;
     margin: 0 2px;
+}
+
+/* ── Actions ────────────────────────────────────────── */
+.pb-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+/* ── Divider ────────────────────────────────────────── */
+.pb-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+    margin: 0 20px;
+}
+
+[data-theme='light'] .pb-divider {
+    background: var(--border-color);
 }
 
 /* ── Stats strip ────────────────────────────────────── */
 .pb-stats-strip {
     display: flex;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 10px;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.22);
-    margin: 2px 0;
-}
-
-[data-theme='light'] .pb-stats-strip {
-    border-color: var(--border-color);
-    background: rgba(0, 0, 0, 0.03);
 }
 
 .pb-stat {
@@ -512,12 +402,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 10px 6px;
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    gap: 5px;
+    padding: 14px 8px;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     transition: background 0.22s ease;
     min-width: 0;
-    position: relative;
+    cursor: default;
 }
 
 .pb-stat:last-child {
@@ -525,31 +415,31 @@
 }
 
 .pb-stat:hover {
-    background: rgba(var(--primary-color-rgb), 0.07);
+    background: rgba(var(--primary-color-rgb), 0.05);
 }
 
 [data-theme='light'] .pb-stat {
     border-right-color: var(--border-color);
 }
 
+[data-theme='light'] .pb-stat:hover {
+    background: rgba(var(--primary-color-rgb), 0.04);
+}
+
 .pb-stat-key {
-    font-size: 0.41rem;
+    font-size: 0.4rem;
     letter-spacing: 1.5px;
-    color: rgba(255, 255, 255, 0.33);
+    color: var(--text-dim);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
-}
-
-[data-theme='light'] .pb-stat-key {
-    color: var(--text-dim);
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 .pb-stat-val {
-    font-size: 0.65rem;
-    color: #fff;
+    font-size: 0.66rem;
+    color: var(--text-color);
     font-weight: 600;
     letter-spacing: 0.5px;
     white-space: nowrap;
@@ -559,23 +449,10 @@
     text-align: center;
 }
 
-[data-theme='light'] .pb-stat-val {
-    color: var(--text-color);
-}
-
-/* TOP_GAME accented value */
+/* TOP_GAME — theme colour accent */
 .pb-stat--top .pb-stat-val {
     color: var(--primary-color);
-    text-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.4);
-}
-
-/* ── Action buttons ─────────────────────────────────── */
-.pb-actions {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-top: 2px;
+    text-shadow: 0 0 10px rgba(var(--primary-color-rgb), 0.35);
 }
 
 /* ── Live activity (full-width) ─────────────────────── */
@@ -1156,64 +1033,41 @@
 
 /* ≤ 960px — tablet / narrow desktop */
 @media (max-width: 960px) {
-    .pb-content {
-        padding: 28px 24px 24px;
-        gap: 24px;
-    }
-    .pb-avatar-wrap  { width: 90px; height: 90px; }
-    .pb-avatar-img   { width: 90px; height: 90px; }
-    .pb-status-dot   { width: 15px; height: 15px; border-width: 2.5px; }
+    .pb-top          { padding: 24px 22px 20px; gap: 22px; }
+    .pb-avatar-wrap  { width: 86px; height: 86px; }
+    .pb-avatar-img   { width: 86px; height: 86px; }
     .pb-name         { font-size: 1.5rem; }
     .steam-grid      { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-/* ≤ 820px — single-column / large tablet */
+/* ≤ 820px — large tablet */
 @media (max-width: 820px) {
     .gaming-layout { gap: 14px; }
 
-    .pb-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-        padding: 24px 20px 20px;
-    }
+    .pb-top     { padding: 20px 20px 18px; gap: 18px; }
+    .pb-name    { font-size: 1.35rem; }
 
-    /* On mobile: avatar + tag sit in a horizontal row */
-    .pb-avatar-col {
-        flex-direction: row;
-        align-items: center;
-        gap: 16px;
-    }
-
-    .pb-arena-tag {
-        font-size: 0.52rem;
-        letter-spacing: 2px;
-    }
-
-    /* Stats strip scrolls horizontally on small screens */
+    /* Stats strip scrolls horizontally */
     .pb-stats-strip {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
     }
-
     .pb-stats-strip::-webkit-scrollbar { display: none; }
-
     .pb-stat {
         flex: 0 0 auto;
-        min-width: 72px;
-        padding: 9px 10px;
+        min-width: 76px;
     }
 
     .arena-name { font-size: 3.5rem; }
 
     .la-game, .la-spotify, .la-idle { min-height: 170px; }
-    .la-game-body      { padding: 18px 18px; gap: 16px; }
-    .la-thumb-wrap     { width: 90px; height: 90px; }
+    .la-game-body       { padding: 18px; gap: 16px; }
+    .la-thumb-wrap      { width: 90px; height: 90px; }
     .la-spotify-content { padding: 20px 18px 14px; gap: 18px; }
     .la-spotify-art-wrap { width: 86px; height: 86px; }
-    .la-idle-scanner   { width: 80px; height: 80px; }
-    .library-panel     { padding: 18px 18px 22px; }
+    .la-idle-scanner    { width: 80px; height: 80px; }
+    .library-panel      { padding: 18px 18px 22px; }
 
     .steam-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1226,24 +1080,28 @@
     .arena-name   { font-size: 2.8rem; letter-spacing: 8px; }
     .arena-prefix { font-size: 0.7rem; }
 
-    .pb-content       { padding: 20px 16px 18px; gap: 16px; }
-    .pb-avatar-wrap   { width: 78px; height: 78px; }
-    .pb-avatar-img    { width: 78px; height: 78px; }
-    .pb-status-dot    { width: 13px; height: 13px; }
-    .pb-name          { font-size: 1.3rem; letter-spacing: 2.5px; }
-    .pb-actions .cyber-btn { font-size: 0.64rem; padding: 8px 14px; }
+    /* Stack avatar above identity on small phones */
+    .pb-top {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px 18px 16px;
+        gap: 16px;
+    }
+    .pb-avatar-wrap { width: 76px; height: 76px; }
+    .pb-avatar-img  { width: 76px; height: 76px; }
+    .pb-name        { font-size: 1.25rem; letter-spacing: 2.5px; }
+    .pb-divider     { margin: 0 14px; }
 
     .steam-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
     }
 
-    .la-spotify-content { gap: 14px; padding: 18px 16px 12px; }
+    .la-spotify-content  { gap: 14px; padding: 18px 16px 12px; }
     .la-spotify-art-wrap { width: 74px; height: 74px; }
-    .la-waveform        { height: 22px; }
-    .la-spotify-footer  { padding: 0 16px 14px; }
-    .la-thumb-wrap      { width: 80px; height: 80px; }
-    .la-spotify-footer  { padding: 0 18px 14px; }
+    .la-waveform         { height: 22px; }
+    .la-spotify-footer   { padding: 0 16px 14px; }
+    .la-thumb-wrap       { width: 80px; height: 80px; }
 }
 
 /* ≤ 480px — standard phone */
@@ -1252,37 +1110,39 @@
     .arena-name   { font-size: 2.1rem; letter-spacing: 5px; }
     .arena-prefix { font-size: 0.6rem; letter-spacing: 3px; }
 
-    .pb-content       { padding: 18px 14px 16px; gap: 14px; }
-    .pb-avatar-wrap   { width: 68px; height: 68px; }
-    .pb-avatar-img    { width: 68px; height: 68px; }
-    .pb-status-dot    { width: 12px; height: 12px; border-width: 2px; }
-    .pb-name          { font-size: 1.15rem; letter-spacing: 2px; }
-    .pb-status-badge  { font-size: 0.48rem; padding: 3px 9px; }
-    .pb-username      { font-size: 0.58rem; }
-    .pb-stat-key      { font-size: 0.38rem; }
-    .pb-stat-val      { font-size: 0.6rem; }
+    .pb-top          { padding: 16px 14px 14px; gap: 12px; }
+    .pb-avatar-wrap  { width: 66px; height: 66px; }
+    .pb-avatar-img   { width: 66px; height: 66px; }
+    .pb-status-dot   { width: 13px; height: 13px; border-width: 2px; }
+    .pb-name         { font-size: 1.1rem; letter-spacing: 2px; }
+    .pb-status-badge { font-size: 0.46rem; padding: 3px 9px; }
+    .pb-username     { font-size: 0.58rem; }
+    .pb-stat-key     { font-size: 0.38rem; }
+    .pb-stat-val     { font-size: 0.6rem; }
+    .pb-stat         { min-width: 64px; padding: 11px 6px; }
+    .pb-divider      { margin: 0 12px; }
 
-    .pb-actions       { gap: 10px; }
+    .pb-actions      { gap: 10px; }
     .pb-actions .cyber-btn { font-size: 0.62rem; padding: 7px 12px; }
-    .subtle-link      { font-size: 0.54rem; }
+    .subtle-link     { font-size: 0.54rem; }
 
-    .library-panel    { padding: 14px 14px 18px; }
-    .library-count-pill { font-size: 0.54rem; padding: 2px 8px; }
-    .library-header   { margin-bottom: 14px; }
+    .library-panel       { padding: 14px 14px 18px; }
+    .library-count-pill  { font-size: 0.54rem; padding: 2px 8px; }
+    .library-header      { margin-bottom: 14px; }
 
-    .steam-grid       { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-    .steam-name       { font-size: 0.62rem; }
+    .steam-grid        { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .steam-name        { font-size: 0.62rem; }
     .steam-card-footer { height: 42px; padding: 6px 8px 7px; }
 
     .la-game, .la-spotify, .la-idle { min-height: 150px; }
-    .la-game-body     { padding: 14px; gap: 12px; }
-    .la-thumb-wrap    { width: 72px; height: 72px; border-radius: 7px; }
-    .la-game-title    { font-size: 0.9rem; }
-    .la-spotify-content { padding: 14px 14px 10px; gap: 12px; }
+    .la-game-body        { padding: 14px; gap: 12px; }
+    .la-thumb-wrap       { width: 72px; height: 72px; border-radius: 7px; }
+    .la-game-title       { font-size: 0.9rem; }
+    .la-spotify-content  { padding: 14px 14px 10px; gap: 12px; }
     .la-spotify-art-wrap { width: 64px; height: 64px; }
-    .la-spotify-song  { font-size: 0.82rem; }
-    .la-spotify-artist { font-size: 0.64rem; }
-    .la-waveform      { height: 20px; }
-    .la-spotify-footer { padding: 0 14px 12px; }
-    .la-idle-scanner  { width: 72px; height: 72px; }
+    .la-spotify-song     { font-size: 0.82rem; }
+    .la-spotify-artist   { font-size: 0.64rem; }
+    .la-waveform         { height: 20px; }
+    .la-spotify-footer   { padding: 0 14px 12px; }
+    .la-idle-scanner     { width: 72px; height: 72px; }
 }

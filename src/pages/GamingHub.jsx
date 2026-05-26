@@ -152,57 +152,46 @@ const GamingHub = () => {
                     </div>
                 </motion.div>
 
-                {/* ── Profile Banner ── */}
+                {/* ── Profile Card (glassmorphism) ── */}
                 <motion.div
-                    className="profile-banner"
+                    className="profile-banner glass-card"
                     style={{ '--status-color': discordStatusColor }}
                     initial={{ opacity: 0, y: -16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {/* Blurred avatar background */}
-                    <div className="pb-bg">
-                        <img className="pb-bg-img" src={avatarUrl} alt="" aria-hidden="true" />
-                        <div className="pb-bg-overlay" />
-                        <div className="pb-bg-grid" />
-                    </div>
-
-                    {/* Main content */}
-                    <div className="pb-content">
-                        {/* Avatar column */}
-                        <div className="pb-avatar-col">
-                            <div className="pb-avatar-zone">
-                                <div
-                                    className="pb-avatar-wrap"
-                                    style={{
-                                        boxShadow: `0 0 0 2.5px ${discordStatusColor}, 0 0 28px ${discordStatusColor}55`,
-                                    }}
-                                >
-                                    <img
-                                        src={avatarUrl}
-                                        alt="Avatar"
-                                        className="pb-avatar-img"
-                                        onError={e => { e.target.src = '/profile2.png'; }}
-                                    />
-                                </div>
-                                <span
-                                    className="pb-status-dot"
-                                    style={{ background: discordStatusColor, boxShadow: `0 0 8px ${discordStatusColor}` }}
+                    {/* Top section: avatar + identity */}
+                    <div className="pb-top">
+                        {/* Avatar */}
+                        <div className="pb-avatar-zone">
+                            <div
+                                className="pb-avatar-wrap"
+                                style={{
+                                    boxShadow: `0 0 0 3px ${discordStatusColor}99, 0 0 22px ${discordStatusColor}33`,
+                                }}
+                            >
+                                <img
+                                    src={avatarUrl}
+                                    alt="Avatar"
+                                    className="pb-avatar-img"
+                                    onError={e => { e.target.src = '/profile2.png'; }}
                                 />
                             </div>
-                            <span className="pb-arena-tag mono">SPIDO://ARENA</span>
+                            <span
+                                className="pb-status-dot"
+                                style={{ background: discordStatusColor, boxShadow: `0 0 10px ${discordStatusColor}` }}
+                            />
                         </div>
 
-                        {/* Info column */}
-                        <div className="pb-info-col">
-                            {/* Name + status badge */}
+                        {/* Identity */}
+                        <div className="pb-identity">
                             <div className="pb-name-row">
-                                <h1 className="pb-name mono">
+                                <h2 className="pb-name mono">
                                     {discordData?.discord_user?.global_name || discordData?.discord_user?.username || 'SPIDO'}
-                                </h1>
+                                </h2>
                                 <span
                                     className="pb-status-badge mono"
-                                    style={{ color: discordStatusColor, borderColor: `${discordStatusColor}55` }}
+                                    style={{ color: discordStatusColor, borderColor: `${discordStatusColor}44` }}
                                 >
                                     <span className="pb-status-pip" style={{ background: discordStatusColor }} />
                                     {statusLabel}
@@ -222,37 +211,6 @@ const GamingHub = () => {
                                 </p>
                             )}
 
-                            {/* Stats strip */}
-                            <div className="pb-stats-strip">
-                                <div className="pb-stat">
-                                    <span className="pb-stat-key mono">PLATFORM</span>
-                                    <span className="pb-stat-val mono">{platform}</span>
-                                </div>
-                                <div className="pb-stat">
-                                    <span className="pb-stat-key mono">DEVICE</span>
-                                    <span className="pb-stat-val mono device-glow">Lenovo LOQ</span>
-                                </div>
-                                <div className="pb-stat">
-                                    <span className="pb-stat-key mono">LIBRARY</span>
-                                    <span className="pb-stat-val mono">
-                                        {steamLoading ? '...' : `${steamTotal} GAMES`}
-                                    </span>
-                                </div>
-                                <div className="pb-stat">
-                                    <span className="pb-stat-key mono">TOTAL_HRS</span>
-                                    <span className="pb-stat-val mono">
-                                        {steamLoading ? '...' : totalHoursDisplay}
-                                    </span>
-                                </div>
-                                <div className="pb-stat pb-stat--top">
-                                    <span className="pb-stat-key mono">TOP_GAME</span>
-                                    <span className="pb-stat-val mono">
-                                        {steamLoading ? '...' : topGame ? topGame.name : '—'}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Action buttons */}
                             <div className="pb-actions">
                                 <a
                                     href="https://discord.gg/zcXGkH98Qk"
@@ -271,6 +229,39 @@ const GamingHub = () => {
                                     VIEW_PROFILE ↗
                                 </a>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="pb-divider" />
+
+                    {/* Stats strip — spans full width */}
+                    <div className="pb-stats-strip">
+                        <div className="pb-stat">
+                            <span className="pb-stat-key mono">PLATFORM</span>
+                            <span className="pb-stat-val mono">{platform}</span>
+                        </div>
+                        <div className="pb-stat">
+                            <span className="pb-stat-key mono">DEVICE</span>
+                            <span className="pb-stat-val mono device-glow">Lenovo LOQ</span>
+                        </div>
+                        <div className="pb-stat">
+                            <span className="pb-stat-key mono">LIBRARY</span>
+                            <span className="pb-stat-val mono">
+                                {steamLoading ? '...' : `${steamTotal} GAMES`}
+                            </span>
+                        </div>
+                        <div className="pb-stat">
+                            <span className="pb-stat-key mono">TOTAL_HRS</span>
+                            <span className="pb-stat-val mono">
+                                {steamLoading ? '...' : totalHoursDisplay}
+                            </span>
+                        </div>
+                        <div className="pb-stat pb-stat--top">
+                            <span className="pb-stat-key mono">TOP_GAME</span>
+                            <span className="pb-stat-val mono">
+                                {steamLoading ? '...' : topGame ? topGame.name : '—'}
+                            </span>
                         </div>
                     </div>
                 </motion.div>
