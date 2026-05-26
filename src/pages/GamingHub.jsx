@@ -184,6 +184,8 @@ const GamingHub = () => {
                         {/* Banner + avatar */}
                         <div className="op-banner">
                             <div className="op-banner-glow" />
+                            <div className="op-banner-grid" />
+                            <div className="op-scan-line" />
                             <div className="op-avatar-zone">
                                 <div
                                     className="op-avatar-frame"
@@ -215,6 +217,9 @@ const GamingHub = () => {
                             <p className="mono op-username">
                                 @{discordData?.discord_user?.username || '---'}
                             </p>
+                            <p className="mono op-operator-id">
+                                ID:{DISCORD_USER_ID.slice(-8)}
+                            </p>
                             <span
                                 className="op-status-badge mono"
                                 style={{ color: discordStatusColor, borderColor: `${discordStatusColor}50` }}
@@ -231,55 +236,33 @@ const GamingHub = () => {
                             )}
                         </div>
 
-                        {/* Stat rows */}
+                        {/* Stat rows — terminal key → value */}
                         <div className="op-stats">
                             <div className="op-stat">
-                                {discordData?.active_on_discord_mobile
-                                    ? <Smartphone size={11} className="op-stat-icon" />
-                                    : <Monitor size={11} className="op-stat-icon" />
-                                }
-                                <div className="op-stat-content">
-                                    <span className="op-stat-label mono">PLATFORM</span>
-                                    <span className="op-stat-value mono">{platform}</span>
-                                </div>
+                                <span className="op-stat-key mono">PLATFORM</span>
+                                <span className="op-stat-val mono">{platform}</span>
                             </div>
                             <div className="op-stat">
-                                <Monitor size={11} className="op-stat-icon" />
-                                <div className="op-stat-content">
-                                    <span className="op-stat-label mono">DEVICE</span>
-                                    <span className="op-stat-value mono device-glow">Lenovo LOQ</span>
-                                </div>
+                                <span className="op-stat-key mono">DEVICE</span>
+                                <span className="op-stat-val mono device-glow">Lenovo LOQ</span>
                             </div>
                             <div className="op-stat">
-                                <Gamepad2 size={11} className="op-stat-icon" />
-                                <div className="op-stat-content">
-                                    <span className="op-stat-label mono">LIBRARY</span>
-                                    <span className="op-stat-value mono">
-                                        {steamLoading ? '...' : `${steamTotal} GAMES`}
-                                    </span>
-                                </div>
+                                <span className="op-stat-key mono">LIBRARY</span>
+                                <span className="op-stat-val mono">
+                                    {steamLoading ? '...' : `${steamTotal} GAMES`}
+                                </span>
                             </div>
                             <div className="op-stat">
-                                <Clock size={11} className="op-stat-icon" />
-                                <div className="op-stat-content">
-                                    <span className="op-stat-label mono">TOTAL_HRS</span>
-                                    <span className="op-stat-value mono">
-                                        {steamLoading ? '...' : totalHoursDisplay}
-                                    </span>
-                                </div>
+                                <span className="op-stat-key mono">TOTAL_HRS</span>
+                                <span className="op-stat-val mono">
+                                    {steamLoading ? '...' : totalHoursDisplay}
+                                </span>
                             </div>
-                            <div className="op-stat">
-                                <Trophy size={11} className="op-stat-icon" />
-                                <div className="op-stat-content">
-                                    <span className="op-stat-label mono">TOP_GAME</span>
-                                    <span className="op-stat-value mono op-top-game">
-                                        {steamLoading
-                                            ? '...'
-                                            : topGame
-                                            ? topGame.name
-                                            : '—'}
-                                    </span>
-                                </div>
+                            <div className="op-stat op-stat--top">
+                                <span className="op-stat-key mono">TOP_GAME</span>
+                                <span className="op-stat-val mono op-top-game">
+                                    {steamLoading ? '...' : topGame ? topGame.name : '—'}
+                                </span>
                             </div>
                         </div>
 
