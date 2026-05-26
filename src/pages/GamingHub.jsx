@@ -265,12 +265,6 @@ const GamingHub = () => {
                             <span className="pb-stat-val mono device-glow">Lenovo LOQ</span>
                         </div>
                         <div className="pb-stat">
-                            <span className="pb-stat-key mono">LIBRARY</span>
-                            <span className="pb-stat-val mono">
-                                {steamLoading ? '...' : `${steamTotal} GAMES`}
-                            </span>
-                        </div>
-                        <div className="pb-stat">
                             <span className="pb-stat-key mono">TOTAL_HRS</span>
                             <span className="pb-stat-val mono">
                                 {steamLoading ? '...' : totalHoursDisplay}
