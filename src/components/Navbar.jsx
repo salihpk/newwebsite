@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Layers, Gamepad2, Mail, Menu } from 'lucide-react';
-import profileImg from '../assets/profile.png';
 import './Navbar.css';
 
 const DISCORD_USER_ID = '577248513654784020';
@@ -98,10 +97,9 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
           whileTap={{ scale: 0.9 }}
         >
           <motion.img
-            src={discordAvatar || profileImg}
+            src={discordAvatar}
             alt="System Controls"
             className={`nav-avatar ${isMusicPlaying ? 'playing' : ''}`}
-            onError={e => { e.target.src = profileImg; }}
             animate={{
               rotate: isMusicPlaying ? 360 : 0,
             }}
@@ -153,7 +151,7 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
             }}
           >
             <div className="mobile-menu-bg-graphic">
-              <img src={profileImg} alt="" style={{ opacity: 0.1 }} />
+              <img src={discordAvatar} alt="" style={{ opacity: 0.1 }} />
             </div>
 
             <div className="mobile-menu-content">

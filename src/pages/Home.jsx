@@ -1,7 +1,6 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import profileImg from '../assets/profile.png';
 import PageTransition from '../components/PageTransition';
 import { ShieldAlert, BrainCircuit, ShieldCheck } from 'lucide-react';
 import './Home.css';
@@ -113,13 +112,12 @@ const Home = () => {
           </Suspense>
           <div className="profile-container">
             <motion.img
-              src={discordAvatar || profileImg}
+              src={discordAvatar}
               alt="Muhammad Salih P.K."
               className="profile-img"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, ease: 'easeInOut' }}
-              onError={e => { e.target.src = profileImg; }}
             />
             <div className="profile-shader"></div>
           </div>
