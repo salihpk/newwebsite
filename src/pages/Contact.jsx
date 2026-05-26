@@ -10,6 +10,7 @@ const Contact = () => {
 
   const [pingState, setPingState]     = useState('idle'); // idle | sending | sent | error
   const [cooldown,  setCooldown]      = useState(0);
+  const [pingReply, setPingReply]     = useState('');
 
   const handlePing = async () => {
     if (pingState === 'sending' || cooldown > 0) return;
@@ -17,6 +18,8 @@ const Contact = () => {
     try {
       const res = await fetch('/api/ping', { method: 'POST' });
       if (!res.ok) throw new Error('failed');
+      const data = await res.json();
+      if (data.reply) setPingReply(data.reply);
       setPingState('sent');
       let secs = 60;
       setCooldown(secs);
@@ -131,11 +134,23 @@ const Contact = () => {
               {pingState === 'error'   && 'TRANSMISSION_FAILED'}
               {pingState === 'idle'    && (cooldown > 0 ? `COOLDOWN: ${cooldown}s` : 'PING_ME()')}
             </button>
-            <p className="ping-hint mono">
-              {pingState === 'sent'
-                ? '> SIGNAL_DELIVERED: awaiting response on Discord'
-                : '> Fires a live Discord alert — I\'ll know you were here'}
-            </p>
+            {pingState === 'sent' && pingReply ? (
+              <motion.p
+                key="reply"
+                className="ping-reply mono"
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {'>'} {pingReply}
+              </motion.p>
+            ) : (
+              <p className="ping-hint mono">
+                {pingState === 'sent'
+                  ? '> SIGNAL_DELIVERED: awaiting response on Discord'
+                  : '> Fires a live Discord alert — I\'ll know you were here'}
+              </p>
+            )}
           </div>
 
           <div className="system-status mono">

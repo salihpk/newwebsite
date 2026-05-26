@@ -45,7 +45,8 @@ export default async function handler(req, res) {
         });
 
         if (!r.ok) throw new Error(`Webhook ${r.status}`);
-        return res.status(200).json({ ok: true });
+        const reply = process.env.PING_REPLY_MESSAGE || null;
+        return res.status(200).json({ ok: true, reply });
     } catch (err) {
         console.error('ping webhook error:', err);
         return res.status(500).json({ error: 'TRANSMISSION_FAILED' });

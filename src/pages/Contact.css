@@ -168,6 +168,16 @@
     transition: color 0.3s ease;
 }
 
+.ping-reply {
+    font-size: 0.65rem;
+    letter-spacing: 0.5px;
+    color: var(--primary-color);
+    margin: 0;
+    padding-left: 2px;
+    line-height: 1.5;
+    filter: drop-shadow(0 0 6px rgba(var(--primary-color-rgb), 0.45));
+}
+
 [data-theme='light'] .ping-btn {
     background: rgba(255, 255, 255, 0.5);
 }
