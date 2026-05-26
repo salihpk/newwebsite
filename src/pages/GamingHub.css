@@ -1248,7 +1248,7 @@
 
 /* ≤ 480px — standard phone */
 @media (max-width: 480px) {
-    .gaming-page  { padding-bottom: 80px; overflow-x: hidden; }
+    .gaming-page  { padding-bottom: 80px; }
     .arena-name   { font-size: 2.1rem; letter-spacing: 5px; }
     .arena-prefix { font-size: 0.6rem; letter-spacing: 3px; }
 
