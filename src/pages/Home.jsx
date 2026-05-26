@@ -68,7 +68,7 @@ const Home = () => {
 
   return (
     <PageTransition className="page-container home-page">
-      <div className="hero-section">
+      <div className="hero-section" data-section="HOME">
         <div className="hero-content">
           <motion.h1
             className="glitch-text"
@@ -125,7 +125,7 @@ const Home = () => {
         </div>
       </div>
 
-      <section className="info-grid">
+      <section className="info-grid" data-section="SKILLS">
         <motion.div
           className="info-card"
           initial={{ opacity: 0, y: 40 }}

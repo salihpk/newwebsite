@@ -137,6 +137,7 @@ const GamingHub = () => {
                 {/* ── Hero ── */}
                 <motion.div
                     className="gaming-hero"
+                    data-section="ARENA"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6 }}
@@ -174,6 +175,7 @@ const GamingHub = () => {
                 {/* ── Profile Card (glassmorphism) ── */}
                 <motion.div
                     className="profile-banner glass-card"
+                    data-section="PROFILE"
                     style={{ '--status-color': discordStatusColor }}
                     initial={{ opacity: 0, y: -16 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -282,6 +284,7 @@ const GamingHub = () => {
                 {/* ── Live Activity (full-width) ── */}
                 <motion.div
                     className="glass-card live-activity-full"
+                    data-section="LIVE"
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.18, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
@@ -440,6 +443,7 @@ const GamingHub = () => {
                 {/* ── Steam Library (full-width) ── */}
                 <motion.div
                     className="glass-card library-panel"
+                    data-section="LIBRARY"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.32, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}

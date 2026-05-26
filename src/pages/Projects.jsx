@@ -143,7 +143,7 @@ const ProjectCard = ({ project, index }) => {
 
 const Projects = () => (
     <PageTransition className="page-container projects-page">
-        <header className="page-header">
+        <header className="page-header" data-section="REPOS">
             <div className="header-title-flex">
                 <motion.div
                     className="desktop-icon title-icon"
@@ -157,7 +157,7 @@ const Projects = () => (
             <p className="mono opacity-50">ARCHIVE DATA RETRIEVED: 2026-02-06</p>
         </header>
 
-        <div className="projects-grid">
+        <div className="projects-grid" data-section="PROJECTS">
             {projects.map((p, i) => (
                 <ProjectCard key={p.id} project={p} index={i} />
             ))}

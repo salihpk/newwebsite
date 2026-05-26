@@ -9,7 +9,9 @@ const Contact  = lazy(() => import('./pages/Contact'));
 
 import Navbar from './components/Navbar';
 import ScrollProgress from './components/ScrollProgress';
+import ScrollSidebar from './components/ScrollSidebar';
 import BootLoader from './components/BootLoader';
+import { useLenis } from './hooks/useLenis';
 
 import CyberBackground from './components/CyberBackground';
 import MusicPlayer from './components/MusicPlayer';
@@ -33,6 +35,9 @@ function App() {
     const [vpnDismissed, setVpnDismissed] = useState(false);
     const [vpnInfo, setVpnInfo] = useState(null);
     const routerLocation = useLocation();
+
+    // Lenis smooth scroll — only active after boot
+    useLenis();
 
     const toggleMusic = () => setIsMusicPlaying(p => !p);
 
@@ -81,12 +86,18 @@ function App() {
 
     useEffect(() => {
         const t = setTimeout(() => {
-            const orig = document.documentElement.style.scrollBehavior;
-            document.documentElement.style.scrollBehavior = 'auto';
-            window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-            requestAnimationFrame(() => {
-                document.documentElement.style.scrollBehavior = orig;
-            });
+            // If Lenis is running, use its scrollTo for instant reset
+            const lenis = window.__lenis;
+            if (lenis) {
+                lenis.scrollTo(0, { immediate: true });
+            } else {
+                const orig = document.documentElement.style.scrollBehavior;
+                document.documentElement.style.scrollBehavior = 'auto';
+                window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+                requestAnimationFrame(() => {
+                    document.documentElement.style.scrollBehavior = orig;
+                });
+            }
         }, 220);
         return () => clearTimeout(t);
     }, [routerLocation.pathname]);
@@ -104,6 +115,7 @@ function App() {
                         transition={{ duration: 0.6 }}
                     >
                         <ScrollProgress />
+                        <ScrollSidebar />
                         <CyberBackground />
                         <div className="crt-overlay"></div>
                         <div className="scanline"></div>

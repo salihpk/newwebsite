@@ -72,7 +72,7 @@ const Contact = () => {
 
   return (
     <PageTransition className="page-container contact-page">
-      <div className="contact-grid">
+      <div className="contact-grid" data-section="CONNECT">
         <motion.div 
            className="contact-info"
            initial={{ opacity: 0, x: -30 }}
