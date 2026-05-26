@@ -167,9 +167,6 @@ const GamingHub = () => {
                         <div className="pb-bg-grid" />
                     </div>
 
-                    {/* Animated scanline */}
-                    <div className="pb-scan-line" />
-
                     {/* Main content */}
                     <div className="pb-content">
                         {/* Avatar column */}
