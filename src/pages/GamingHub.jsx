@@ -256,34 +256,35 @@ const GamingHub = () => {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.3 }}
+                                    transition={{ duration: 0.35 }}
                                 >
-                                    <div className="la-art-wrap">
-                                        {activityArt && (
-                                            <img src={activityArt} alt="" className="la-art-bg" />
-                                        )}
-                                        {activityArt
-                                            ? <img src={activityArt} alt="" className="la-art" />
-                                            : <div className="la-art-placeholder mono">{discordActivity.name.charAt(0)}</div>
-                                        }
-                                        <div className="la-art-overlay">
-                                            <span className="la-game-title mono">{discordActivity.name}</span>
+                                    {activityArt && <img src={activityArt} alt="" className="la-art-bg" />}
+                                    <div className="la-art-overlay" />
+                                    <div className="la-game-body">
+                                        <div className="la-thumb-wrap">
+                                            {activityArt
+                                                ? <img src={activityArt} alt={discordActivity.name} className="la-thumb" />
+                                                : <div className="la-thumb-fallback mono">{discordActivity.name.charAt(0)}</div>
+                                            }
                                         </div>
-                                    </div>
-                                    <div className="la-meta">
-                                        <div className="la-meta-text">
+                                        <div className="la-game-info">
+                                            <span className="la-playing-badge mono">
+                                                <span className="la-live-pip" />
+                                                PLAYING
+                                            </span>
+                                            <h3 className="la-game-title mono">{discordActivity.name}</h3>
                                             {discordActivity.details && (
                                                 <span className="la-detail mono">{discordActivity.details}</span>
                                             )}
                                             {discordActivity.state && (
                                                 <span className="la-state mono">{discordActivity.state}</span>
                                             )}
+                                            {discordActivity.timestamps?.start && (
+                                                <span className="la-elapsed mono">
+                                                    ⏱ {formatElapsed(discordActivity.timestamps.start)}
+                                                </span>
+                                            )}
                                         </div>
-                                        {discordActivity.timestamps?.start && (
-                                            <span className="la-elapsed mono">
-                                                ⏱ {formatElapsed(discordActivity.timestamps.start)}
-                                            </span>
-                                        )}
                                     </div>
                                 </motion.div>
                             ) : discordSpotify ? (
@@ -293,14 +294,18 @@ const GamingHub = () => {
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.3 }}
+                                    transition={{ duration: 0.35 }}
                                 >
                                     {discordSpotify.album_art_url && (
                                         <img src={discordSpotify.album_art_url} alt="" className="la-spotify-bg" />
                                     )}
+                                    <div className="la-spotify-overlay" />
                                     <div className="la-spotify-content">
                                         {discordSpotify.album_art_url && (
-                                            <img src={discordSpotify.album_art_url} alt="" className="la-spotify-art" />
+                                            <div className="la-spotify-art-wrap">
+                                                <img src={discordSpotify.album_art_url} alt="" className="la-spotify-art" />
+                                                <div className="la-spotify-art-shine" />
+                                            </div>
                                         )}
                                         <div className="la-spotify-info">
                                             <span className="la-spotify-badge mono">
@@ -312,6 +317,17 @@ const GamingHub = () => {
                                             <span className="la-spotify-album mono">{discordSpotify.album}</span>
                                         </div>
                                     </div>
+                                    <div className="la-spotify-footer">
+                                        <div className="la-waveform">
+                                            {Array.from({ length: 22 }).map((_, i) => (
+                                                <div
+                                                    key={i}
+                                                    className="la-waveform-bar"
+                                                    style={{ animationDelay: `${(i * 0.08) % 1.2}s` }}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
                                 </motion.div>
                             ) : (
                                 <motion.div
@@ -321,15 +337,19 @@ const GamingHub = () => {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                 >
-                                    <div className="la-idle-scanner">
-                                        <div className="la-idle-ring la-idle-ring-1" />
-                                        <div className="la-idle-ring la-idle-ring-2" />
-                                        <div className="la-idle-ring la-idle-ring-3" />
-                                        <div className="la-idle-sweep" />
-                                        <Gamepad2 size={22} className="la-idle-icon" />
+                                    <div className="la-idle-grid" />
+                                    <div className="la-idle-inner">
+                                        <span className="la-idle-signal mono">SIGNAL_LOST</span>
+                                        <div className="la-idle-scanner">
+                                            <div className="la-idle-ring la-idle-ring-1" />
+                                            <div className="la-idle-ring la-idle-ring-2" />
+                                            <div className="la-idle-ring la-idle-ring-3" />
+                                            <div className="la-idle-sweep" />
+                                            <Gamepad2 size={22} className="la-idle-icon" />
+                                        </div>
+                                        <span className="la-idle-text mono">NO_ACTIVE_SESSION</span>
+                                        <span className="la-idle-sub mono">SCANNING<span className="la-idle-dots" /></span>
                                     </div>
-                                    <span className="la-idle-text mono">NO_ACTIVE_SESSION</span>
-                                    <span className="la-idle-sub mono">AWAITING_INPUT</span>
                                 </motion.div>
                             )}
                         </AnimatePresence>
