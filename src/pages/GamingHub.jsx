@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
-import { Gamepad2, Monitor, ShieldCheck, Music2, Trophy, Clock, Smartphone } from 'lucide-react';
+import { Gamepad2, ShieldCheck, Music2 } from 'lucide-react';
 import './GamingHub.css';
 
 const GamingHub = () => {
