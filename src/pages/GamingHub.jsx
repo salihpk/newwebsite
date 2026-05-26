@@ -159,34 +159,47 @@ const GamingHub = () => {
                             />
                         </div>
 
-                        <div className="operator-body">
-                            <div className="avatar-wrap">
-                                <img
-                                    src={
-                                        discordData?.discord_user?.avatar
-                                            ? `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${discordData.discord_user.avatar}.png?size=256`
-                                            : profileDefault
-                                    }
-                                    alt="Avatar"
-                                    className="operator-avatar"
-                                    onError={e => { e.target.src = profileDefault; }}
-                                />
+                        {/* Banner + avatar */}
+                        <div className="op-banner">
+                            <div className="op-banner-glow" />
+                            <div className="op-avatar-zone">
+                                <div
+                                    className="op-avatar-frame"
+                                    style={{ boxShadow: `0 0 0 2px ${discordStatusColor}, 0 0 22px ${discordStatusColor}55` }}
+                                >
+                                    <img
+                                        src={
+                                            discordData?.discord_user?.avatar
+                                                ? `https://cdn.discordapp.com/avatars/${DISCORD_USER_ID}/${discordData.discord_user.avatar}.png?size=256`
+                                                : '/profile2.png'
+                                        }
+                                        alt="Avatar"
+                                        className="op-avatar"
+                                        onError={e => { e.target.src = '/profile2.png'; }}
+                                    />
+                                </div>
                                 <span
-                                    className="avatar-ring"
-                                    style={{ borderColor: discordStatusColor, boxShadow: `0 0 10px ${discordStatusColor}` }}
+                                    className="op-status-dot"
+                                    style={{ background: discordStatusColor, boxShadow: `0 0 8px ${discordStatusColor}` }}
                                 />
                             </div>
-                            <div className="operator-info">
-                                <h2 className="mono operator-name">
-                                    {discordData?.discord_user?.global_name || discordData?.discord_user?.username || 'SPIDO'}
-                                </h2>
-                                <p className="mono text-xs opacity-50">
-                                    @{discordData?.discord_user?.username || '---'}
-                                </p>
-                                <span className="status-label mono" style={{ color: discordStatusColor }}>
-                                    {statusLabel}
-                                </span>
-                            </div>
+                        </div>
+
+                        {/* Identity */}
+                        <div className="op-identity">
+                            <h2 className="mono op-name">
+                                {discordData?.discord_user?.global_name || discordData?.discord_user?.username || 'SPIDO'}
+                            </h2>
+                            <p className="mono op-username">
+                                @{discordData?.discord_user?.username || '---'}
+                            </p>
+                            <span
+                                className="op-status-badge mono"
+                                style={{ color: discordStatusColor, borderColor: `${discordStatusColor}50` }}
+                            >
+                                <span className="op-status-pip" style={{ background: discordStatusColor }} />
+                                {statusLabel}
+                            </span>
                         </div>
 
                         {/* Inline stat rows */}
