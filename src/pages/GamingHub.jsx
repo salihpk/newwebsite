@@ -13,6 +13,7 @@ const GamingHub = () => {
     const [steamLoading, setSteamLoading] = useState(true);
     const [steamError, setSteamError] = useState(null);
     const [steamTotal, setSteamTotal] = useState(0);
+    const [steamStatus, setSteamStatus] = useState(null); // live in-game presence
 
     useEffect(() => {
         const fetchDiscord = async () => {
@@ -48,6 +49,24 @@ const GamingHub = () => {
             }
         };
         fetchSteam();
+    }, []);
+
+    // Poll Steam live presence every 30 s — fallback when Discord is closed
+    useEffect(() => {
+        const fetchSteamStatus = async () => {
+            try {
+                const res = await fetch('/api/steam-status');
+                if (res.ok) {
+                    const data = await res.json();
+                    setSteamStatus(data);
+                }
+            } catch (e) {
+                console.warn('Steam status error:', e);
+            }
+        };
+        fetchSteamStatus();
+        const interval = setInterval(fetchSteamStatus, 30000);
+        return () => clearInterval(interval);
     }, []);
 
     const discordActivity = discordData?.activities?.find(a => a.type === 0) || null;
@@ -280,6 +299,7 @@ const GamingHub = () => {
 
                     <AnimatePresence mode="wait">
                         {discordActivity ? (
+                            /* ── Discord rich presence game ── */
                             <motion.div
                                 key="game"
                                 className="la-game"
@@ -359,7 +379,45 @@ const GamingHub = () => {
                                     </div>
                                 </div>
                             </motion.div>
+                        ) : steamStatus?.inGame ? (
+                            /* ── Steam fallback (Discord not running) ── */
+                            <motion.div
+                                key="steam"
+                                className="la-game"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.35 }}
+                            >
+                                <img src={steamStatus.coverUrl} alt="" className="la-art-bg" />
+                                <div className="la-art-overlay" />
+                                <div className="la-game-body">
+                                    <div className="la-thumb-wrap">
+                                        <img
+                                            src={steamStatus.thumbUrl}
+                                            alt={steamStatus.gameName}
+                                            className="la-thumb"
+                                            onError={e => {
+                                                e.target.style.display = 'none';
+                                                e.target.nextSibling.style.display = 'flex';
+                                            }}
+                                        />
+                                        <div className="la-thumb-fallback mono">
+                                            {steamStatus.gameName.charAt(0)}
+                                        </div>
+                                    </div>
+                                    <div className="la-game-info">
+                                        <span className="la-playing-badge la-steam-badge mono">
+                                            <span className="la-live-pip" />
+                                            PLAYING ON STEAM
+                                        </span>
+                                        <h3 className="la-game-title mono">{steamStatus.gameName}</h3>
+                                        <span className="la-state mono">via Steam — Discord offline</span>
+                                    </div>
+                                </div>
+                            </motion.div>
                         ) : (
+                            /* ── Idle ── */
                             <motion.div
                                 key="idle"
                                 className="la-idle"

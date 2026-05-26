@@ -550,6 +550,17 @@
     margin-bottom: 2px;
 }
 
+/* Steam badge — slightly different tint to distinguish from Discord */
+.la-steam-badge {
+    color: #6dcff6;
+    text-shadow: 0 0 8px rgba(109, 207, 246, 0.5);
+}
+
+.la-steam-badge .la-live-pip {
+    background: #6dcff6;
+    box-shadow: 0 0 7px rgba(109, 207, 246, 0.7);
+}
+
 .la-live-pip {
     width: 6px;
     height: 6px;
