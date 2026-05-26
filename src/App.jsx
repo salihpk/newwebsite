@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import Home from './pages/Home';
-import Projects from './pages/Projects';
-import GamingHub from './pages/GamingHub';
-import Contact from './pages/Contact';
+
+const Home     = lazy(() => import('./pages/Home'));
+const Projects = lazy(() => import('./pages/Projects'));
+const GamingHub = lazy(() => import('./pages/GamingHub'));
+const Contact  = lazy(() => import('./pages/Contact'));
 
 import Navbar from './components/Navbar';
 import ScrollProgress from './components/ScrollProgress';
@@ -128,12 +129,14 @@ function App() {
 
                         <main>
                             <AnimatePresence mode="wait">
-                                <Routes location={routerLocation} key={routerLocation.pathname}>
-                                    <Route path="/" element={<Home />} />
-                                    <Route path="/projects" element={<Projects />} />
-                                    <Route path="/gaming" element={<GamingHub />} />
-                                    <Route path="/contact" element={<Contact />} />
-                                </Routes>
+                                <Suspense fallback={null}>
+                                    <Routes location={routerLocation} key={routerLocation.pathname}>
+                                        <Route path="/" element={<Home />} />
+                                        <Route path="/projects" element={<Projects />} />
+                                        <Route path="/gaming" element={<GamingHub />} />
+                                        <Route path="/contact" element={<Contact />} />
+                                    </Routes>
+                                </Suspense>
                             </AnimatePresence>
                         </main>
 
@@ -155,36 +158,6 @@ function App() {
             </AnimatePresence>
 
             <MatrixRain isActive={showMatrix} onClose={() => setShowMatrix(false)} />
-
-            <style>{`
-                .vpn-status-toast {
-                    position: fixed; bottom: 80px; right: 20px; z-index: 10000;
-                    background: rgba(255, 0, 60, 0.1);
-                    border: 1px solid rgba(255, 0, 60, 0.5);
-                    color: #ff003c;
-                    padding: 8px 12px;
-                    font-size: 0.65rem;
-                    backdrop-filter: blur(8px);
-                    border-radius: 4px;
-                    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-                }
-                .vpn-toast-content { display: flex; align-items: center; gap: 10px; }
-                .close-toast {
-                    background: none; border: none; color: #ff003c;
-                    font-size: 1rem; cursor: pointer; padding: 0 0 0 5px;
-                    opacity: 0.7; transition: opacity 0.2s;
-                }
-                .close-toast:hover { opacity: 1; }
-                .text-warn { color: #ff003c; text-shadow: 0 0 5px rgba(255,0,60,0.5); }
-                .blink { animation: vpnBlink 1.5s infinite; }
-                @keyframes vpnBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-                .footer-stats {
-                    display: flex; align-items: center; justify-content: center; gap: 10px;
-                    flex-wrap: wrap; padding: 0 10px;
-                }
-                .footer-stat-item { display: flex; align-items: center; gap: 5px; }
-                .footer-stats span { transition: all 0.3s ease; }
-            `}</style>
         </div>
     );
 }

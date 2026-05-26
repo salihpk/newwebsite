@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PageTransition from '../components/PageTransition';
-import profileDefault from '../assets/profile.png';
 import { Gamepad2, Monitor, ShieldCheck, Music2, Wifi } from 'lucide-react';
 import './GamingHub.css';
 
