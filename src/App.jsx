@@ -16,6 +16,7 @@ import { useLenis } from './hooks/useLenis';
 import CyberBackground from './components/CyberBackground';
 import MusicPlayer from './components/MusicPlayer';
 import MatrixRain from './components/MatrixRain';
+import AiAssistant from './components/AiAssistant';
 import { MapPin, ShieldCheck, Cpu } from 'lucide-react';
 import './App.css';
 
@@ -165,6 +166,7 @@ function App() {
                         </footer>
 
                         <MusicPlayer isPlaying={isMusicPlaying} />
+                        <AiAssistant />
                     </motion.div>
                 )}
             </AnimatePresence>
