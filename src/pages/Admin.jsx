@@ -1,45 +1,75 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, LayoutDashboard, BookOpen, Trophy, FileText, Shield, Terminal, Bug, LogOut, Eye, EyeOff } from 'lucide-react';
+import { Lock, LayoutDashboard, BookOpen, Trophy, FileText, Shield, Terminal, Bug, LogOut, Eye, EyeOff, Loader } from 'lucide-react';
 import PageTransition from '../components/PageTransition';
 import './Admin.css';
 
 // Lazy load each panel
-const ModuleTracker   = lazy(() => import('./admin/ModuleTracker'));
-const LearningLog     = lazy(() => import('./admin/LearningLog'));
-const Achievements    = lazy(() => import('./admin/Achievements'));
-const CheatSheet      = lazy(() => import('./admin/CheatSheet'));
-const VulnLog         = lazy(() => import('./admin/VulnLog'));
+const ModuleTracker = lazy(() => import('./admin/ModuleTracker'));
+const LearningLog   = lazy(() => import('./admin/LearningLog'));
+const Achievements  = lazy(() => import('./admin/Achievements'));
+const CheatSheet    = lazy(() => import('./admin/CheatSheet'));
+const VulnLog       = lazy(() => import('./admin/VulnLog'));
 
-const ADMIN_PASSWORD = 'spido2025';   // change this to whatever you want
-const SESSION_KEY    = 'admin_session';
+// Token stored in sessionStorage — disappears when the tab closes.
+// The actual secret never leaves the server.
+const TOKEN_KEY = 'admin_token';
 
 const NAV = [
-    { id: 'modules',  label: 'Module Tracker',    icon: LayoutDashboard, phase: 'core' },
-    { id: 'log',      label: 'Learning Log',       icon: BookOpen,        phase: 'core' },
-    { id: 'achieve',  label: 'Achievements',       icon: Trophy,          phase: 'core' },
-    { id: 'cheat',    label: 'Cheat Sheets',       icon: Terminal,        phase: 'core' },
-    { id: 'vuln',     label: 'Vuln Log',           icon: Bug,             phase: 'core' },
-    { id: 'ai',       label: 'AI Reports',         icon: FileText,        phase: 'phase2' },
-    { id: 'security', label: 'Security Controls',  icon: Shield,          phase: 'phase2' },
+    { id: 'modules',  label: 'Module Tracker',   icon: LayoutDashboard, phase: 'core'   },
+    { id: 'log',      label: 'Learning Log',      icon: BookOpen,        phase: 'core'   },
+    { id: 'achieve',  label: 'Achievements',      icon: Trophy,          phase: 'core'   },
+    { id: 'cheat',    label: 'Cheat Sheets',      icon: Terminal,        phase: 'core'   },
+    { id: 'vuln',     label: 'Vuln Log',          icon: Bug,             phase: 'core'   },
+    { id: 'ai',       label: 'AI Reports',        icon: FileText,        phase: 'phase2' },
+    { id: 'security', label: 'Security Controls', icon: Shield,          phase: 'phase2' },
 ];
+
+// ── Server-side auth helpers ──────────────────────────────────────────────────
+
+async function apiLogin(password) {
+    const res = await fetch('/api/admin-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Auth failed');
+    return data.token;
+}
+
+async function apiVerify(token) {
+    const res = await fetch('/api/admin-verify', {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.ok;
+}
+
+// ── Login screen ──────────────────────────────────────────────────────────────
 
 function LoginScreen({ onLogin }) {
     const [pw, setPw]         = useState('');
     const [show, setShow]     = useState(false);
     const [error, setError]   = useState('');
+    const [loading, setLoading] = useState(false);
     const [shake, setShake]   = useState(false);
 
-    const attempt = (e) => {
+    const attempt = async (e) => {
         e.preventDefault();
-        if (pw === ADMIN_PASSWORD) {
-            sessionStorage.setItem(SESSION_KEY, '1');
-            onLogin();
-        } else {
+        if (loading) return;
+        setLoading(true);
+        setError('');
+        try {
+            const token = await apiLogin(pw);
+            sessionStorage.setItem(TOKEN_KEY, token);
+            onLogin(token);
+        } catch {
             setError('ACCESS_DENIED: Invalid credentials');
             setShake(true);
             setTimeout(() => setShake(false), 600);
             setPw('');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -64,6 +94,7 @@ function LoginScreen({ onLogin }) {
                             placeholder="> enter_password"
                             value={pw}
                             onChange={e => { setPw(e.target.value); setError(''); }}
+                            disabled={loading}
                             autoFocus
                         />
                         <button type="button" className="admin-pw-toggle" onClick={() => setShow(s => !s)}>
@@ -82,8 +113,8 @@ function LoginScreen({ onLogin }) {
                             </motion.p>
                         )}
                     </AnimatePresence>
-                    <button type="submit" className="cyber-btn admin-login-btn">
-                        AUTHENTICATE
+                    <button type="submit" className="cyber-btn admin-login-btn" disabled={loading}>
+                        {loading ? <><Loader size={14} className="spin" /> VERIFYING...</> : 'AUTHENTICATE'}
                     </button>
                 </form>
             </motion.div>
@@ -97,46 +128,73 @@ function Phase2Placeholder({ label, icon: Icon }) {
             <Icon size={40} className="admin-ph2-icon" />
             <h3 className="mono">{label.toUpperCase().replace(' ', '_')}</h3>
             <p className="mono admin-ph2-tag">// PHASE_2 — coming soon</p>
-            <p>This feature is planned for Phase 2. Check back after the core modules are complete.</p>
+            <p>This feature is planned for Phase 2.</p>
         </div>
     );
 }
 
+// ── Main component ────────────────────────────────────────────────────────────
+
 export default function Admin() {
-    const [authed, setAuthed]     = useState(() => !!sessionStorage.getItem(SESSION_KEY));
-    const [active, setActive]     = useState('modules');
-    const [sideOpen, setSideOpen] = useState(false);
+    // 'checking' | 'login' | 'authed'
+    const [authState, setAuthState] = useState('checking');
+    const [active, setActive]       = useState('modules');
+    const [sideOpen, setSideOpen]   = useState(false);
 
-    const logout = () => {
-        sessionStorage.removeItem(SESSION_KEY);
-        setAuthed(false);
-    };
+    // On mount: verify any stored token with the server
+    useEffect(() => {
+        const token = sessionStorage.getItem(TOKEN_KEY);
+        if (!token) { setAuthState('login'); return; }
+        apiVerify(token).then(ok => setAuthState(ok ? 'authed' : 'login'));
+    }, []);
 
-    if (!authed) return (
+    const handleLogin = useCallback((token) => {
+        sessionStorage.setItem(TOKEN_KEY, token);
+        setAuthState('authed');
+    }, []);
+
+    const logout = useCallback(() => {
+        sessionStorage.removeItem(TOKEN_KEY);
+        setAuthState('login');
+    }, []);
+
+    // ── Render: checking ──
+    if (authState === 'checking') return (
         <PageTransition className="page-container">
-            <LoginScreen onLogin={() => setAuthed(true)} />
+            <div className="admin-login-wrap">
+                <div className="mono" style={{ color: 'var(--text-dim)', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <Loader size={14} className="spin" /> VERIFYING_SESSION...
+                </div>
+            </div>
         </PageTransition>
     );
 
+    // ── Render: login ──
+    if (authState === 'login') return (
+        <PageTransition className="page-container">
+            <LoginScreen onLogin={handleLogin} />
+        </PageTransition>
+    );
+
+    // ── Render: authed ──
     const activeNav = NAV.find(n => n.id === active);
 
     const renderPanel = () => {
         switch (active) {
-            case 'modules': return <ModuleTracker />;
-            case 'log':     return <LearningLog />;
-            case 'achieve': return <Achievements />;
-            case 'cheat':   return <CheatSheet />;
-            case 'vuln':    return <VulnLog />;
-            case 'ai':      return <Phase2Placeholder label="AI Reports" icon={FileText} />;
-            case 'security':return <Phase2Placeholder label="Security Controls" icon={Shield} />;
-            default:        return null;
+            case 'modules':  return <ModuleTracker />;
+            case 'log':      return <LearningLog />;
+            case 'achieve':  return <Achievements />;
+            case 'cheat':    return <CheatSheet />;
+            case 'vuln':     return <VulnLog />;
+            case 'ai':       return <Phase2Placeholder label="AI Reports" icon={FileText} />;
+            case 'security': return <Phase2Placeholder label="Security Controls" icon={Shield} />;
+            default:         return null;
         }
     };
 
     return (
         <PageTransition className="page-container admin-page">
             <div className="admin-layout">
-                {/* Sidebar */}
                 <aside className={`admin-sidebar ${sideOpen ? 'open' : ''}`}>
                     <div className="admin-sidebar-header mono">
                         <span className="admin-sidebar-brand">SPIDO:// ADMIN</span>
@@ -159,9 +217,7 @@ export default function Admin() {
                     </button>
                 </aside>
 
-                {/* Main */}
                 <div className="admin-main" onClick={() => sideOpen && setSideOpen(false)}>
-                    {/* Topbar */}
                     <header className="admin-topbar">
                         <button className="admin-hamburger" onClick={e => { e.stopPropagation(); setSideOpen(s => !s); }}>
                             <span /><span /><span />

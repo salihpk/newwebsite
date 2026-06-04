@@ -112,6 +112,11 @@
 }
 .shake { animation: shake 0.5s ease; }
 
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+.spin { animation: spin 0.9s linear infinite; }
+
 /* ── Layout ── */
 .admin-page {
     padding: 0 !important;
