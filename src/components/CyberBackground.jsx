@@ -130,23 +130,19 @@ const CyberBackground = () => {
     }, []);
 
     return (
-        <>
-            <div className="cyber-glow cyber-glow-1" aria-hidden="true" />
-            <div className="cyber-glow cyber-glow-2" aria-hidden="true" />
-            <canvas
-                ref={canvasRef}
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100vw',
-                    height: '100vh',
-                    zIndex: -1,
-                    pointerEvents: 'none',
-                    opacity: 0.6
-                }}
-            />
-        </>
+        <canvas
+            ref={canvasRef}
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                zIndex: -1,
+                pointerEvents: 'none',
+                opacity: 0.6
+            }}
+        />
     );
 };
 

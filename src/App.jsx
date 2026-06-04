@@ -6,6 +6,8 @@ const Home     = lazy(() => import('./pages/Home'));
 const Projects = lazy(() => import('./pages/Projects'));
 const GamingHub = lazy(() => import('./pages/GamingHub'));
 const Contact  = lazy(() => import('./pages/Contact'));
+const Admin     = lazy(() => import('./pages/Admin'));
+const NotFound  = lazy(() => import('./pages/NotFound'));
 
 import Navbar from './components/Navbar';
 import ScrollProgress from './components/ScrollProgress';
@@ -147,6 +149,8 @@ function App() {
                                         <Route path="/projects" element={<Projects />} />
                                         <Route path="/gaming" element={<GamingHub />} />
                                         <Route path="/contact" element={<Contact />} />
+                                        <Route path="/admin" element={<Admin />} />
+                                        <Route path="*" element={<NotFound />} />
                                     </Routes>
                                 </Suspense>
                             </AnimatePresence>
