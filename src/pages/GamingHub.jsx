@@ -172,111 +172,99 @@ const GamingHub = () => {
                     </div>
                 </motion.div>
 
-                {/* ── Profile Card (glassmorphism) ── */}
+                {/* ── Discord-style Profile Card ── */}
                 <motion.div
-                    className="profile-banner glass-card"
+                    className="dc-card"
                     data-section="PROFILE"
-                    style={{ '--status-color': discordStatusColor }}
                     initial={{ opacity: 0, y: -16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {/* Top section: avatar + identity */}
-                    <div className="pb-top">
-                        {/* Avatar */}
-                        <div className="pb-avatar-zone">
-                            <div
-                                className="pb-avatar-wrap"
-                                style={{
-                                    boxShadow: `0 0 0 3px ${discordStatusColor}99, 0 0 22px ${discordStatusColor}33`,
-                                }}
-                            >
-                                <img
-                                    src={avatarUrl}
-                                    alt="Avatar"
-                                    className="pb-avatar-img"
-                                    onError={e => { e.target.src = '/profile2.png'; }}
-                                />
-                            </div>
-                            <span
-                                className="pb-status-dot"
-                                style={{ background: discordStatusColor, boxShadow: `0 0 10px ${discordStatusColor}` }}
+                    {/* Banner */}
+                    <div className="dc-banner">
+                        <div className="dc-banner-gradient" />
+                        <div className="dc-banner-scan" />
+                    </div>
+
+                    {/* Avatar row — overlaps banner */}
+                    <div className="dc-avatar-row">
+                        <div className="dc-avatar-wrap" style={{ boxShadow: `0 0 0 4px var(--dc-bg), 0 0 0 6px ${discordStatusColor}88` }}>
+                            <img
+                                src={avatarUrl}
+                                alt="Avatar"
+                                className="dc-avatar-img"
+                                onError={e => { e.target.src = '/profile2.png'; }}
                             />
+                            <span className="dc-status-dot" style={{ background: discordStatusColor, boxShadow: `0 0 8px ${discordStatusColor}` }} />
                         </div>
-
-                        {/* Identity */}
-                        <div className="pb-identity">
-                            <div className="pb-name-row">
-                                <h2 className="pb-name mono">
-                                    {discordData?.discord_user?.global_name || discordData?.discord_user?.username || 'SPIDO'}
-                                </h2>
-                                <span
-                                    className="pb-status-badge mono"
-                                    style={{ color: discordStatusColor, borderColor: `${discordStatusColor}44` }}
-                                >
-                                    <span className="pb-status-pip" style={{ background: discordStatusColor }} />
-                                    {statusLabel}
-                                </span>
-                            </div>
-
-                            <p className="pb-username mono">
-                                @{discordData?.discord_user?.username || '---'}
-                                <span className="pb-operator-id"> · ID:{DISCORD_USER_ID.slice(-8)}</span>
-                            </p>
-
-                            {customStatus && (
-                                <p className="pb-custom-status mono">
-                                    <span className="pb-quote">"</span>
-                                    {customStatus}
-                                    <span className="pb-quote">"</span>
-                                </p>
-                            )}
-
-                            <div className="pb-actions">
-                                <a
-                                    href="https://discord.gg/zcXGkH98Qk"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="cyber-btn sm mono"
-                                >
-                                    JOIN_DISCORD
-                                </a>
-                                <a
-                                    href={`https://discord.com/users/${DISCORD_USER_ID}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="mono subtle-link"
-                                >
-                                    VIEW_PROFILE ↗
-                                </a>
-                            </div>
+                        <div className="dc-avatar-actions">
+                            <a href="https://discord.gg/zcXGkH98Qk" target="_blank" rel="noopener noreferrer" className="cyber-btn sm mono">
+                                JOIN_DISCORD
+                            </a>
+                            <a href={`https://discord.com/users/${DISCORD_USER_ID}`} target="_blank" rel="noopener noreferrer" className="mono subtle-link">
+                                VIEW_PROFILE ↗
+                            </a>
                         </div>
                     </div>
 
-                    {/* Divider */}
-                    <div className="pb-divider" />
+                    {/* Body */}
+                    <div className="dc-body">
+                        {/* Name + status */}
+                        <div className="dc-name-row">
+                            <h2 className="dc-display-name mono">
+                                {discordData?.discord_user?.global_name || discordData?.discord_user?.username || 'SPIDO'}
+                            </h2>
+                            <span className="dc-status-badge mono" style={{ color: discordStatusColor, borderColor: `${discordStatusColor}44` }}>
+                                <span className="dc-status-pip" style={{ background: discordStatusColor }} />
+                                {statusLabel}
+                            </span>
+                        </div>
 
-                    {/* Stats strip — spans full width */}
-                    <div className="pb-stats-strip">
-                        <div className="pb-stat">
-                            <span className="pb-stat-key mono">PLATFORM</span>
-                            <span className="pb-stat-val mono">{platform}</span>
+                        {/* Username */}
+                        <p className="dc-username mono">
+                            @{discordData?.discord_user?.username || '---'}
+                            <span className="dc-uid mono"> · ID:{DISCORD_USER_ID.slice(-8)}</span>
+                        </p>
+
+                        {/* Badges row */}
+                        <div className="dc-badges">
+                            <span className="dc-badge mono" title="Cybersecurity">🛡️ SEC</span>
+                            <span className="dc-badge mono" title="AI Enthusiast">🤖 AI</span>
+                            <span className="dc-badge mono" title="Developer">⚡ DEV</span>
+                            <span className="dc-badge dc-badge--device mono" title="Lenovo LOQ">💻 LOQ</span>
                         </div>
-                        <div className="pb-stat">
-                            <span className="pb-stat-key mono">DEVICE</span>
-                            <span className="pb-stat-val mono device-glow">Lenovo LOQ</span>
-                        </div>
-                        <div className="pb-stat">
-                            <span className="pb-stat-key mono">TOTAL_HRS</span>
-                            <span className="pb-stat-val mono">
-                                {steamLoading ? '...' : totalHoursDisplay}
-                            </span>
-                        </div>
-                        <div className="pb-stat pb-stat--top">
-                            <span className="pb-stat-key mono">TOP_GAME</span>
-                            <span className="pb-stat-val mono">
-                                {steamLoading ? '...' : topGame ? topGame.name : '—'}
-                            </span>
+
+                        {/* Divider */}
+                        <div className="dc-divider" />
+
+                        {/* About / custom status */}
+                        <div className="dc-section-label mono">ABOUT_ME</div>
+                        <p className="dc-about mono">
+                            {customStatus || 'Cybersecurity Aspirant · AI Enthusiast · Creative Developer'}
+                        </p>
+
+                        {/* Divider */}
+                        <div className="dc-divider" />
+
+                        {/* Stats */}
+                        <div className="dc-section-label mono">STATS</div>
+                        <div className="dc-stats">
+                            <div className="dc-stat">
+                                <span className="dc-stat-key mono">PLATFORM</span>
+                                <span className="dc-stat-val mono">{platform}</span>
+                            </div>
+                            <div className="dc-stat">
+                                <span className="dc-stat-key mono">DEVICE</span>
+                                <span className="dc-stat-val mono">Lenovo LOQ</span>
+                            </div>
+                            <div className="dc-stat">
+                                <span className="dc-stat-key mono">TOTAL_HRS</span>
+                                <span className="dc-stat-val mono">{steamLoading ? '...' : totalHoursDisplay}</span>
+                            </div>
+                            <div className="dc-stat">
+                                <span className="dc-stat-key mono">TOP_GAME</span>
+                                <span className="dc-stat-val mono">{steamLoading ? '...' : topGame ? topGame.name : '—'}</span>
+                            </div>
                         </div>
                     </div>
                 </motion.div>

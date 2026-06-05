@@ -238,6 +238,252 @@
 
 /* ── Profile Card (glassmorphism) ───────────────────── */
 
+/* ── Discord-style Profile Card ─────────────────────── */
+.dc-card {
+    --dc-bg: #0d0d10;
+    background: rgba(14, 14, 18, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(var(--primary-color-rgb), 0.15);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+}
+
+[data-theme='light'] .dc-card {
+    --dc-bg: #f0f2f5;
+    background: rgba(240, 242, 245, 0.92);
+    border-color: rgba(var(--primary-color-rgb), 0.18);
+}
+
+/* Banner */
+.dc-banner {
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+}
+
+.dc-banner-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+        rgba(var(--primary-color-rgb), 0.55) 0%,
+        rgba(var(--primary-color-rgb), 0.12) 50%,
+        rgba(0, 20, 10, 0.9) 100%);
+}
+
+[data-theme='light'] .dc-banner-gradient {
+    background: linear-gradient(135deg,
+        rgba(var(--primary-color-rgb), 0.4) 0%,
+        rgba(var(--primary-color-rgb), 0.08) 60%,
+        rgba(220, 230, 255, 0.6) 100%);
+}
+
+.dc-banner-scan {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0,0,0,0.08) 3px,
+        rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+}
+
+/* Avatar row */
+.dc-avatar-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 20px 0 20px;
+    margin-top: -42px;
+    position: relative;
+    z-index: 2;
+}
+
+.dc-avatar-wrap {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    background: var(--dc-bg);
+    padding: 4px;
+}
+
+.dc-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.dc-status-dot {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 3px solid var(--dc-bg);
+    transition: background 0.3s;
+}
+
+.dc-avatar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 6px;
+}
+
+/* Body */
+.dc-body {
+    padding: 12px 20px 20px;
+}
+
+.dc-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 2px;
+}
+
+.dc-display-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0;
+    letter-spacing: 0.5px;
+}
+
+.dc-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.6rem;
+    letter-spacing: 1.5px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1px solid;
+}
+
+.dc-status-pip {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dc-username {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    margin: 0 0 10px;
+    letter-spacing: 0.3px;
+}
+
+.dc-uid {
+    opacity: 0.5;
+    font-size: 0.65rem;
+}
+
+/* Badges */
+.dc-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.dc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 0.62rem;
+    letter-spacing: 1px;
+    background: rgba(var(--primary-color-rgb), 0.1);
+    border: 1px solid rgba(var(--primary-color-rgb), 0.22);
+    color: var(--primary-color);
+    transition: background 0.15s;
+}
+
+.dc-badge:hover {
+    background: rgba(var(--primary-color-rgb), 0.2);
+}
+
+.dc-badge--device {
+    background: rgba(109, 207, 246, 0.08);
+    border-color: rgba(109, 207, 246, 0.22);
+    color: #6dcff6;
+}
+
+/* Divider */
+.dc-divider {
+    height: 1px;
+    background: rgba(var(--primary-color-rgb), 0.08);
+    margin: 12px 0;
+}
+
+/* Section label */
+.dc-section-label {
+    font-size: 0.58rem;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    opacity: 0.7;
+}
+
+/* About */
+.dc-about {
+    font-size: 0.78rem;
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.85;
+}
+
+/* Stats grid */
+.dc-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 20px;
+}
+
+.dc-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dc-stat-key {
+    font-size: 0.58rem;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    opacity: 0.7;
+}
+
+.dc-stat-val {
+    font-size: 0.75rem;
+    color: var(--text-color);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+    .dc-avatar-row { flex-direction: column; align-items: flex-start; gap: 10px; margin-top: -36px; }
+    .dc-avatar-wrap { width: 72px; height: 72px; }
+    .dc-avatar-actions { padding-bottom: 0; }
+    .dc-display-name { font-size: 1.05rem; }
+    .dc-stats { grid-template-columns: 1fr; }
+}
+
 /* The card itself reuses .glass-card — only layout overrides needed */
 .profile-banner {
     padding: 0;
