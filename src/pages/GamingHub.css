@@ -1330,6 +1330,166 @@
     100% { content: ''; }
 }
 
+/* ── Operator Profile Card (MC-synced) ──────────────── */
+.op-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.op-header {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.58rem;
+    letter-spacing: 2.5px;
+    color: var(--text-dim);
+    padding: 12px 18px 10px;
+    border-bottom: 1px solid rgba(var(--primary-color-rgb), 0.08);
+}
+
+.op-header-id {
+    margin-left: auto;
+    font-size: 0.55rem;
+    letter-spacing: 1.5px;
+    opacity: 0.4;
+}
+
+.op-body {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+/* Avatar */
+.op-avatar-col {
+    position: relative;
+    flex-shrink: 0;
+    padding: 20px 22px;
+}
+
+.op-avatar-wrap {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+}
+
+.op-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.op-status-dot {
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(5,5,8,0.9);
+}
+
+/* Identity */
+.op-identity {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 0;
+    border-left: 1px solid rgba(var(--primary-color-rgb), 0.08);
+    border-right: 1px solid rgba(var(--primary-color-rgb), 0.08);
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+.op-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 2px;
+}
+
+.op-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-color);
+    letter-spacing: 0.5px;
+}
+
+.op-custom-status {
+    font-style: italic;
+    opacity: 0.75;
+}
+
+.op-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+
+/* Vertical divider */
+.op-vdivider {
+    width: 1px;
+    align-self: stretch;
+    background: rgba(var(--primary-color-rgb), 0.08);
+    flex-shrink: 0;
+}
+
+/* Stats */
+.op-stats {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px 22px;
+    min-width: 200px;
+}
+
+/* Footer */
+.op-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 18px;
+    border-top: 1px solid rgba(var(--primary-color-rgb), 0.08);
+    font-size: 0.55rem;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    opacity: 0.5;
+}
+
+/* mc-badge reuse */
+.mc-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.58rem;
+    letter-spacing: 1.5px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid;
+}
+
+@media (max-width: 640px) {
+    .op-body { flex-wrap: wrap; }
+    .op-vdivider { display: none; }
+    .op-stats {
+        width: 100%;
+        min-width: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 0 18px 16px;
+        border-top: 1px solid rgba(var(--primary-color-rgb), 0.08);
+    }
+    .op-identity { border-right: none; }
+}
+
 /* ── Mission Control ────────────────────────────────── */
 .mc-grid {
     display: grid;

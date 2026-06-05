@@ -172,81 +172,88 @@ const GamingHub = () => {
                     </div>
                 </motion.div>
 
-                {/* ── Horizontal Banner Profile Card ── */}
+                {/* ── Operator Profile (MC-synced) ── */}
                 <motion.div
-                    className="hb-card"
+                    className="glass-card op-card"
                     data-section="PROFILE"
-                    style={{ '--status-color': discordStatusColor }}
                     initial={{ opacity: 0, y: -16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {/* Blurred avatar background */}
-                    <img src={avatarUrl} alt="" className="hb-bg" aria-hidden />
-                    <div className="hb-bg-overlay" />
+                    {/* Header — same style as mc-panel-header */}
+                    <div className="op-header mono">
+                        <span className="mc-pip" style={{ background: discordStatusColor, boxShadow: `0 0 6px ${discordStatusColor}` }} />
+                        OPERATOR_PROFILE
+                        <span className="op-header-id">NODE_00</span>
+                    </div>
 
-                    {/* Content row */}
-                    <div className="hb-inner">
+                    {/* Body grid: avatar + data cols */}
+                    <div className="op-body">
 
-                        {/* Avatar */}
-                        <div className="hb-avatar-zone">
-                            <div className="hb-avatar-ring" style={{ boxShadow: `0 0 0 3px ${discordStatusColor}, 0 0 24px ${discordStatusColor}55` }}>
+                        {/* Avatar col */}
+                        <div className="op-avatar-col">
+                            <div className="op-avatar-wrap" style={{ boxShadow: `0 0 0 2px ${discordStatusColor}, 0 0 18px ${discordStatusColor}44` }}>
                                 <img
                                     src={avatarUrl}
                                     alt="Avatar"
-                                    className="hb-avatar-img"
+                                    className="op-avatar-img"
                                     onError={e => { e.target.src = '/profile2.png'; }}
                                 />
                             </div>
-                            <span className="hb-status-dot" style={{ background: discordStatusColor, boxShadow: `0 0 8px ${discordStatusColor}` }} />
+                            <span className="op-status-dot" style={{ background: discordStatusColor, boxShadow: `0 0 8px ${discordStatusColor}` }} />
                         </div>
 
-                        {/* Identity */}
-                        <div className="hb-identity">
-                            <div className="hb-name-row">
-                                <h2 className="hb-name mono">
+                        {/* Identity col */}
+                        <div className="op-identity">
+                            <div className="op-name-row">
+                                <span className="op-name mono">
                                     {discordData?.discord_user?.global_name || discordData?.discord_user?.username || 'SPIDO'}
-                                </h2>
-                                <span className="hb-status-badge mono" style={{ color: discordStatusColor, borderColor: `${discordStatusColor}55` }}>
-                                    <span className="hb-pip" style={{ background: discordStatusColor }} />
+                                </span>
+                                <span className="mc-badge mono" style={{ color: discordStatusColor, borderColor: `${discordStatusColor}44` }}>
+                                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: discordStatusColor, display: 'inline-block', marginRight: 4 }} />
                                     {statusLabel}
                                 </span>
                             </div>
-                            <p className="hb-username mono">
-                                @{discordData?.discord_user?.username || '---'}
-                                <span className="hb-uid"> · ID:{DISCORD_USER_ID.slice(-8)}</span>
-                            </p>
+                            <div className="mc-row mono" style={{ marginBottom: 2 }}>
+                                <span className="mc-key">USER</span>
+                                <span className="mc-val">@{discordData?.discord_user?.username || '---'}</span>
+                            </div>
                             {customStatus && (
-                                <p className="hb-custom-status mono">"{customStatus}"</p>
+                                <div className="mc-row mono">
+                                    <span className="mc-key">STATUS</span>
+                                    <span className="mc-val op-custom-status">"{customStatus}"</span>
+                                </div>
                             )}
-                            <div className="hb-actions">
-                                <a href="https://discord.gg/zcXGkH98Qk" target="_blank" rel="noopener noreferrer" className="cyber-btn sm mono">
-                                    JOIN_DISCORD
-                                </a>
-                                <a href={`https://discord.com/users/${DISCORD_USER_ID}`} target="_blank" rel="noopener noreferrer" className="mono subtle-link">
-                                    VIEW_PROFILE ↗
-                                </a>
+                            <div className="op-actions">
+                                <a href="https://discord.gg/zcXGkH98Qk" target="_blank" rel="noopener noreferrer" className="cyber-btn sm mono">JOIN_DISCORD</a>
+                                <a href={`https://discord.com/users/${DISCORD_USER_ID}`} target="_blank" rel="noopener noreferrer" className="mono subtle-link">VIEW_PROFILE ↗</a>
                             </div>
                         </div>
 
-                        {/* Divider */}
-                        <div className="hb-vdivider" />
+                        {/* Vertical divider */}
+                        <div className="op-vdivider" />
 
-                        {/* Stats */}
-                        <div className="hb-stats">
+                        {/* Stats col */}
+                        <div className="op-stats">
                             {[
                                 ['PLATFORM',  platform],
                                 ['DEVICE',    'Lenovo LOQ'],
                                 ['TOTAL_HRS', steamLoading ? '...' : totalHoursDisplay],
                                 ['TOP_GAME',  steamLoading ? '...' : topGame ? topGame.name : '—'],
                             ].map(([k, v]) => (
-                                <div key={k} className="hb-stat">
-                                    <span className="hb-stat-key mono">{k}</span>
-                                    <span className="hb-stat-val mono">{v}</span>
+                                <div key={k} className="mc-row mono">
+                                    <span className="mc-key">{k}</span>
+                                    <span className="mc-val">{v}</span>
                                 </div>
                             ))}
                         </div>
 
+                    </div>
+
+                    {/* Footer — same style as mc-panel-footer */}
+                    <div className="op-footer mono">
+                        <span className="mc-footer-label">OPERATOR_ID: {DISCORD_USER_ID.slice(-6)}</span>
+                        <span className="mc-footer-dot" />
                     </div>
                 </motion.div>
 
