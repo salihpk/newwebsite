@@ -1787,14 +1787,38 @@
 
 /* ≤ 640px — large phone */
 @media (max-width: 640px) {
+    /* Discord + Steam side by side, Activity full width below */
     .mc-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
     }
-    .mc-panel {
+    /* Discord: top-left */
+    .mc-panel--discord {
+        grid-column: 1;
+        grid-row: 1;
+        border-right: 1px solid rgba(var(--primary-color-rgb), 0.08);
+        border-bottom: 1px solid rgba(var(--primary-color-rgb), 0.08);
+    }
+    /* Steam: top-right */
+    .mc-panel--steam {
+        grid-column: 2;
+        grid-row: 1;
         border-right: none;
         border-bottom: 1px solid rgba(var(--primary-color-rgb), 0.08);
     }
-    .mc-panel:last-child { border-bottom: none; }
+    /* Activity: full width bottom row */
+    .mc-panel--activity {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        border-right: none;
+    }
+    .mc-panel {
+        border-right: none;
+        padding: 12px 14px;
+    }
+    .mc-panel-footer { display: none; }
+    .mc-no-activity { padding: 16px 0; }
+    .mc-activity-body { min-height: 80px; }
 
     .arena-name   { font-size: 2.8rem; letter-spacing: 8px; }
     .arena-prefix { font-size: 0.7rem; }
