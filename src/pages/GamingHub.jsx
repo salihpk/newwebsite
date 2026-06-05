@@ -172,70 +172,123 @@ const GamingHub = () => {
                     </div>
                 </motion.div>
 
-                {/* ── Mission Control (with operator identity header) ── */}
+                {/* ── Profile Card (glassmorphism) ── */}
                 <motion.div
-                    className="glass-card live-activity-full"
+                    className="profile-banner glass-card"
                     data-section="PROFILE"
+                    style={{ '--status-color': discordStatusColor }}
                     initial={{ opacity: 0, y: -16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {/* Identity bar */}
-                    <div className="mc-identity-bar">
-                        <div className="mc-id-avatar-zone">
-                            <div className="mc-id-avatar-wrap" style={{ boxShadow: `0 0 0 2px ${discordStatusColor}, 0 0 16px ${discordStatusColor}44` }}>
+                    {/* Top section: avatar + identity */}
+                    <div className="pb-top">
+                        {/* Avatar */}
+                        <div className="pb-avatar-zone">
+                            <div
+                                className="pb-avatar-wrap"
+                                style={{
+                                    boxShadow: `0 0 0 3px ${discordStatusColor}99, 0 0 22px ${discordStatusColor}33`,
+                                }}
+                            >
                                 <img
                                     src={avatarUrl}
                                     alt="Avatar"
-                                    className="mc-id-avatar-img"
+                                    className="pb-avatar-img"
                                     onError={e => { e.target.src = '/profile2.png'; }}
                                 />
                             </div>
-                            <span className="mc-id-status-dot" style={{ background: discordStatusColor, boxShadow: `0 0 8px ${discordStatusColor}` }} />
+                            <span
+                                className="pb-status-dot"
+                                style={{ background: discordStatusColor, boxShadow: `0 0 10px ${discordStatusColor}` }}
+                            />
                         </div>
 
-                        <div className="mc-id-text">
-                            <div className="mc-id-name-row">
-                                <span className="mc-id-name mono">
+                        {/* Identity */}
+                        <div className="pb-identity">
+                            <div className="pb-name-row">
+                                <h2 className="pb-name mono">
                                     {discordData?.discord_user?.global_name || discordData?.discord_user?.username || 'SPIDO'}
-                                </span>
-                                <span className="mc-badge mono" style={{ color: discordStatusColor, borderColor: `${discordStatusColor}44` }}>
-                                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: discordStatusColor, display: 'inline-block', marginRight: 4 }} />
+                                </h2>
+                                <span
+                                    className="pb-status-badge mono"
+                                    style={{ color: discordStatusColor, borderColor: `${discordStatusColor}44` }}
+                                >
+                                    <span className="pb-status-pip" style={{ background: discordStatusColor }} />
                                     {statusLabel}
                                 </span>
                             </div>
-                            <span className="mc-id-sub mono">
-                                @{discordData?.discord_user?.username || '---'} · MISSION_CONTROL
-                            </span>
-                        </div>
 
-                        <a href="https://discord.gg/zcXGkH98Qk" target="_blank" rel="noopener noreferrer" className="cyber-btn sm mono mc-id-join">
-                            JOIN_DISCORD
-                        </a>
+                            <p className="pb-username mono">
+                                @{discordData?.discord_user?.username || '---'}
+                                <span className="pb-operator-id"> · ID:{DISCORD_USER_ID.slice(-8)}</span>
+                            </p>
+
+                            {customStatus && (
+                                <p className="pb-custom-status mono">
+                                    <span className="pb-quote">"</span>
+                                    {customStatus}
+                                    <span className="pb-quote">"</span>
+                                </p>
+                            )}
+
+                            <div className="pb-actions">
+                                <a
+                                    href="https://discord.gg/zcXGkH98Qk"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="cyber-btn sm mono"
+                                >
+                                    JOIN_DISCORD
+                                </a>
+                                <a
+                                    href={`https://discord.com/users/${DISCORD_USER_ID}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mono subtle-link"
+                                >
+                                    VIEW_PROFILE ↗
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Unified stats strip — Discord + Steam combined */}
-                    <div className="mc-stats-strip">
-                        <div className="mc-stat-cell">
-                            <span className="mc-stat-key mono">PLATFORM</span>
-                            <span className="mc-stat-val mono">{discordLoading ? '...' : platform}</span>
+                    {/* Divider */}
+                    <div className="pb-divider" />
+
+                    {/* Stats strip — spans full width */}
+                    <div className="pb-stats-strip">
+                        <div className="pb-stat">
+                            <span className="pb-stat-key mono">PLATFORM</span>
+                            <span className="pb-stat-val mono">{platform}</span>
                         </div>
-                        <div className="mc-stat-cell">
-                            <span className="mc-stat-key mono">STEAM</span>
-                            <span className="mc-stat-val mono" style={{ color: steamStatus?.inGame ? '#6dcff6' : undefined }}>
-                                {steamStatus?.inGame ? 'IN_GAME' : 'IDLE'}
+                        <div className="pb-stat">
+                            <span className="pb-stat-key mono">DEVICE</span>
+                            <span className="pb-stat-val mono device-glow">Lenovo LOQ</span>
+                        </div>
+                        <div className="pb-stat">
+                            <span className="pb-stat-key mono">TOTAL_HRS</span>
+                            <span className="pb-stat-val mono">
+                                {steamLoading ? '...' : totalHoursDisplay}
                             </span>
                         </div>
-                        <div className="mc-stat-cell">
-                            <span className="mc-stat-key mono">LIBRARY</span>
-                            <span className="mc-stat-val mono">{steamLoading ? '...' : `${steamTotal} GAMES`}</span>
-                        </div>
-                        <div className="mc-stat-cell">
-                            <span className="mc-stat-key mono">TOTAL_HRS</span>
-                            <span className="mc-stat-val mono">{steamLoading ? '...' : totalHoursDisplay}</span>
+                        <div className="pb-stat pb-stat--top">
+                            <span className="pb-stat-key mono">TOP_GAME</span>
+                            <span className="pb-stat-val mono">
+                                {steamLoading ? '...' : topGame ? topGame.name : '—'}
+                            </span>
                         </div>
                     </div>
+                </motion.div>
 
+                {/* ── Mission Control (live activity) ── */}
+                <motion.div
+                    className="glass-card live-activity-full"
+                    data-section="LIVE"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.18, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                >
                     {/* ── Live Activity ── */}
                     <div className="mc-activity-section">
                         <div className="mc-panel-header mono">
