@@ -238,6 +238,221 @@
 
 /* ── Profile Card (glassmorphism) ───────────────────── */
 
+/* ── Horizontal Banner Profile Card ─────────────────── */
+.hb-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid rgba(var(--primary-color-rgb), 0.18);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.45);
+}
+
+.hb-bg {
+    position: absolute;
+    inset: -10%;
+    width: 120%;
+    height: 120%;
+    object-fit: cover;
+    filter: blur(32px) brightness(0.18) saturate(1.8);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.hb-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        100deg,
+        rgba(5,5,8,0.55) 0%,
+        rgba(5,5,8,0.25) 40%,
+        rgba(5,5,8,0.7) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+}
+
+[data-theme='light'] .hb-bg {
+    filter: blur(32px) brightness(0.55) saturate(1.4);
+}
+[data-theme='light'] .hb-bg-overlay {
+    background: linear-gradient(
+        100deg,
+        rgba(240,242,245,0.72) 0%,
+        rgba(240,242,245,0.45) 40%,
+        rgba(240,242,245,0.82) 100%
+    );
+}
+
+.hb-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 28px 32px;
+}
+
+/* Avatar */
+.hb-avatar-zone {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.hb-avatar-ring {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+}
+
+.hb-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hb-status-dot {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 3px solid rgba(5,5,8,0.9);
+}
+
+/* Identity */
+.hb-identity {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hb-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.hb-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+}
+
+[data-theme='light'] .hb-name { color: var(--text-color); text-shadow: none; }
+
+.hb-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.58rem;
+    letter-spacing: 1.5px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 1px solid;
+    backdrop-filter: blur(4px);
+}
+
+.hb-pip {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.hb-username {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.55);
+    margin: 0;
+}
+
+[data-theme='light'] .hb-username { color: var(--text-dim); }
+
+.hb-uid {
+    font-size: 0.62rem;
+    opacity: 0.6;
+}
+
+.hb-custom-status {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.7);
+    margin: 2px 0 0;
+    font-style: italic;
+}
+
+[data-theme='light'] .hb-custom-status { color: var(--text-dim); }
+
+.hb-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+}
+
+/* Vertical divider */
+.hb-vdivider {
+    width: 1px;
+    height: 80px;
+    background: rgba(var(--primary-color-rgb), 0.15);
+    flex-shrink: 0;
+}
+
+/* Stats */
+.hb-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 28px;
+    flex-shrink: 0;
+}
+
+.hb-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.hb-stat-key {
+    font-size: 0.55rem;
+    letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.38);
+}
+
+[data-theme='light'] .hb-stat-key { color: var(--text-dim); }
+
+.hb-stat-val {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+}
+
+[data-theme='light'] .hb-stat-val { color: var(--text-color); }
+
+@media (max-width: 768px) {
+    .hb-inner { flex-wrap: wrap; gap: 20px; padding: 22px 20px; }
+    .hb-vdivider { display: none; }
+    .hb-stats { width: 100%; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .hb-stat-val { max-width: none; font-size: 0.72rem; }
+}
+
+@media (max-width: 480px) {
+    .hb-stats { grid-template-columns: 1fr 1fr; }
+    .hb-avatar-ring { width: 76px; height: 76px; }
+    .hb-name { font-size: 1.15rem; }
+}
+
 /* ── Discord-style Profile Card ─────────────────────── */
 .dc-card {
     --dc-bg: #0d0d10;

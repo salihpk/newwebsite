@@ -172,100 +172,81 @@ const GamingHub = () => {
                     </div>
                 </motion.div>
 
-                {/* ── Discord-style Profile Card ── */}
+                {/* ── Horizontal Banner Profile Card ── */}
                 <motion.div
-                    className="dc-card"
+                    className="hb-card"
                     data-section="PROFILE"
+                    style={{ '--status-color': discordStatusColor }}
                     initial={{ opacity: 0, y: -16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {/* Banner */}
-                    <div className="dc-banner">
-                        <div className="dc-banner-gradient" />
-                        <div className="dc-banner-scan" />
-                    </div>
+                    {/* Blurred avatar background */}
+                    <img src={avatarUrl} alt="" className="hb-bg" aria-hidden />
+                    <div className="hb-bg-overlay" />
 
-                    {/* Avatar row — overlaps banner */}
-                    <div className="dc-avatar-row">
-                        <div className="dc-avatar-wrap" style={{ boxShadow: `0 0 0 4px var(--dc-bg), 0 0 0 6px ${discordStatusColor}88` }}>
-                            <img
-                                src={avatarUrl}
-                                alt="Avatar"
-                                className="dc-avatar-img"
-                                onError={e => { e.target.src = '/profile2.png'; }}
-                            />
-                            <span className="dc-status-dot" style={{ background: discordStatusColor, boxShadow: `0 0 8px ${discordStatusColor}` }} />
-                        </div>
-                        <div className="dc-avatar-actions">
-                            <a href="https://discord.gg/zcXGkH98Qk" target="_blank" rel="noopener noreferrer" className="cyber-btn sm mono">
-                                JOIN_DISCORD
-                            </a>
-                            <a href={`https://discord.com/users/${DISCORD_USER_ID}`} target="_blank" rel="noopener noreferrer" className="mono subtle-link">
-                                VIEW_PROFILE ↗
-                            </a>
-                        </div>
-                    </div>
+                    {/* Content row */}
+                    <div className="hb-inner">
 
-                    {/* Body */}
-                    <div className="dc-body">
-                        {/* Name + status */}
-                        <div className="dc-name-row">
-                            <h2 className="dc-display-name mono">
-                                {discordData?.discord_user?.global_name || discordData?.discord_user?.username || 'SPIDO'}
-                            </h2>
-                            <span className="dc-status-badge mono" style={{ color: discordStatusColor, borderColor: `${discordStatusColor}44` }}>
-                                <span className="dc-status-pip" style={{ background: discordStatusColor }} />
-                                {statusLabel}
-                            </span>
+                        {/* Avatar */}
+                        <div className="hb-avatar-zone">
+                            <div className="hb-avatar-ring" style={{ boxShadow: `0 0 0 3px ${discordStatusColor}, 0 0 24px ${discordStatusColor}55` }}>
+                                <img
+                                    src={avatarUrl}
+                                    alt="Avatar"
+                                    className="hb-avatar-img"
+                                    onError={e => { e.target.src = '/profile2.png'; }}
+                                />
+                            </div>
+                            <span className="hb-status-dot" style={{ background: discordStatusColor, boxShadow: `0 0 8px ${discordStatusColor}` }} />
                         </div>
 
-                        {/* Username */}
-                        <p className="dc-username mono">
-                            @{discordData?.discord_user?.username || '---'}
-                            <span className="dc-uid mono"> · ID:{DISCORD_USER_ID.slice(-8)}</span>
-                        </p>
-
-                        {/* Badges row */}
-                        <div className="dc-badges">
-                            <span className="dc-badge mono" title="Cybersecurity">🛡️ SEC</span>
-                            <span className="dc-badge mono" title="AI Enthusiast">🤖 AI</span>
-                            <span className="dc-badge mono" title="Developer">⚡ DEV</span>
-                            <span className="dc-badge dc-badge--device mono" title="Lenovo LOQ">💻 LOQ</span>
+                        {/* Identity */}
+                        <div className="hb-identity">
+                            <div className="hb-name-row">
+                                <h2 className="hb-name mono">
+                                    {discordData?.discord_user?.global_name || discordData?.discord_user?.username || 'SPIDO'}
+                                </h2>
+                                <span className="hb-status-badge mono" style={{ color: discordStatusColor, borderColor: `${discordStatusColor}55` }}>
+                                    <span className="hb-pip" style={{ background: discordStatusColor }} />
+                                    {statusLabel}
+                                </span>
+                            </div>
+                            <p className="hb-username mono">
+                                @{discordData?.discord_user?.username || '---'}
+                                <span className="hb-uid"> · ID:{DISCORD_USER_ID.slice(-8)}</span>
+                            </p>
+                            {customStatus && (
+                                <p className="hb-custom-status mono">"{customStatus}"</p>
+                            )}
+                            <div className="hb-actions">
+                                <a href="https://discord.gg/zcXGkH98Qk" target="_blank" rel="noopener noreferrer" className="cyber-btn sm mono">
+                                    JOIN_DISCORD
+                                </a>
+                                <a href={`https://discord.com/users/${DISCORD_USER_ID}`} target="_blank" rel="noopener noreferrer" className="mono subtle-link">
+                                    VIEW_PROFILE ↗
+                                </a>
+                            </div>
                         </div>
 
                         {/* Divider */}
-                        <div className="dc-divider" />
-
-                        {/* About / custom status */}
-                        <div className="dc-section-label mono">ABOUT_ME</div>
-                        <p className="dc-about mono">
-                            {customStatus || 'Cybersecurity Aspirant · AI Enthusiast · Creative Developer'}
-                        </p>
-
-                        {/* Divider */}
-                        <div className="dc-divider" />
+                        <div className="hb-vdivider" />
 
                         {/* Stats */}
-                        <div className="dc-section-label mono">STATS</div>
-                        <div className="dc-stats">
-                            <div className="dc-stat">
-                                <span className="dc-stat-key mono">PLATFORM</span>
-                                <span className="dc-stat-val mono">{platform}</span>
-                            </div>
-                            <div className="dc-stat">
-                                <span className="dc-stat-key mono">DEVICE</span>
-                                <span className="dc-stat-val mono">Lenovo LOQ</span>
-                            </div>
-                            <div className="dc-stat">
-                                <span className="dc-stat-key mono">TOTAL_HRS</span>
-                                <span className="dc-stat-val mono">{steamLoading ? '...' : totalHoursDisplay}</span>
-                            </div>
-                            <div className="dc-stat">
-                                <span className="dc-stat-key mono">TOP_GAME</span>
-                                <span className="dc-stat-val mono">{steamLoading ? '...' : topGame ? topGame.name : '—'}</span>
-                            </div>
+                        <div className="hb-stats">
+                            {[
+                                ['PLATFORM',  platform],
+                                ['DEVICE',    'Lenovo LOQ'],
+                                ['TOTAL_HRS', steamLoading ? '...' : totalHoursDisplay],
+                                ['TOP_GAME',  steamLoading ? '...' : topGame ? topGame.name : '—'],
+                            ].map(([k, v]) => (
+                                <div key={k} className="hb-stat">
+                                    <span className="hb-stat-key mono">{k}</span>
+                                    <span className="hb-stat-val mono">{v}</span>
+                                </div>
+                            ))}
                         </div>
+
                     </div>
                 </motion.div>
 
