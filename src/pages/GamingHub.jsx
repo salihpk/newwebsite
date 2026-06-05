@@ -172,41 +172,31 @@ const GamingHub = () => {
                     </div>
                 </motion.div>
 
-                {/* ── Operator Profile (MC-synced) ── */}
+                {/* ── Mission Control (with operator identity header) ── */}
                 <motion.div
-                    className="glass-card op-card"
+                    className="glass-card live-activity-full"
                     data-section="PROFILE"
                     initial={{ opacity: 0, y: -16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {/* Header — same style as mc-panel-header */}
-                    <div className="op-header mono">
-                        <span className="mc-pip" style={{ background: discordStatusColor, boxShadow: `0 0 6px ${discordStatusColor}` }} />
-                        OPERATOR_PROFILE
-                        <span className="op-header-id">NODE_00</span>
-                    </div>
-
-                    {/* Body grid: avatar + data cols */}
-                    <div className="op-body">
-
-                        {/* Avatar col */}
-                        <div className="op-avatar-col">
-                            <div className="op-avatar-wrap" style={{ boxShadow: `0 0 0 2px ${discordStatusColor}, 0 0 18px ${discordStatusColor}44` }}>
+                    {/* Identity bar */}
+                    <div className="mc-identity-bar">
+                        <div className="mc-id-avatar-zone">
+                            <div className="mc-id-avatar-wrap" style={{ boxShadow: `0 0 0 2px ${discordStatusColor}, 0 0 16px ${discordStatusColor}44` }}>
                                 <img
                                     src={avatarUrl}
                                     alt="Avatar"
-                                    className="op-avatar-img"
+                                    className="mc-id-avatar-img"
                                     onError={e => { e.target.src = '/profile2.png'; }}
                                 />
                             </div>
-                            <span className="op-status-dot" style={{ background: discordStatusColor, boxShadow: `0 0 8px ${discordStatusColor}` }} />
+                            <span className="mc-id-status-dot" style={{ background: discordStatusColor, boxShadow: `0 0 8px ${discordStatusColor}` }} />
                         </div>
 
-                        {/* Identity col */}
-                        <div className="op-identity">
-                            <div className="op-name-row">
-                                <span className="op-name mono">
+                        <div className="mc-id-text">
+                            <div className="mc-id-name-row">
+                                <span className="mc-id-name mono">
                                     {discordData?.discord_user?.global_name || discordData?.discord_user?.username || 'SPIDO'}
                                 </span>
                                 <span className="mc-badge mono" style={{ color: discordStatusColor, borderColor: `${discordStatusColor}44` }}>
@@ -214,60 +204,14 @@ const GamingHub = () => {
                                     {statusLabel}
                                 </span>
                             </div>
-                            <div className="mc-row mono" style={{ marginBottom: 2 }}>
-                                <span className="mc-key">USER</span>
-                                <span className="mc-val">@{discordData?.discord_user?.username || '---'}</span>
-                            </div>
-                            {customStatus && (
-                                <div className="mc-row mono">
-                                    <span className="mc-key">STATUS</span>
-                                    <span className="mc-val op-custom-status">"{customStatus}"</span>
-                                </div>
-                            )}
-                            <div className="op-actions">
-                                <a href="https://discord.gg/zcXGkH98Qk" target="_blank" rel="noopener noreferrer" className="cyber-btn sm mono">JOIN_DISCORD</a>
-                                <a href={`https://discord.com/users/${DISCORD_USER_ID}`} target="_blank" rel="noopener noreferrer" className="mono subtle-link">VIEW_PROFILE ↗</a>
-                            </div>
+                            <span className="mc-id-sub mono">
+                                @{discordData?.discord_user?.username || '---'} · MISSION_CONTROL
+                            </span>
                         </div>
 
-                        {/* Vertical divider */}
-                        <div className="op-vdivider" />
-
-                        {/* Stats col */}
-                        <div className="op-stats">
-                            {[
-                                ['PLATFORM',  platform],
-                                ['DEVICE',    'Lenovo LOQ'],
-                                ['TOTAL_HRS', steamLoading ? '...' : totalHoursDisplay],
-                                ['TOP_GAME',  steamLoading ? '...' : topGame ? topGame.name : '—'],
-                            ].map(([k, v]) => (
-                                <div key={k} className="mc-row mono">
-                                    <span className="mc-key">{k}</span>
-                                    <span className="mc-val">{v}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                    </div>
-
-                    {/* Footer — same style as mc-panel-footer */}
-                    <div className="op-footer mono">
-                        <span className="mc-footer-label">OPERATOR_ID: {DISCORD_USER_ID.slice(-6)}</span>
-                        <span className="mc-footer-dot" />
-                    </div>
-                </motion.div>
-
-                {/* ── Mission Control ── */}
-                <motion.div
-                    className="glass-card live-activity-full"
-                    data-section="LIVE"
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.18, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-                >
-                    <div className="card-label-row mono live-label">
-                        <span className="live-dot" />
-                        MISSION_CONTROL
+                        <a href="https://discord.gg/zcXGkH98Qk" target="_blank" rel="noopener noreferrer" className="cyber-btn sm mono mc-id-join">
+                            JOIN_DISCORD
+                        </a>
                     </div>
 
                     <div className="mc-grid">
