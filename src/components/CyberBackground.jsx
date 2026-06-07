@@ -71,7 +71,15 @@ const CyberBackground = () => {
             ctx.stroke();
         };
 
-        const animate = () => {
+        // ~30 fps cap — background animation doesn't need 60 fps
+        const TARGET_INTERVAL = 1000 / 30;
+        let lastFrameTime = 0;
+
+        const animate = (timestamp) => {
+            animationFrameId = requestAnimationFrame(animate);
+            if (timestamp - lastFrameTime < TARGET_INTERVAL) return;
+            lastFrameTime = timestamp;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             drawGrid();
@@ -105,8 +113,6 @@ const CyberBackground = () => {
                 }
             }
             ctx.stroke();
-
-            animationFrameId = requestAnimationFrame(animate);
         };
 
         animate();

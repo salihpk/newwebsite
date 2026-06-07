@@ -1728,6 +1728,7 @@
     z-index: 0;
     transform: scale(1.04);
     animation: cineKenBurns 18s ease-in-out infinite alternate;
+    will-change: transform;
 }
 
 @keyframes cineKenBurns {

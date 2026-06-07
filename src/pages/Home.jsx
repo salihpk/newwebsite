@@ -135,9 +135,9 @@ const Home = () => {
           whileHover={{ scale: 1.02, y: -8 }}
         >
           <div className="card-icon-header">
-            <motion.div className="desktop-icon" animate={{ rotate: [0, 5, -5, 0] }} transition={{ repeat: Infinity, duration: 4 }}>
+            <div className="desktop-icon icon-anim-rock">
               <ShieldAlert className="card-icon" size={24} />
-            </motion.div>
+            </div>
             <h3 className="mono">01_VULN_RESEARCH</h3>
           </div>
           <p>Analyzing and identifying security flaws through ethical hacking and deep system inspection.</p>
@@ -151,9 +151,9 @@ const Home = () => {
           whileHover={{ scale: 1.02, y: -8 }}
         >
           <div className="card-icon-header">
-            <motion.div className="desktop-icon" animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 3 }}>
+            <div className="desktop-icon icon-anim-pulse">
               <BrainCircuit className="card-icon" size={24} />
-            </motion.div>
+            </div>
             <h3 className="mono">02_AI_LOGIC</h3>
           </div>
           <p>Integrating artificial intelligence into cybersecurity workflows for predictive analysis.</p>
@@ -167,9 +167,9 @@ const Home = () => {
           whileHover={{ scale: 1.02, y: -8 }}
         >
           <div className="card-icon-header">
-            <motion.div className="desktop-icon" animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 2.5 }}>
+            <div className="desktop-icon icon-anim-float">
               <ShieldCheck className="card-icon" size={24} />
-            </motion.div>
+            </div>
             <h3 className="mono">03_SECURE_BUILD</h3>
           </div>
           <p>Architecting hardened, scalable web applications with a focus on security by design.</p>

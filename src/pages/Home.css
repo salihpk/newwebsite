@@ -286,6 +286,7 @@
     animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    will-change: transform;
 }
 
 .info-card::before {
@@ -583,3 +584,32 @@
     }
 }
 
+/* ── Card icon animations (CSS — compositor thread, not JS) ── */
+@keyframes iconRock {
+    0%, 100% { transform: rotate(0deg); }
+    25%       { transform: rotate(5deg); }
+    75%       { transform: rotate(-5deg); }
+}
+@keyframes iconPulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.1); }
+}
+@keyframes iconFloat {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-4px); }
+}
+
+.icon-anim-rock  { animation: iconRock  4s ease-in-out infinite; will-change: transform; }
+.icon-anim-pulse { animation: iconPulse 3s ease-in-out infinite; will-change: transform; }
+.icon-anim-float { animation: iconFloat 2.5s ease-in-out infinite; will-change: transform; }
+
+/* ── Respect reduced-motion preference ─────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

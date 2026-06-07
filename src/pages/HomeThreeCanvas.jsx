@@ -4,7 +4,7 @@ import { OrbitControls, Sphere, MeshDistortMaterial, Float } from '@react-three/
 
 const DigitalCore = ({ scale = 2.4, color = '#00ff41' }) => (
   <Float speed={0.8} rotationIntensity={0.5} floatIntensity={1}>
-    <Sphere args={[1, 100, 200]} scale={scale}>
+    <Sphere args={[1, 48, 48]} scale={scale}>
       <MeshDistortMaterial
         color={color}
         attach="material"
@@ -22,6 +22,7 @@ const DigitalCore = ({ scale = 2.4, color = '#00ff41' }) => (
 const HomeThreeCanvas = ({ scale, color }) => (
   <Canvas
     camera={{ position: [0, 0, 5], fov: 75 }}
+    dpr={[1, 1.5]}
     style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1, pointerEvents: 'none' }}
   >
     <ambientLight intensity={0.5} />
