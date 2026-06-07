@@ -10,7 +10,6 @@ const NotFound  = lazy(() => import('./pages/NotFound'));
 
 import Navbar from './components/Navbar';
 import ScrollProgress from './components/ScrollProgress';
-import ScrollSidebar from './components/ScrollSidebar';
 import BootLoader from './components/BootLoader';
 import { useLenis } from './hooks/useLenis';
 
@@ -116,7 +115,6 @@ function App() {
                         transition={{ duration: 0.6 }}
                     >
                         <ScrollProgress />
-                        <ScrollSidebar />
                         <CyberBackground />
                         <div className="crt-overlay"></div>
                         <div className="scanline"></div>
