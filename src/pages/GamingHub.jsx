@@ -106,6 +106,16 @@ const GamingHub = () => {
 
     const activityArt = getActivityImage();
 
+    // Cinematic banner: which artwork + active state
+    const hasActivity = Boolean(discordActivity || discordSpotify || steamStatus?.inGame);
+    const cineArt = discordActivity
+        ? activityArt
+        : discordSpotify
+        ? discordSpotify.album_art_url
+        : steamStatus?.inGame
+        ? steamStatus.coverUrl
+        : null;
+
     const customStatus = discordData?.activities?.find(a => a.type === 4)?.state || null;
 
     const platform = discordData?.active_on_discord_mobile
@@ -289,9 +299,23 @@ const GamingHub = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.18, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {/* ── Live Activity ── */}
-                    <div className="mc-activity-section">
-                        <div className="mc-panel-header mono">
+                    {/* ── Live Activity — Cinematic Banner ── */}
+                    <div className={`cine-banner ${hasActivity ? 'cine-on' : 'cine-off'}`}>
+                        {/* Full-bleed background art */}
+                        {cineArt && (
+                            <img
+                                src={cineArt}
+                                alt=""
+                                className="cine-bg"
+                                aria-hidden
+                                onError={e => { e.target.style.display = 'none'; }}
+                            />
+                        )}
+                        <div className="cine-overlay" />
+                        <div className="cine-scan" />
+
+                        {/* Top label */}
+                        <div className="cine-toplabel mono">
                             <span className="mc-pip" style={{
                                 background: (discordActivity || steamStatus?.inGame) ? 'var(--primary-color)' : discordSpotify ? '#1db954' : '#555',
                                 boxShadow: (discordActivity || steamStatus?.inGame) ? '0 0 6px var(--primary-color)' : discordSpotify ? '0 0 6px #1db954' : 'none'
@@ -299,60 +323,53 @@ const GamingHub = () => {
                             LIVE_ACTIVITY
                         </div>
 
-                        <div className="mc-panel-body mc-activity-body">
-                            {discordActivity ? (
-                                <div className="mc-activity-content">
-                                    {activityArt && <img src={activityArt} alt="" className="mc-activity-art" />}
-                                    <div className="mc-activity-info">
-                                        <span className="mc-badge mono">
-                                            <span className="la-live-pip" /> PLAYING
-                                        </span>
-                                        <span className="mc-activity-title mono">{discordActivity.name}</span>
-                                        {discordActivity.details && <span className="mc-activity-sub mono">{discordActivity.details}</span>}
-                                        {discordActivity.timestamps?.start && (
-                                            <span className="mc-activity-time mono">⏱ {formatElapsed(discordActivity.timestamps.start)}</span>
-                                        )}
-                                    </div>
+                        {/* Foreground content */}
+                        {discordActivity ? (
+                            <div className="cine-content">
+                                <span className="cine-badge mono">
+                                    <span className="la-live-pip" /> PLAYING
+                                </span>
+                                <h3 className="cine-title mono">{discordActivity.name}</h3>
+                                {discordActivity.details && <span className="cine-sub mono">{discordActivity.details}</span>}
+                                {discordActivity.state && <span className="cine-sub cine-sub--dim mono">{discordActivity.state}</span>}
+                                {discordActivity.timestamps?.start && (
+                                    <span className="cine-time mono">⏱ {formatElapsed(discordActivity.timestamps.start)}</span>
+                                )}
+                            </div>
+                        ) : discordSpotify ? (
+                            <div className="cine-content">
+                                <span className="cine-badge cine-badge--spotify mono">
+                                    <Music2 size={11} /> LISTENING ON SPOTIFY
+                                </span>
+                                <h3 className="cine-title mono">{discordSpotify.song}</h3>
+                                <span className="cine-sub mono">{discordSpotify.artist}</span>
+                                <span className="cine-sub cine-sub--dim mono">{discordSpotify.album}</span>
+                                <div className="cine-waveform">
+                                    {Array.from({ length: 24 }).map((_, i) => (
+                                        <div key={i} className="cine-waveform-bar" style={{ animationDelay: `${(i * 0.08) % 1.2}s` }} />
+                                    ))}
                                 </div>
-                            ) : discordSpotify ? (
-                                <div className="mc-activity-content">
-                                    {discordSpotify.album_art_url && <img src={discordSpotify.album_art_url} alt="" className="mc-activity-art mc-art-round" />}
-                                    <div className="mc-activity-info">
-                                        <span className="mc-badge mc-badge--spotify mono">
-                                            <Music2 size={9} /> SPOTIFY
-                                        </span>
-                                        <span className="mc-activity-title mono">{discordSpotify.song}</span>
-                                        <span className="mc-activity-sub mono">{discordSpotify.artist}</span>
-                                        <div className="mc-waveform">
-                                            {Array.from({ length: 16 }).map((_, i) => (
-                                                <div key={i} className="mc-waveform-bar" style={{ animationDelay: `${(i * 0.09) % 1.2}s` }} />
-                                            ))}
-                                        </div>
-                                    </div>
+                            </div>
+                        ) : steamStatus?.inGame ? (
+                            <div className="cine-content">
+                                <span className="cine-badge cine-badge--steam mono">
+                                    <span className="la-live-pip" style={{ background: '#6dcff6' }} /> PLAYING ON STEAM
+                                </span>
+                                <h3 className="cine-title mono">{steamStatus.gameName}</h3>
+                                <span className="cine-sub mono">via Steam — Discord offline</span>
+                            </div>
+                        ) : (
+                            <div className="cine-idle">
+                                <div className="mc-idle-scanner">
+                                    <div className="la-idle-ring la-idle-ring-1" />
+                                    <div className="la-idle-ring la-idle-ring-2" />
+                                    <div className="la-idle-sweep" />
+                                    <Gamepad2 size={20} className="la-idle-icon" />
                                 </div>
-                            ) : steamStatus?.inGame ? (
-                                <div className="mc-activity-content">
-                                    <img src={steamStatus.thumbUrl} alt="" className="mc-activity-art" onError={e => e.target.style.display='none'} />
-                                    <div className="mc-activity-info">
-                                        <span className="mc-badge mc-badge--steam mono">
-                                            <span className="la-live-pip" style={{ background: '#6dcff6' }} /> STEAM
-                                        </span>
-                                        <span className="mc-activity-title mono">{steamStatus.gameName}</span>
-                                        <span className="mc-activity-sub mono">via Steam</span>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="mc-no-activity">
-                                    <div className="mc-idle-scanner">
-                                        <div className="la-idle-ring la-idle-ring-1" />
-                                        <div className="la-idle-ring la-idle-ring-2" />
-                                        <div className="la-idle-sweep" />
-                                        <Gamepad2 size={18} className="la-idle-icon" />
-                                    </div>
-                                    <span className="mc-idle-text mono">NO_ACTIVE_SESSION</span>
-                                </div>
-                            )}
-                        </div>
+                                <span className="cine-idle-text mono">NO_ACTIVE_SESSION</span>
+                                <span className="cine-idle-sub mono">SCANNING<span className="la-idle-dots" /></span>
+                            </div>
+                        )}
                     </div>
                 </motion.div>
 
