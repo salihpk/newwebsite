@@ -4,7 +4,7 @@ import { OrbitControls, Sphere, MeshDistortMaterial, Float } from '@react-three/
 
 const DigitalCore = ({ scale = 2.4, color = '#00ff41' }) => (
   <Float speed={0.8} rotationIntensity={0.5} floatIntensity={1}>
-    <Sphere args={[1, 48, 48]} scale={scale}>
+    <Sphere args={[1, 64, 64]} scale={scale}>
       <MeshDistortMaterial
         color={color}
         attach="material"
