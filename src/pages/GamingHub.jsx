@@ -15,23 +15,48 @@ const GamingHub = () => {
     const [steamTotal, setSteamTotal] = useState(0);
     const [steamStatus, setSteamStatus] = useState(null); // live in-game presence
 
+    // Lanyard WebSocket — real-time presence, no polling
     useEffect(() => {
-        const fetchDiscord = async () => {
-            try {
-                const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
-                if (res.ok) {
-                    const json = await res.json();
-                    if (json.success) setDiscordData(json.data);
+        let ws;
+        let heartbeatTimer;
+        let reconnectTimer;
+
+        const connect = () => {
+            ws = new WebSocket('wss://api.lanyard.rest/socket');
+
+            ws.onmessage = (event) => {
+                const msg = JSON.parse(event.data);
+                if (msg.op === 1) {
+                    // Hello — server tells us the heartbeat interval
+                    ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_USER_ID } }));
+                    heartbeatTimer = setInterval(() => {
+                        if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ op: 3 }));
+                    }, msg.d.heartbeat_interval);
+                } else if (msg.op === 0) {
+                    // Event — INIT_STATE or PRESENCE_UPDATE
+                    setDiscordData(msg.d);
+                    setDiscordLoading(false);
                 }
-            } catch (e) {
-                console.warn('Lanyard error:', e);
-            } finally {
+            };
+
+            ws.onclose = () => {
+                clearInterval(heartbeatTimer);
+                // Reconnect after 5s on unexpected close
+                reconnectTimer = setTimeout(connect, 5000);
+            };
+
+            ws.onerror = () => {
+                ws.close();
                 setDiscordLoading(false);
-            }
+            };
         };
-        fetchDiscord();
-        const interval = setInterval(fetchDiscord, 30000);
-        return () => clearInterval(interval);
+
+        connect();
+        return () => {
+            clearInterval(heartbeatTimer);
+            clearTimeout(reconnectTimer);
+            ws?.close();
+        };
     }, []);
 
     useEffect(() => {
