@@ -82,10 +82,10 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
             toggleTheme(e);
           }}
           onContextMenu={(e) => {
-            e.preventDefault();
-            toggleMusic();
+            e.preventDefault(); // suppress browser context menu; desktop right-click handled by timer
           }}
-          onPointerDown={() => {
+          onPointerDown={(e) => {
+            e.currentTarget.setPointerCapture(e.pointerId); // keep pointer captured on mobile
             isLongPressActive.current = false;
             pressTimerRef.current = setTimeout(() => {
               toggleMusic();
@@ -93,7 +93,9 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
             }, 600);
           }}
           onPointerUp={() => clearTimeout(pressTimerRef.current)}
+          onPointerCancel={() => clearTimeout(pressTimerRef.current)}
           onPointerLeave={() => clearTimeout(pressTimerRef.current)}
+          style={{ touchAction: 'none' }}
           whileTap={{ scale: 0.9 }}
         >
           <motion.img
