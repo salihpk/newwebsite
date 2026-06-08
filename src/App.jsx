@@ -139,9 +139,9 @@ function App() {
                         <Navbar toggleMusic={toggleMusic} isMusicPlaying={isMusicPlaying} />
 
                         <main>
-                            <AnimatePresence mode="wait">
-                                <Suspense fallback={null}>
-                                    <Routes location={routerLocation} key={routerLocation.pathname}>
+                            <AnimatePresence mode="sync">
+                                <Suspense key={routerLocation.pathname} fallback={null}>
+                                    <Routes location={routerLocation}>
                                         <Route path="/" element={<Home />} />
                                         <Route path="/projects" element={<Projects />} />
                                         <Route path="/gaming" element={<GamingHub />} />
