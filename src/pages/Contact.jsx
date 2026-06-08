@@ -44,11 +44,11 @@ const Contact = () => {
   return (
     <PageTransition className="page-container contact-page">
       <div className="contact-grid" data-section="CONNECT">
-        <motion.div 
+        <motion.div
            className="contact-info"
-           initial={{ opacity: 0, x: -30 }}
+           initial={{ opacity: 0, x: -40 }}
            animate={{ opacity: 1, x: 0 }}
-           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+           transition={{ type: 'spring', stiffness: 280, damping: 24 }}
         >
           <div className="header-title-flex">
             <div className="desktop-icon">
@@ -102,11 +102,11 @@ const Contact = () => {
           </div>
         </motion.div>
 
-        <motion.div 
+        <motion.div
            className="contact-form-container"
-           initial={{ opacity: 0, x: 30 }}
+           initial={{ opacity: 0, x: 40 }}
            animate={{ opacity: 1, x: 0 }}
-           transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+           transition={{ type: 'spring', stiffness: 280, damping: 24, delay: 0.12 }}
         >
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="form-header mono">SEND_DATA_PACKET</div>

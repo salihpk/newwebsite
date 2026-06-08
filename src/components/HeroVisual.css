@@ -34,7 +34,7 @@
         rgba(0, 255, 65, .05) 40%,
         transparent 70%
     );
-    animation: hvGlowPulse 4s ease-in-out infinite;
+    animation: hvGlowPulse 2.4s ease-in-out infinite;
 }
 
 @keyframes hvGlowPulse {
@@ -53,21 +53,21 @@
     transform-style: preserve-3d;
 }
 
-/* Ring 1 — near-flat, slow CW */
+/* Ring 1 — near-flat, CW */
 .hv-ring-1 {
     border-color: rgba(0, 255, 65, .7);
     box-shadow:
         0 0  6px rgba(0, 255, 65, .5),
         0 0 14px rgba(0, 255, 65, .2),
         inset 0 0 6px rgba(0, 255, 65, .1);
-    animation: hvRing1 10s linear infinite;
+    animation: hvRing1 7s linear infinite;
 }
 @keyframes hvRing1 {
     from { transform: rotateX(70deg) rotateZ(0deg); }
     to   { transform: rotateX(70deg) rotateZ(360deg); }
 }
 
-/* Ring 2 — steeply tilted, medium CCW */
+/* Ring 2 — steeply tilted, CCW */
 .hv-ring-2 {
     width:  calc(var(--hv-dim) * 1.12);
     height: calc(var(--hv-dim) * 1.12);
@@ -75,14 +75,14 @@
     box-shadow:
         0 0  5px rgba(0, 255, 65, .3),
         0 0 12px rgba(0, 255, 65, .12);
-    animation: hvRing2 14s linear infinite;
+    animation: hvRing2 10s linear infinite;
 }
 @keyframes hvRing2 {
     from { transform: rotateX(20deg) rotateY(45deg) rotateZ(0deg); }
     to   { transform: rotateX(20deg) rotateY(45deg) rotateZ(-360deg); }
 }
 
-/* Ring 3 — perpendicular, fast CW */
+/* Ring 3 — perpendicular, fastest CW */
 .hv-ring-3 {
     width:  calc(var(--hv-dim) * 0.88);
     height: calc(var(--hv-dim) * 0.88);
@@ -90,20 +90,20 @@
     border-style: dashed;
     box-shadow:
         0 0 4px rgba(0, 255, 65, .3);
-    animation: hvRing3 7s linear infinite;
+    animation: hvRing3 4.5s linear infinite;
 }
 @keyframes hvRing3 {
     from { transform: rotateY(80deg) rotateZ(0deg); }
     to   { transform: rotateY(80deg) rotateZ(360deg); }
 }
 
-/* Ring 4 — diagonal accent, slow CCW */
+/* Ring 4 — diagonal accent, CCW */
 .hv-ring-4 {
     width:  calc(var(--hv-dim) * 1.25);
     height: calc(var(--hv-dim) * 1.25);
     border-color: rgba(0, 255, 65, .18);
     box-shadow: 0 0 18px rgba(0, 255, 65, .08);
-    animation: hvRing4 20s linear infinite;
+    animation: hvRing4 14s linear infinite;
 }
 @keyframes hvRing4 {
     from { transform: rotateX(50deg) rotateY(-30deg) rotateZ(0deg); }
@@ -134,12 +134,12 @@
 }
 
 .hv-orbit-1 {
-    animation: hvOrbit1 10s linear infinite;
+    animation: hvOrbit1 7s linear infinite;
 }
 .hv-orbit-2 {
     width:  calc(var(--hv-dim) * 1.12);
     height: calc(var(--hv-dim) * 1.12);
-    animation: hvOrbit2 14s linear infinite;
+    animation: hvOrbit2 10s linear infinite;
 }
 .hv-orbit-2 .hv-dot {
     top: -4px;
@@ -151,7 +151,7 @@
 .hv-orbit-3 {
     width:  calc(var(--hv-dim) * 0.88);
     height: calc(var(--hv-dim) * 0.88);
-    animation: hvOrbit3 7s linear infinite;
+    animation: hvOrbit3 4.5s linear infinite;
 }
 .hv-orbit-3 .hv-dot {
     top: -3px;

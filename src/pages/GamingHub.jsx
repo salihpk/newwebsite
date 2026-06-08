@@ -173,16 +173,16 @@ const GamingHub = () => {
                 <motion.div
                     className="gaming-hero"
                     data-section="ARENA"
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.85 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6 }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 22 }}
                 >
                     <div className="arena-title-wrap">
                         <motion.div
                             className="arena-prefix-row"
-                            initial={{ opacity: 0, x: -30 }}
+                            initial={{ opacity: 0, x: -36 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 24, delay: 0.12 }}
                         >
                             <span className="arena-prefix mono">SPIDO://</span>
                             <span className="arena-cursor mono">_</span>
@@ -191,9 +191,9 @@ const GamingHub = () => {
                             <motion.h1
                                 className="mono arena-name"
                                 data-text="ARENA"
-                                initial={{ opacity: 0, y: 40, scale: 0.85 }}
+                                initial={{ opacity: 0, y: 44, scale: 0.82 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                                transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 0.22 }}
                             >
                                 ARENA
                             </motion.h1>
@@ -212,9 +212,9 @@ const GamingHub = () => {
                     className="profile-banner glass-card"
                     data-section="PROFILE"
                     style={{ '--status-color': discordStatusColor }}
-                    initial={{ opacity: 0, y: -16 }}
+                    initial={{ opacity: 0, y: -24 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 26, delay: 0.08 }}
                 >
                     {/* Top section: avatar + identity */}
                     <div className="pb-top">
@@ -320,9 +320,9 @@ const GamingHub = () => {
                 <motion.div
                     className="glass-card live-activity-full"
                     data-section="LIVE"
-                    initial={{ opacity: 0, y: 16 }}
+                    initial={{ opacity: 0, y: 28 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.18, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ type: 'spring', stiffness: 280, damping: 24, delay: 0.16 }}
                 >
                     {/* ── Live Activity — Cinematic Banner ── */}
                     <div className={`cine-banner ${hasActivity ? 'cine-on' : 'cine-off'}`}>
@@ -402,9 +402,9 @@ const GamingHub = () => {
                 <motion.div
                     className="glass-card library-panel"
                     data-section="LIBRARY"
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 32 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.32, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 24, delay: 0.24 }}
                 >
                     <div className="library-header mono">
                         <span className="header-accent" />

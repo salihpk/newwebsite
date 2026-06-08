@@ -4,6 +4,15 @@ import PageTransition from '../components/PageTransition';
 import { Layers, Globe, Database, Archive } from 'lucide-react';
 import './Projects.css';
 
+const gridContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.08 } },
+};
+const gridItem = {
+  hidden: { opacity: 0, y: 44 },
+  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 22 } },
+};
+
 const projects = [
     {
         id: 1,
@@ -102,10 +111,7 @@ const ProjectCard = ({ project, index }) => {
     return (
         <motion.div
             className="project-card-motion"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '0px 0px -50px 0px' }}
-            transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            variants={gridItem}
         >
             <div ref={cardRef} className="project-card">
                 {/* Cursor-following glare overlay */}
@@ -157,11 +163,18 @@ const Projects = () => (
             <p className="mono opacity-50">ARCHIVE DATA RETRIEVED: 2026-02-06</p>
         </header>
 
-        <div className="projects-grid" data-section="PROJECTS">
+        <motion.div
+            className="projects-grid"
+            data-section="PROJECTS"
+            variants={gridContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-60px 0px' }}
+        >
             {projects.map((p, i) => (
                 <ProjectCard key={p.id} project={p} index={i} />
             ))}
-        </div>
+        </motion.div>
     </PageTransition>
 );
 

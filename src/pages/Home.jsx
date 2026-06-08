@@ -6,6 +6,21 @@ import { ShieldAlert, BrainCircuit, ShieldCheck } from 'lucide-react';
 import HeroVisual from '../components/HeroVisual';
 import './Home.css';
 
+// ── Shared spring presets ──────────────────────────────────────
+const spring = (delay = 0, stiffness = 300, damping = 22) => ({
+  type: 'spring', stiffness, damping, delay,
+});
+
+const cardContainer = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } },
+};
+
+const cardItem = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 280, damping: 22 } },
+};
+
 const DISCORD_USER_ID = '577248513654784020';
 
 const Home = () => {
@@ -48,9 +63,9 @@ const Home = () => {
           <motion.h1
             className="glitch-text"
             data-value="MUHAMMED SALIH"
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            initial={{ opacity: 0, y: 36, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={spring(0.05, 280, 20)}
             onMouseEnter={(e) => triggerGlitch(e.target, 'MUHAMMED SALIH')}
             onMouseLeave={(e) => triggerGlitch(e.target, 'MUHAMMED SALIH')}
           >
@@ -58,10 +73,9 @@ const Home = () => {
           </motion.h1>
           <motion.p
             className="hero-subtext"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
+            transition={spring(0.18, 320, 26)}
             Cyber security Aspirant | AI Enthusiast | Creative Developer
           </motion.p>
           <div className="hero-cta">
@@ -88,9 +102,9 @@ const Home = () => {
               src={discordAvatar || '/profile2.png'}
               alt="Muhammad Salih P.K."
               className="profile-img"
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.72 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2, ease: 'easeInOut' }}
+              transition={spring(0.08, 220, 18)}
               onError={e => { e.target.src = '/profile2.png'; }}
             />
             <div className="profile-shader"></div>
@@ -98,14 +112,18 @@ const Home = () => {
         </div>
       </div>
 
-      <section className="info-grid" data-section="SKILLS">
+      <motion.section
+        className="info-grid"
+        data-section="SKILLS"
+        variants={cardContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-60px 0px' }}
+      >
         <motion.div
           className="info-card"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '0px 0px -50px 0px' }}
-          transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          whileHover={{ scale: 1.02, y: -8 }}
+          variants={cardItem}
+          whileHover={{ scale: 1.04, y: -12, transition: { type: 'spring', stiffness: 400, damping: 20 } }}
         >
           <div className="card-icon-header">
             <div className="desktop-icon icon-anim-rock">
@@ -117,11 +135,8 @@ const Home = () => {
         </motion.div>
         <motion.div
           className="info-card"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '0px 0px -50px 0px' }}
-          transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          whileHover={{ scale: 1.02, y: -8 }}
+          variants={cardItem}
+          whileHover={{ scale: 1.04, y: -12, transition: { type: 'spring', stiffness: 400, damping: 20 } }}
         >
           <div className="card-icon-header">
             <div className="desktop-icon icon-anim-pulse">
@@ -133,11 +148,8 @@ const Home = () => {
         </motion.div>
         <motion.div
           className="info-card"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '0px 0px -50px 0px' }}
-          transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          whileHover={{ scale: 1.02, y: -8 }}
+          variants={cardItem}
+          whileHover={{ scale: 1.04, y: -12, transition: { type: 'spring', stiffness: 400, damping: 20 } }}
         >
           <div className="card-icon-header">
             <div className="desktop-icon icon-anim-float">
@@ -147,7 +159,7 @@ const Home = () => {
           </div>
           <p>Architecting hardened, scalable web applications with a focus on security by design.</p>
         </motion.div>
-      </section>
+      </motion.section>
     </PageTransition>
   );
 };
