@@ -1,137 +1,137 @@
 import React, { useEffect, useRef } from 'react';
 
+const TARGET_FPS  = 30;
+const INTERVAL_MS = 1000 / TARGET_FPS;
+
 const CyberBackground = () => {
     const canvasRef = useRef(null);
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d', { willReadFrequently: false, alpha: true });
-        let animationFrameId;
+        const ctx    = canvas.getContext('2d', { alpha: true });
+        let   rafId;
+        let   lastTime = 0;
 
-        // Read theme color once, refresh only when the theme actually changes
-        let primaryColor = getComputedStyle(document.documentElement)
-            .getPropertyValue('--primary-color').trim();
-        const themeObserver = new MutationObserver(() => {
-            primaryColor = getComputedStyle(document.documentElement)
-                .getPropertyValue('--primary-color').trim();
-        });
-        themeObserver.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['data-theme'],
-        });
-
-        const resizeCanvas = () => {
-            canvas.width = window.innerWidth;
+        /* ── Resize ─────────────────────────────────────────── */
+        const resize = () => {
+            canvas.width  = window.innerWidth;
             canvas.height = window.innerHeight;
         };
+        window.addEventListener('resize', resize);
+        resize();
 
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+        /* ── Stars ──────────────────────────────────────────── */
+        const COUNT  = window.innerWidth < 768 ? 90 : 160;
+        const stars  = [];
 
-        // Lighter particle field (was 40)
-        const particleCount = window.innerWidth < 768 ? 16 : 24;
-        const connectionDistSq = 160 * 160;
-        const particles = [];
-
-        const resetParticle = (p) => {
-            p.x = Math.random() * canvas.width;
-            p.y = Math.random() * canvas.height;
-            p.vx = (Math.random() - 0.5) * 0.5;
-            p.vy = (Math.random() - 0.5) * 0.5;
-            p.size = Math.random() * 2;
-            p.alpha = Math.random() * 0.5 + 0.2;
+        const initStar = (s, randomY = true) => {
+            s.x      = Math.random() * canvas.width;
+            s.y      = randomY ? Math.random() * canvas.height : -4;
+            s.depth  = Math.random();               // 0 = far, 1 = near
+            s.r      = 0.25 + s.depth * 1.6;       // 0.25 – 1.85 px
+            s.speed  = 0.06 + s.depth * 0.22;      // slow drift down
+            s.drift  = (Math.random() - 0.5) * 0.04; // tiny horizontal wander
+            s.base   = 0.15 + s.depth * 0.55;      // base opacity
+            s.phase  = Math.random() * Math.PI * 2;
+            s.freq   = 0.004 + Math.random() * 0.008; // twinkle speed
         };
 
-        for (let i = 0; i < particleCount; i++) {
-            const p = {};
-            resetParticle(p);
-            particles.push(p);
+        for (let i = 0; i < COUNT; i++) {
+            const s = {};
+            initStar(s, true);
+            stars.push(s);
         }
 
-        const drawGrid = () => {
-            ctx.strokeStyle = primaryColor;
-            ctx.lineWidth = 0.5;
+        /* ── Occasional shooting star ───────────────────────── */
+        let shoot    = null;
+        let nextShoot = 4000 + Math.random() * 8000;
 
-            const gridSize = 100;
-            const scrollSpeed = 0.5;
-            const offset = (performance.now() * scrollSpeed / 50) % gridSize;
-
-            ctx.globalAlpha = 0.05;
-
-            // Batch every grid line into a single path (was one stroke per line)
-            ctx.beginPath();
-            for (let x = offset; x < canvas.width; x += gridSize) {
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-            }
-            for (let y = offset; y < canvas.height; y += gridSize) {
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-            }
-            ctx.stroke();
+        const spawnShoot = () => {
+            shoot = {
+                x:  Math.random() * canvas.width  * 0.7,
+                y:  Math.random() * canvas.height * 0.4,
+                vx: 4 + Math.random() * 4,
+                vy: 2 + Math.random() * 2,
+                len: 80 + Math.random() * 60,
+                life: 1,
+            };
+            nextShoot = 5000 + Math.random() * 12000;
         };
 
-        // ~30 fps cap — background animation doesn't need 60 fps
-        const TARGET_INTERVAL = 1000 / 30;
-        let lastFrameTime = 0;
+        /* ── Draw loop ──────────────────────────────────────── */
+        const draw = (now) => {
+            rafId = requestAnimationFrame(draw);
+            if (now - lastTime < INTERVAL_MS) return;
+            const dt = now - lastTime;
+            lastTime = now;
 
-        const animate = (timestamp) => {
-            animationFrameId = requestAnimationFrame(animate);
-            if (timestamp - lastFrameTime < TARGET_INTERVAL) return;
-            lastFrameTime = timestamp;
+            const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+            const RGB    = isDark ? '220,230,255' : '37,99,235';
+            const glowA  = isDark ? 0.18 : 0.08;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            drawGrid();
+            /* Stars */
+            stars.forEach(s => {
+                s.phase += s.freq * dt;
+                s.y     += s.speed;
+                s.x     += s.drift;
 
-            ctx.fillStyle = primaryColor;
-            for (let i = 0; i < particles.length; i++) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
-                    resetParticle(p);
+                if (s.y > canvas.height + 4) initStar(s, false);
+                if (s.x < -4)               s.x = canvas.width  + 4;
+                if (s.x > canvas.width  + 4) s.x = -4;
+
+                const alpha = s.base * (0.65 + 0.35 * Math.sin(s.phase));
+
+                /* Glow halo for bright/near stars */
+                if (s.depth > 0.65) {
+                    const gr = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4);
+                    gr.addColorStop(0, `rgba(${RGB},${alpha * glowA * 2})`);
+                    gr.addColorStop(1, `rgba(${RGB},0)`);
+                    ctx.beginPath();
+                    ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2);
+                    ctx.fillStyle = gr;
+                    ctx.fill();
                 }
-                ctx.globalAlpha = p.alpha;
+
+                /* Star dot */
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${RGB},${alpha})`;
                 ctx.fill();
-            }
+            });
 
-            // Connect particles (squared distance avoids per-pair sqrt)
-            ctx.strokeStyle = primaryColor;
-            ctx.globalAlpha = 0.03;
-            ctx.beginPath();
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    if (dx * dx + dy * dy < connectionDistSq) {
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                    }
+            /* Shooting star */
+            nextShoot -= dt;
+            if (nextShoot <= 0 && !shoot) spawnShoot();
+
+            if (shoot) {
+                shoot.x    += shoot.vx * (dt / 16);
+                shoot.y    += shoot.vy * (dt / 16);
+                shoot.life -= 0.018 * (dt / 16);
+
+                if (shoot.life > 0) {
+                    const tail = { x: shoot.x - shoot.vx * shoot.len / 10, y: shoot.y - shoot.vy * shoot.len / 10 };
+                    const gr   = ctx.createLinearGradient(tail.x, tail.y, shoot.x, shoot.y);
+                    gr.addColorStop(0, `rgba(${RGB},0)`);
+                    gr.addColorStop(1, `rgba(${RGB},${shoot.life * (isDark ? 0.85 : 0.4)})`);
+                    ctx.beginPath();
+                    ctx.moveTo(tail.x, tail.y);
+                    ctx.lineTo(shoot.x, shoot.y);
+                    ctx.strokeStyle = gr;
+                    ctx.lineWidth   = 1.5;
+                    ctx.stroke();
+                } else {
+                    shoot = null;
                 }
             }
-            ctx.stroke();
         };
 
-        animate();
-
-        // Pause animation when tab is hidden to save CPU
-        const handleVisibility = () => {
-            if (document.hidden) {
-                cancelAnimationFrame(animationFrameId);
-            } else {
-                animate();
-            }
-        };
-        document.addEventListener('visibilitychange', handleVisibility);
+        rafId = requestAnimationFrame(draw);
 
         return () => {
-            window.removeEventListener('resize', resizeCanvas);
-            cancelAnimationFrame(animationFrameId);
-            document.removeEventListener('visibilitychange', handleVisibility);
-            themeObserver.disconnect();
+            cancelAnimationFrame(rafId);
+            window.removeEventListener('resize', resize);
         };
     }, []);
 
@@ -140,13 +140,11 @@ const CyberBackground = () => {
             ref={canvasRef}
             style={{
                 position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                zIndex: -1,
+                inset: 0,
+                width: '100%',
+                height: '100%',
                 pointerEvents: 'none',
-                opacity: 0.6
+                zIndex: 0,
             }}
         />
     );
