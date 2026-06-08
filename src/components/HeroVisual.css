@@ -1,0 +1,239 @@
+/* ══════════════════════════════════════════════════════════════
+   GYROSCOPE RINGS — Hero Visual (pure CSS 3D, no WebGL)
+   Uses perspective + rotateX/Y transforms for true 3D ring tilt.
+   --hv-r : ring radius (slightly larger than profile radius)
+══════════════════════════════════════════════════════════════ */
+
+.hv {
+    --hv-r:   185px;   /* ring radius — desktop (profile = 300px → 150px + margin) */
+    --hv-c:   var(--primary-color, #00ff41);
+    --hv-g:   var(--primary-glow,  rgba(0, 255, 65, .5));
+    --hv-dim: calc(var(--hv-r) * 2);
+
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* 3D perspective on the container so all children share the same vanishing point */
+    perspective: 900px;
+    perspective-origin: 50% 50%;
+}
+
+/* ── Ambient glow behind profile ─────────────────────────── */
+.hv-glow {
+    position: absolute;
+    width:  var(--hv-dim);
+    height: var(--hv-dim);
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(0, 255, 65, .12) 0%,
+        rgba(0, 255, 65, .05) 40%,
+        transparent 70%
+    );
+    animation: hvGlowPulse 4s ease-in-out infinite;
+}
+
+@keyframes hvGlowPulse {
+    0%, 100% { transform: scale(1);    opacity: .7; }
+    50%       { transform: scale(1.15); opacity: 1;  }
+}
+
+/* ── Base ring ────────────────────────────────────────────── */
+.hv-ring {
+    position: absolute;
+    width:  var(--hv-dim);
+    height: var(--hv-dim);
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    will-change: transform;
+    transform-style: preserve-3d;
+}
+
+/* Ring 1 — near-flat, slow CW */
+.hv-ring-1 {
+    border-color: rgba(0, 255, 65, .7);
+    box-shadow:
+        0 0  6px rgba(0, 255, 65, .5),
+        0 0 14px rgba(0, 255, 65, .2),
+        inset 0 0 6px rgba(0, 255, 65, .1);
+    animation: hvRing1 10s linear infinite;
+}
+@keyframes hvRing1 {
+    from { transform: rotateX(70deg) rotateZ(0deg); }
+    to   { transform: rotateX(70deg) rotateZ(360deg); }
+}
+
+/* Ring 2 — steeply tilted, medium CCW */
+.hv-ring-2 {
+    width:  calc(var(--hv-dim) * 1.12);
+    height: calc(var(--hv-dim) * 1.12);
+    border-color: rgba(0, 255, 65, .4);
+    box-shadow:
+        0 0  5px rgba(0, 255, 65, .3),
+        0 0 12px rgba(0, 255, 65, .12);
+    animation: hvRing2 14s linear infinite;
+}
+@keyframes hvRing2 {
+    from { transform: rotateX(20deg) rotateY(45deg) rotateZ(0deg); }
+    to   { transform: rotateX(20deg) rotateY(45deg) rotateZ(-360deg); }
+}
+
+/* Ring 3 — perpendicular, fast CW */
+.hv-ring-3 {
+    width:  calc(var(--hv-dim) * 0.88);
+    height: calc(var(--hv-dim) * 0.88);
+    border-color: rgba(0, 255, 65, .5);
+    border-style: dashed;
+    box-shadow:
+        0 0 4px rgba(0, 255, 65, .3);
+    animation: hvRing3 7s linear infinite;
+}
+@keyframes hvRing3 {
+    from { transform: rotateY(80deg) rotateZ(0deg); }
+    to   { transform: rotateY(80deg) rotateZ(360deg); }
+}
+
+/* Ring 4 — diagonal accent, slow CCW */
+.hv-ring-4 {
+    width:  calc(var(--hv-dim) * 1.25);
+    height: calc(var(--hv-dim) * 1.25);
+    border-color: rgba(0, 255, 65, .18);
+    box-shadow: 0 0 18px rgba(0, 255, 65, .08);
+    animation: hvRing4 20s linear infinite;
+}
+@keyframes hvRing4 {
+    from { transform: rotateX(50deg) rotateY(-30deg) rotateZ(0deg); }
+    to   { transform: rotateX(50deg) rotateY(-30deg) rotateZ(-360deg); }
+}
+
+/* ── Orbiting dots ─────────────────────────────────────────── */
+.hv-orbit {
+    position: absolute;
+    width:  var(--hv-dim);
+    height: var(--hv-dim);
+    border-radius: 50%;
+    transform-style: preserve-3d;
+}
+
+.hv-dot {
+    position: absolute;
+    top:  -4px;
+    left: calc(50% - 4px);
+    width:  8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--hv-c);
+    box-shadow:
+        0 0  6px var(--hv-c),
+        0 0 14px var(--hv-g),
+        0 0 26px var(--hv-g);
+}
+
+.hv-orbit-1 {
+    animation: hvOrbit1 10s linear infinite;
+}
+.hv-orbit-2 {
+    width:  calc(var(--hv-dim) * 1.12);
+    height: calc(var(--hv-dim) * 1.12);
+    animation: hvOrbit2 14s linear infinite;
+}
+.hv-orbit-2 .hv-dot {
+    top: -4px;
+    left: calc(50% - 4px);
+    width:  6px;
+    height: 6px;
+    opacity: .75;
+}
+.hv-orbit-3 {
+    width:  calc(var(--hv-dim) * 0.88);
+    height: calc(var(--hv-dim) * 0.88);
+    animation: hvOrbit3 7s linear infinite;
+}
+.hv-orbit-3 .hv-dot {
+    top: -3px;
+    left: calc(50% - 3px);
+    width:  6px;
+    height: 6px;
+    opacity: .6;
+}
+
+@keyframes hvOrbit1 {
+    from { transform: rotateX(70deg) rotateZ(0deg); }
+    to   { transform: rotateX(70deg) rotateZ(360deg); }
+}
+@keyframes hvOrbit2 {
+    from { transform: rotateX(20deg) rotateY(45deg) rotateZ(0deg); }
+    to   { transform: rotateX(20deg) rotateY(45deg) rotateZ(-360deg); }
+}
+@keyframes hvOrbit3 {
+    from { transform: rotateY(80deg) rotateZ(0deg); }
+    to   { transform: rotateY(80deg) rotateZ(360deg); }
+}
+
+/* ── Light-theme override ─────────────────────────────────── */
+[data-theme='light'] .hv {
+    --hv-c: #1d4ed8;
+    --hv-g: rgba(29, 78, 216, .6);
+}
+
+[data-theme='light'] .hv-ring-1 {
+    border-color: rgba(29, 78, 216, 1);
+    border-width: 2.5px;
+    box-shadow:
+        0 0 10px rgba(29, 78, 216, .8),
+        0 0 24px rgba(29, 78, 216, .4),
+        inset 0 0 10px rgba(29, 78, 216, .15);
+}
+[data-theme='light'] .hv-ring-2 {
+    border-color: rgba(29, 78, 216, .8);
+    border-width: 2px;
+    box-shadow:
+        0 0  8px rgba(29, 78, 216, .6),
+        0 0 20px rgba(29, 78, 216, .25);
+}
+[data-theme='light'] .hv-ring-3 {
+    border-color: rgba(29, 78, 216, .9);
+    border-width: 2px;
+    box-shadow: 0 0 8px rgba(29, 78, 216, .55);
+}
+[data-theme='light'] .hv-ring-4 {
+    border-color: rgba(29, 78, 216, .45);
+    border-width: 1.5px;
+    box-shadow: 0 0 22px rgba(29, 78, 216, .18);
+}
+[data-theme='light'] .hv-glow {
+    background: radial-gradient(
+        circle,
+        rgba(29, 78, 216, .18) 0%,
+        rgba(29, 78, 216, .08) 40%,
+        transparent 70%
+    );
+}
+[data-theme='light'] .hv-dot {
+    background: #1d4ed8;
+    box-shadow:
+        0 0  6px #1d4ed8,
+        0 0 16px rgba(29, 78, 216, .7),
+        0 0 28px rgba(29, 78, 216, .4);
+}
+
+/* ── Tablet ───────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .hv { --hv-r: 95px; }
+}
+
+/* ── Mobile ───────────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .hv { --hv-r: 118px; }
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .hv-ring, .hv-orbit, .hv-glow {
+        animation: none !important;
+    }
+}

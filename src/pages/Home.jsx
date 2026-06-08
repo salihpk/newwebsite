@@ -1,17 +1,14 @@
-import React, { Suspense, lazy, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { ShieldAlert, BrainCircuit, ShieldCheck } from 'lucide-react';
+import HeroVisual from '../components/HeroVisual';
 import './Home.css';
-
-const ThreeCanvas = lazy(() => import('./HomeThreeCanvas'));
 
 const DISCORD_USER_ID = '577248513654784020';
 
 const Home = () => {
-  const [coreScale, setCoreScale] = useState(2.4);
-  const [themeColor, setThemeColor] = useState('#00ff41');
   const [discordAvatar, setDiscordAvatar] = useState(null);
 
   useEffect(() => {
@@ -25,28 +22,6 @@ const Home = () => {
         }
       })
       .catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    const updateThemeColor = () => {
-      const theme = document.documentElement.getAttribute('data-theme');
-      setThemeColor(theme === 'light' ? '#2563eb' : '#00ff41');
-    };
-    updateThemeColor();
-    const observer = new MutationObserver(updateThemeColor);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) setCoreScale(2.8);
-      else if (window.innerWidth < 1024) setCoreScale(3.2);
-      else setCoreScale(2.4);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const triggerGlitch = (target, targetText) => {
@@ -107,9 +82,7 @@ const Home = () => {
         </div>
 
         <div className="hero-visual">
-          <Suspense fallback={null}>
-            <ThreeCanvas scale={coreScale} color={themeColor} />
-          </Suspense>
+          <HeroVisual />
           <div className="profile-container">
             <motion.img
               src={discordAvatar || '/profile2.png'}

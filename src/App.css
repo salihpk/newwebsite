@@ -7,6 +7,45 @@
     overflow-x: hidden;
 }
 
+/* ── Background glow synced to gyroscope ring-4 (20s CCW) ── */
+.app-container::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: conic-gradient(
+        from 0deg at 50% 50%,
+        transparent          0deg,
+        rgba(0,255,65,.028) 60deg,
+        transparent         120deg,
+        rgba(0,255,65,.018) 180deg,
+        transparent         240deg,
+        rgba(0,255,65,.028) 300deg,
+        transparent         360deg
+    );
+    animation: appBgSpin 20s linear infinite reverse;
+    will-change: transform;
+}
+
+@keyframes appBgSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+[data-theme='light'] .app-container::before {
+    background: conic-gradient(
+        from 0deg at 50% 50%,
+        transparent               0deg,
+        rgba(29, 78, 216, .025)  60deg,
+        transparent              120deg,
+        rgba(29, 78, 216, .015) 180deg,
+        transparent              240deg,
+        rgba(29, 78, 216, .025) 300deg,
+        transparent              360deg
+    );
+}
+
 main {
     flex: 1;
     padding-top: 80px;
