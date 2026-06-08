@@ -39,46 +39,6 @@ body.scan-frozen .navbar {
     text-decoration: none;
 }
 
-/* Spinning ring synced to hv-ring-1 (10s CW) */
-.nav-profile-link::before {
-    content: '';
-    position: absolute;
-    inset: -5px;
-    border-radius: 50%;
-    border: 1.5px solid transparent;
-    border-top-color:    rgba(0, 255, 65, .8);
-    border-right-color:  rgba(0, 255, 65, .2);
-    border-bottom-color: rgba(0, 255, 65, .8);
-    border-left-color:   rgba(0, 255, 65, .2);
-    animation: navRingSpin 10s linear infinite;
-    pointer-events: none;
-}
-
-/* Counter ring synced to hv-ring-3 (7s CW) */
-.nav-profile-link::after {
-    content: '';
-    position: absolute;
-    inset: -9px;
-    border-radius: 50%;
-    border: 1px dashed rgba(0, 255, 65, .18);
-    animation: navRingSpin 7s linear infinite reverse;
-    pointer-events: none;
-}
-
-@keyframes navRingSpin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-}
-
-[data-theme='light'] .nav-profile-link::before {
-    border-top-color:    rgba(29, 78, 216, .8);
-    border-right-color:  rgba(29, 78, 216, .2);
-    border-bottom-color: rgba(29, 78, 216, .8);
-    border-left-color:   rgba(29, 78, 216, .2);
-}
-[data-theme='light'] .nav-profile-link::after {
-    border-color: rgba(29, 78, 216, .18);
-}
 
 .nav-avatar {
     width: 42px;
@@ -87,8 +47,14 @@ body.scan-frozen .navbar {
     border: 2px solid var(--primary-color);
     object-fit: cover;
     mix-blend-mode: screen;
+    animation: navAvatarPulse 3s ease-in-out infinite;
     transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                 border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes navAvatarPulse {
+    0%, 100% { box-shadow: 0 0  6px var(--primary-glow); }
+    50%       { box-shadow: 0 0 16px var(--primary-glow), 0 0 28px var(--primary-glow); }
 }
 
 [data-theme='light'] .nav-avatar {
