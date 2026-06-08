@@ -39,19 +39,33 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
 
   // ── Auto-hide on scroll ───────────────────────────────────────
   const [navVisible, setNavVisible] = useState(true);
-  const lastScrollY = useRef(0);
+  const lastScrollY  = useRef(0);
+  const rafPending   = useRef(false);
+  const visibleRef   = useRef(true); // track without re-render cost
 
   useEffect(() => {
     const onScroll = () => {
-      const y = window.scrollY;
-      if (y < 60) {
-        setNavVisible(true); // always show near top
-      } else if (y > lastScrollY.current + 4) {
-        setNavVisible(false); // scrolling down → hide
-      } else if (y < lastScrollY.current - 4) {
-        setNavVisible(true);  // scrolling up → show
-      }
-      lastScrollY.current = y;
+      if (rafPending.current) return;
+      rafPending.current = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        let next = visibleRef.current;
+
+        if (y < 60) {
+          next = true;                        // always show near top
+        } else if (y > lastScrollY.current + 10) {
+          next = false;                       // scrolling down  → hide
+        } else if (y < lastScrollY.current - 10) {
+          next = true;                        // scrolling up    → show
+        }
+
+        if (next !== visibleRef.current) {
+          visibleRef.current = next;
+          setNavVisible(next);               // only setState when it actually changes
+        }
+        lastScrollY.current = y;
+        rafPending.current  = false;
+      });
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
