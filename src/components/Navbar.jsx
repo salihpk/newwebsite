@@ -37,6 +37,26 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
+  // ── Auto-hide on scroll ───────────────────────────────────────
+  const [navVisible, setNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y < 60) {
+        setNavVisible(true); // always show near top
+      } else if (y > lastScrollY.current + 4) {
+        setNavVisible(false); // scrolling down → hide
+      } else if (y < lastScrollY.current - 4) {
+        setNavVisible(true);  // scrolling up → show
+      }
+      lastScrollY.current = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   const navItems = [
     { name: 'HOME', path: '/', icon: <Home size={20} /> },
     { name: 'PROJECTS', path: '/projects', icon: <Layers size={20} /> },
@@ -93,7 +113,7 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar${navVisible ? '' : ' navbar--hidden'}`}>
       <div className="nav-logo">
         <motion.div
           className="nav-profile-link"
