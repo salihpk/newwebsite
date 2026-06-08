@@ -66,7 +66,8 @@ const CyberBackground = () => {
             lastTime = now;
 
             const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-            const RGB    = isDark ? '220,230,255' : '37,99,235';
+            const RGB    = getComputedStyle(document.documentElement)
+                               .getPropertyValue('--primary-color-rgb').trim() || (isDark ? '0,255,65' : '37,99,235');
             const glowA  = isDark ? 0.18 : 0.08;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
