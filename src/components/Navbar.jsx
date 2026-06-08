@@ -29,26 +29,6 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const toggleTheme = (e) => {
-    e.preventDefault();
-    const x = e.clientX ?? window.innerWidth / 2;
-    const y = e.clientY ?? window.innerHeight / 2;
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-
-    document.documentElement.style.setProperty('--theme-x', `${x}px`);
-    document.documentElement.style.setProperty('--theme-y', `${y}px`);
-
-    if (!document.startViewTransition) {
-      setTheme(newTheme);
-      return;
-    }
-
-    document.startViewTransition(() => {
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      setTheme(newTheme);
-    });
-  };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -67,35 +47,74 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
   const pressTimerRef = useRef(null);
   const isLongPressActive = useRef(false);
 
+  // Shared theme-switch logic (accepts coordinates directly)
+  const applyThemeSwitch = (x, y) => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.style.setProperty('--theme-x', `${x}px`);
+    document.documentElement.style.setProperty('--theme-y', `${y}px`);
+    if (!document.startViewTransition) {
+      setTheme(newTheme);
+      return;
+    }
+    document.startViewTransition(() => {
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      setTheme(newTheme);
+    });
+  };
+
+  // ── Touch handlers (mobile long-press) ───────────────────────
+  const handleTouchStart = () => {
+    isLongPressActive.current = false;
+    pressTimerRef.current = setTimeout(() => {
+      toggleMusic();
+      isLongPressActive.current = true;
+    }, 600);
+  };
+
+  const handleTouchEnd = (e) => {
+    clearTimeout(pressTimerRef.current);
+    pressTimerRef.current = null;
+    if (!isLongPressActive.current) {
+      // Short tap → toggle theme
+      const touch = e.changedTouches?.[0];
+      applyThemeSwitch(
+        touch?.clientX ?? window.innerWidth / 2,
+        touch?.clientY ?? window.innerHeight / 2,
+      );
+    }
+    isLongPressActive.current = false;
+    e.preventDefault(); // block ghost click that follows touchend
+  };
+
+  const handleTouchCancel = () => {
+    clearTimeout(pressTimerRef.current);
+    isLongPressActive.current = false;
+  };
+
   return (
     <nav className="navbar">
       <div className="nav-logo">
         <motion.div
           className="nav-profile-link"
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: 'pointer', touchAction: 'manipulation' }}
+          /* Desktop: left-click = theme, right-click = music */
           onClick={(e) => {
             e.preventDefault();
             if (isLongPressActive.current) {
               isLongPressActive.current = false;
               return;
             }
-            toggleTheme(e);
+            applyThemeSwitch(e.clientX ?? window.innerWidth / 2, e.clientY ?? window.innerHeight / 2);
           }}
           onContextMenu={(e) => {
-            e.preventDefault(); // suppress browser context menu; desktop right-click handled by timer
+            e.preventDefault();
+            toggleMusic(); // desktop right-click → toggle music
           }}
-          onPointerDown={(e) => {
-            e.currentTarget.setPointerCapture(e.pointerId); // keep pointer captured on mobile
-            isLongPressActive.current = false;
-            pressTimerRef.current = setTimeout(() => {
-              toggleMusic();
-              isLongPressActive.current = true;
-            }, 600);
-          }}
-          onPointerUp={() => clearTimeout(pressTimerRef.current)}
-          onPointerCancel={() => clearTimeout(pressTimerRef.current)}
-          onPointerLeave={() => clearTimeout(pressTimerRef.current)}
-          style={{ touchAction: 'none' }}
+          /* Mobile: touch events handle tap (theme) and hold (music) */
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchCancel}
           whileTap={{ scale: 0.9 }}
         >
           <motion.img
