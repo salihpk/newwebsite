@@ -76,6 +76,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
             transition={spring(0.18, 320, 26)}
+          >
             Cyber security Aspirant | AI Enthusiast | Creative Developer
           </motion.p>
           <div className="hero-cta">
