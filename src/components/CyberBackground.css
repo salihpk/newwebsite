@@ -1,0 +1,114 @@
+/* ══════════════════════════════════════════════════════════════
+   AURORA GLOW — page background (pure CSS, no canvas/JS)
+   Large blurred theme-colored blobs drifting slowly behind content.
+   Only transform is animated → fully GPU-composited, zero JS cost.
+══════════════════════════════════════════════════════════════ */
+
+.aurora {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.aurora-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    will-change: transform;
+}
+
+/* Blob 1 — primary color, top-left, largest */
+.aurora-blob-1 {
+    width: 55vw;
+    height: 55vw;
+    min-width: 420px;
+    min-height: 420px;
+    top: -18%;
+    left: -12%;
+    background: radial-gradient(circle,
+        rgba(var(--primary-color-rgb), 0.16) 0%,
+        rgba(var(--primary-color-rgb), 0.05) 45%,
+        transparent 70%);
+    animation: auroraDrift1 22s ease-in-out infinite alternate;
+}
+
+/* Blob 2 — primary tint, bottom-right */
+.aurora-blob-2 {
+    width: 48vw;
+    height: 48vw;
+    min-width: 380px;
+    min-height: 380px;
+    bottom: -22%;
+    right: -14%;
+    background: radial-gradient(circle,
+        rgba(var(--primary-color-rgb), 0.13) 0%,
+        rgba(var(--primary-color-rgb), 0.04) 45%,
+        transparent 70%);
+    animation: auroraDrift2 26s ease-in-out infinite alternate;
+}
+
+/* Blob 3 — smaller accent, wanders through the middle */
+.aurora-blob-3 {
+    width: 34vw;
+    height: 34vw;
+    min-width: 300px;
+    min-height: 300px;
+    top: 30%;
+    left: 38%;
+    background: radial-gradient(circle,
+        rgba(var(--primary-color-rgb), 0.09) 0%,
+        transparent 65%);
+    animation: auroraDrift3 18s ease-in-out infinite alternate;
+}
+
+@keyframes auroraDrift1 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(10vw, 8vh, 0) scale(1.15); }
+    100% { transform: translate3d(4vw, 16vh, 0) scale(0.95); }
+}
+
+@keyframes auroraDrift2 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(-8vw, -10vh, 0) scale(1.12); }
+    100% { transform: translate3d(-14vw, -4vh, 0) scale(1.02); }
+}
+
+@keyframes auroraDrift3 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(-12vw, 10vh, 0) scale(1.25); }
+    100% { transform: translate3d(8vw, -8vh, 0) scale(0.9); }
+}
+
+/* ── Light theme — softer, pastel ─────────────────────────── */
+[data-theme='light'] .aurora-blob-1 {
+    background: radial-gradient(circle,
+        rgba(var(--primary-color-rgb), 0.12) 0%,
+        rgba(var(--primary-color-rgb), 0.04) 45%,
+        transparent 70%);
+}
+
+[data-theme='light'] .aurora-blob-2 {
+    background: radial-gradient(circle,
+        rgba(var(--primary-color-rgb), 0.10) 0%,
+        rgba(var(--primary-color-rgb), 0.03) 45%,
+        transparent 70%);
+}
+
+[data-theme='light'] .aurora-blob-3 {
+    background: radial-gradient(circle,
+        rgba(var(--primary-color-rgb), 0.07) 0%,
+        transparent 65%);
+}
+
+/* ── Mobile — fewer pixels to blur ────────────────────────── */
+@media (max-width: 768px) {
+    .aurora-blob { filter: blur(60px); }
+    .aurora-blob-3 { display: none; }
+}
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .aurora-blob { animation: none !important; }
+}
