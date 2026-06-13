@@ -15,7 +15,7 @@
 .aurora-blob {
     position: absolute;
     border-radius: 50%;
-    filter: blur(90px);
+    filter: blur(70px);
     will-change: transform;
 }
 
@@ -25,6 +25,8 @@
     height: 55vw;
     min-width: 420px;
     min-height: 420px;
+    max-width: 760px;
+    max-height: 760px;
     top: -18%;
     left: -12%;
     background: radial-gradient(circle,
@@ -40,6 +42,8 @@
     height: 48vw;
     min-width: 380px;
     min-height: 380px;
+    max-width: 660px;
+    max-height: 660px;
     bottom: -22%;
     right: -14%;
     background: radial-gradient(circle,
@@ -55,6 +59,8 @@
     height: 34vw;
     min-width: 300px;
     min-height: 300px;
+    max-width: 480px;
+    max-height: 480px;
     top: 30%;
     left: 38%;
     background: radial-gradient(circle,
