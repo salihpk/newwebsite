@@ -464,8 +464,12 @@
     }
 
     .split-name {
-        font-size: 2rem;
-        letter-spacing: 3px;
+        font-size: 1.7rem;
+        letter-spacing: 2px;
+    }
+
+    .split-name br {
+        display: none;
     }
 
     .hero-status {
