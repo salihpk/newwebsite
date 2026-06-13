@@ -6,6 +6,7 @@ const Home     = lazy(() => import('./pages/Home'));
 const Projects = lazy(() => import('./pages/Projects'));
 const GamingHub = lazy(() => import('./pages/GamingHub'));
 const Contact  = lazy(() => import('./pages/Contact'));
+const Root     = lazy(() => import('./pages/Root'));
 const NotFound  = lazy(() => import('./pages/NotFound'));
 
 import Navbar from './components/Navbar';
@@ -15,6 +16,8 @@ import { useLenis } from './hooks/useLenis';
 
 import CyberBackground from './components/CyberBackground';
 import MatrixRain from './components/MatrixRain';
+import CTFTracker from './components/CTFTracker';
+import { initCTF } from './ctf/ctf';
 import { MapPin, ShieldCheck, Cpu } from 'lucide-react';
 import './App.css';
 
@@ -36,6 +39,11 @@ function App() {
 
     // Lenis smooth scroll — only active after boot
     useLenis();
+
+    // Boot the hidden CTF challenge (console banner + window.ctf API)
+    useEffect(() => {
+        initCTF();
+    }, []);
 
     useEffect(() => {
         const detectVPN = async () => {
@@ -142,13 +150,14 @@ function App() {
                                         <Route path="/projects" element={<Projects />} />
                                         <Route path="/gaming" element={<GamingHub />} />
                                         <Route path="/contact" element={<Contact />} />
+                                        <Route path="/root" element={<Root />} />
                                         <Route path="*" element={<NotFound />} />
                                     </Routes>
                                 </Suspense>
                             </AnimatePresence>
                         </main>
 
-                        <footer className="footer">
+                        <footer className="footer" data-sig="Q0hBUkxJRS1FMTFF">
                             <div className="mono text-xs opacity-50 footer-stats">
                                 <span className="footer-stat-item"><ShieldCheck size={10} /> SYSTEM: STABLE</span>
                                 <span className="separator">|</span>
@@ -159,6 +168,8 @@ function App() {
                                 <span className="footer-stat-item"><MapPin size={10} /> LOC: {locationData.toUpperCase()}</span>
                             </div>
                         </footer>
+
+                        <CTFTracker />
                     </motion.div>
                 )}
             </AnimatePresence>
