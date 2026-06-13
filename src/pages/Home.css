@@ -396,8 +396,8 @@
     .split-hero {
         flex-direction: column-reverse;
         min-height: auto;
-        padding: 50px 28px 40px;
-        gap: 32px;
+        padding: 36px 28px 32px;
+        gap: 20px;
         align-items: center;
         text-align: center;
     }
@@ -424,8 +424,10 @@
     }
 
     .portrait-wrap {
-        width: 320px;
-        height: 320px;
+        width: 240px;
+        height: 240px;
+        overflow: hidden;
+        border-radius: 50%;
     }
 
     .sonar-ring { width: 200px; height: 200px; }
@@ -463,15 +465,17 @@
     }
 
     .portrait-wrap {
-        width: 220px;
-        height: 220px;
+        width: 190px;
+        height: 190px;
+        overflow: hidden;
+        border-radius: 50%;
     }
 
-    .sonar-ring { width: 148px; height: 148px; }
+    .sonar-ring { width: 140px; height: 140px; }
 
     .portrait-container {
-        width: 148px;
-        height: 148px;
+        width: 140px;
+        height: 140px;
     }
 
     .hero-cta {
