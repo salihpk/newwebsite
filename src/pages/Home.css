@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════
-   Home — Cipher layout
-   Centered portrait hero, corner brackets, full-width name bar
+   Home — Split hero layout
+   Text left, portrait right, skills row below
 ═══════════════════════════════════════════════════════ */
 
 .home-page {
@@ -10,16 +10,16 @@
     padding-bottom: 100px;
 }
 
-/* ── Cipher hero container ──────────────────────────── */
-.cipher-hero {
+/* ── Split hero container ───────────────────────────── */
+.split-hero {
     position: relative;
     min-height: 82vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 22px;
-    padding: 60px 20px;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 60px 56px;
     border: 1px solid rgba(var(--primary-color-rgb), 0.09);
     border-radius: 16px;
     overflow: hidden;
@@ -39,7 +39,6 @@
     left: 20px;
     border-top: 2px solid var(--primary-color);
     border-left: 2px solid var(--primary-color);
-    border-radius: 0;
 }
 
 .bracket-tr {
@@ -47,7 +46,6 @@
     right: 20px;
     border-top: 2px solid var(--primary-color);
     border-right: 2px solid var(--primary-color);
-    border-radius: 0;
 }
 
 .bracket-bl {
@@ -55,7 +53,6 @@
     left: 20px;
     border-bottom: 2px solid var(--primary-color);
     border-left: 2px solid var(--primary-color);
-    border-radius: 0;
 }
 
 .bracket-br {
@@ -63,37 +60,125 @@
     right: 20px;
     border-bottom: 2px solid var(--primary-color);
     border-right: 2px solid var(--primary-color);
-    border-radius: 0;
 }
 
-/* ── Subtle crosshair ───────────────────────────────── */
-.cipher-grid-h {
+/* ── Scanning line ──────────────────────────────────── */
+.hero-scan {
     position: absolute;
-    top: 50%;
     left: 0;
     right: 0;
     height: 1px;
-    background: rgba(var(--primary-color-rgb), 0.04);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(var(--primary-color-rgb), 0.25) 40%,
+        rgba(var(--primary-color-rgb), 0.5) 50%,
+        rgba(var(--primary-color-rgb), 0.25) 60%,
+        transparent 100%
+    );
+    animation: heroScan 7s linear infinite;
     pointer-events: none;
-    z-index: 0;
-}
-
-.cipher-grid-v {
-    position: absolute;
-    left: 50%;
+    z-index: 3;
     top: 0;
-    bottom: 0;
-    width: 1px;
-    background: rgba(var(--primary-color-rgb), 0.04);
-    pointer-events: none;
-    z-index: 0;
 }
 
-/* ── Portrait area ──────────────────────────────────── */
-.cipher-visual {
-    position: relative;
-    width: 480px;
-    height: 480px;
+@keyframes heroScan {
+    0%   { top: 0%;   opacity: 0; }
+    5%   { opacity: 1; }
+    95%  { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+/* ── Left column ────────────────────────────────────── */
+.hero-left {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 520px;
+    flex: 1;
+    z-index: 1;
+}
+
+/* Status badge */
+.hero-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    box-shadow: 0 0 7px var(--primary-glow);
+    flex-shrink: 0;
+    animation: dotPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 1;   transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.85); }
+}
+
+.status-online {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.status-sep {
+    opacity: 0.35;
+}
+
+.status-tag {
+    color: var(--text-dim);
+    opacity: 0.75;
+}
+
+/* Name */
+.split-name {
+    font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+    font-weight: 700;
+    letter-spacing: 5px;
+    line-height: 0.95;
+    color: var(--text-color);
+    cursor: default;
+    user-select: none;
+    margin: 0;
+}
+
+/* Accent divider */
+.name-divider {
+    width: 56px;
+    height: 3px;
+    background: var(--primary-color);
+    box-shadow: 0 0 14px var(--primary-glow);
+    border-radius: 2px;
+}
+
+/* Bio */
+.hero-bio {
+    font-size: 0.94rem;
+    color: var(--text-dim);
+    line-height: 1.72;
+    max-width: 400px;
+    margin: 0;
+}
+
+
+/* CTAs */
+.hero-cta {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+/* ── Right column ───────────────────────────────────── */
+.hero-right {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -101,29 +186,75 @@
     z-index: 1;
 }
 
-.cipher-hero .profile-container {
+.portrait-wrap {
+    position: relative;
+    width: 440px;
+    height: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Sonar rings ────────────────────────────────────── */
+.sonar-ring {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    border: 1.5px solid var(--primary-color);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: none;
+    animation: sonarPulse 2.4s ease-out infinite;
+}
+
+.sonar-ring-2 { animation-delay: 0.8s; }
+.sonar-ring-3 { animation-delay: 1.6s; }
+
+@keyframes sonarPulse {
+    0%   { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+    100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+.portrait-container {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 300px;
-    height: 300px;
+    width: 260px;
+    height: 260px;
     z-index: 5;
     overflow: hidden;
     border-radius: 50%;
     border: 2px solid var(--primary-color);
-    box-shadow: 0 0 40px var(--primary-glow);
+    box-shadow:
+        0 0 40px var(--primary-glow),
+        0 0 80px rgba(var(--primary-color-rgb), 0.12),
+        inset 0 0 20px rgba(var(--primary-color-rgb), 0.05);
     background: var(--surface-color);
     transition: border-color 1.2s ease, box-shadow 1.2s ease;
 }
 
-.profile-img {
+.portrait-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.profile-shader {
+@keyframes holoReveal {
+    0%   { filter: hue-rotate(180deg) brightness(2.2) saturate(0.4); transform: scaleY(0.94); }
+    25%  { filter: hue-rotate(90deg)  brightness(1.6) saturate(0.7); }
+    55%  { filter: hue-rotate(30deg)  brightness(1.2) saturate(1.1); transform: scaleY(1.02); }
+    80%  { filter: hue-rotate(8deg)   brightness(1.05) saturate(1); }
+    100% { filter: hue-rotate(0deg)   brightness(1)   saturate(1);   transform: scaleY(1); }
+}
+
+.portrait-hologram {
+    animation: holoReveal 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.portrait-shader {
     position: absolute;
     top: 0;
     left: 0;
@@ -132,61 +263,13 @@
     background: repeating-linear-gradient(
         transparent 0px,
         transparent 3px,
-        rgba(var(--primary-color-rgb), 0.025) 3px,
-        rgba(var(--primary-color-rgb), 0.025) 4px
+        rgba(var(--primary-color-rgb), 0.022) 3px,
+        rgba(var(--primary-color-rgb), 0.022) 4px
     );
     pointer-events: none;
 }
 
-/* ── Name bar ───────────────────────────────────────── */
-.cipher-name-bar {
-    width: 100%;
-    background: var(--primary-color);
-    text-align: center;
-    padding: 14px 40px;
-    box-shadow: 0 0 60px var(--primary-glow),
-                0 0 120px rgba(var(--primary-color-rgb), 0.08);
-    position: relative;
-    z-index: 1;
-    flex-shrink: 0;
-    transform-origin: center;
-}
-
-.cipher-name {
-    color: #040804;
-    font-size: 2.6rem;
-    letter-spacing: 8px;
-    margin: 0;
-    line-height: 1;
-    text-shadow: none;
-    cursor: default;
-    user-select: none;
-}
-
-[data-theme='light'] .cipher-name {
-    color: #ffffff;
-}
-
-/* ── Subtitle ───────────────────────────────────────── */
-.cipher-subtitle {
-    font-size: 0.64rem;
-    color: var(--text-dim);
-    letter-spacing: 3px;
-    opacity: 0.65;
-    z-index: 1;
-    text-align: center;
-}
-
-/* ── CTAs ───────────────────────────────────────────── */
-.cipher-cta {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-    z-index: 1;
-}
-
-/* ── Glass card (mirrors GamingHub) ─────────────────── */
+/* ── Glass card ─────────────────────────────────────── */
 .home-page .glass-card {
     background: rgba(12, 12, 15, 0.65);
     backdrop-filter: blur(22px);
@@ -200,8 +283,9 @@
 }
 
 .home-page .glass-card:hover {
-    box-shadow: 0 18px 45px -14px rgba(var(--primary-color-rgb), 0.14),
-                0 0 18px rgba(var(--primary-color-rgb), 0.04);
+    box-shadow:
+        0 18px 45px -14px rgba(var(--primary-color-rgb), 0.14),
+        0 0 18px rgba(var(--primary-color-rgb), 0.04);
 }
 
 [data-theme='light'] .home-page .glass-card {
@@ -214,23 +298,6 @@
     box-shadow: 0 18px 40px -14px rgba(var(--primary-color-rgb), 0.18);
 }
 
-/* ── Card label row ─────────────────────────────────── */
-.home-page .card-label-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.62rem;
-    letter-spacing: 2px;
-    color: var(--text-dim);
-    padding: 13px 20px 11px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.045);
-    flex-shrink: 0;
-}
-
-[data-theme='light'] .home-page .card-label-row {
-    border-bottom-color: var(--border-color);
-}
-
 /* ── Skills grid ────────────────────────────────────── */
 .skills-grid {
     display: grid;
@@ -238,21 +305,39 @@
     gap: 20px;
 }
 
-.skill-id {
-    color: var(--primary-color);
-    opacity: 0.55;
+/* ── Skill card inner ───────────────────────────────── */
+.home-page .skill-card {
+    position: relative;
+    overflow: hidden;
 }
 
-.skill-name {
+.skill-ghost-num {
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    font-size: 5rem;
+    font-weight: 700;
     color: var(--primary-color);
-    flex: 1;
+    opacity: 0.055;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
 }
 
 .skill-body {
-    padding: 22px 20px 26px;
+    padding: 24px 22px 28px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.skill-name {
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    color: var(--primary-color);
 }
 
 .skill-body p {
@@ -260,6 +345,7 @@
     color: var(--text-dim);
     line-height: 1.65;
     opacity: 0.85;
+    margin: 0;
 }
 
 /* ── Card icon ──────────────────────────────────────── */
@@ -304,46 +390,58 @@
 
 /* ── Tablet (≤ 1024px) ──────────────────────────────── */
 @media (max-width: 1024px) {
-    .cipher-hero {
-        min-height: 70vh;
-        gap: 18px;
-        padding: 50px 16px;
+    .split-hero {
+        flex-direction: column-reverse;
+        min-height: auto;
+        padding: 50px 28px 40px;
+        gap: 32px;
+        align-items: center;
+        text-align: center;
     }
 
-    .cipher-visual {
-        width: 340px;
-        height: 340px;
+    .hero-left {
+        align-items: center;
+        max-width: 100%;
     }
 
-    .cipher-visual .pc {
-        --pc-d: 260px;
+    .hero-bio {
+        text-align: center;
     }
 
-    .cipher-hero .profile-container {
-        width: 220px;
-        height: 220px;
+    .hero-stats {
+        justify-content: center;
     }
 
-    .cipher-name {
-        font-size: 2rem;
-        letter-spacing: 5px;
+    .hero-cta {
+        justify-content: center;
+    }
+
+    .name-divider {
+        align-self: center;
+    }
+
+    .portrait-wrap {
+        width: 320px;
+        height: 320px;
+    }
+
+    .sonar-ring { width: 200px; height: 200px; }
+
+    .portrait-container {
+        width: 200px;
+        height: 200px;
     }
 
     .skills-grid {
         grid-template-columns: 1fr;
     }
-
-    .home-page .desktop-icon {
-        display: flex !important;
-    }
 }
 
 /* ── Mobile (≤ 480px) ───────────────────────────────── */
 @media (max-width: 480px) {
-    .cipher-hero {
-        min-height: 60vh;
-        gap: 14px;
-        padding: 40px 12px;
+    .split-hero {
+        padding: 40px 16px 32px;
+        gap: 24px;
         border-radius: 10px;
     }
 
@@ -357,37 +455,31 @@
     .bracket-bl { bottom: 12px; left: 12px;  }
     .bracket-br { bottom: 12px; right: 12px; }
 
-    .cipher-visual {
-        width: 270px;
-        height: 270px;
-    }
-
-    .cipher-visual .pc {
-        --pc-d: 210px;
-    }
-
-    .cipher-hero .profile-container {
-        width: 180px;
-        height: 180px;
-    }
-
-    .cipher-name {
-        font-size: 1.25rem;
+    .split-name {
+        font-size: 2rem;
         letter-spacing: 3px;
     }
 
-    .cipher-name-bar {
-        padding: 12px 16px;
+    .portrait-wrap {
+        width: 260px;
+        height: 260px;
     }
 
-    .cipher-subtitle {
-        font-size: 0.56rem;
-        letter-spacing: 1.5px;
+    .sonar-ring { width: 170px; height: 170px; }
+
+    .portrait-container {
+        width: 170px;
+        height: 170px;
     }
 
-    .cipher-cta {
+    .hero-stats {
+        gap: 20px;
+    }
+
+    .hero-cta {
         flex-direction: column;
         gap: 10px;
+        width: 100%;
     }
 
     .home-page {
@@ -396,8 +488,12 @@
 }
 
 /* ── Light theme ────────────────────────────────────── */
-[data-theme='light'] .cipher-hero {
+[data-theme='light'] .split-hero {
     border-color: rgba(var(--primary-color-rgb), 0.14);
+}
+
+[data-theme='light'] .split-name {
+    color: var(--text-color);
 }
 
 /* ── Reduced motion ─────────────────────────────────── */
@@ -405,4 +501,7 @@
     .icon-anim-rock,
     .icon-anim-pulse,
     .icon-anim-float { animation: none !important; }
+    .hero-scan        { animation: none !important; }
+    .status-dot       { animation: none !important; }
+    .sonar-ring       { animation: none !important; }
 }
