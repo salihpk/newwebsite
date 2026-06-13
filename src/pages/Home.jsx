@@ -91,7 +91,6 @@ const Home = () => {
         >
           <motion.div className="hero-status mono" variants={fadeLeft}>
             <div className="status-tags">
-              <span className="status-dot" aria-hidden="true" />
               <span className="status-tag">CYBERSEC_ASPIRANT</span>
               <span className="status-sep" aria-hidden="true">·</span>
               <span className="status-tag">AI_ENTHUSIAST</span>
