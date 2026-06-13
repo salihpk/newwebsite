@@ -80,7 +80,6 @@ const Home = () => {
 
       {/* ── Split hero ── */}
       <section className="split-hero" data-section="HERO" aria-label="Profile">
-        <div className="hero-scan" aria-hidden="true" />
 
         {/* Left column */}
         <motion.div
