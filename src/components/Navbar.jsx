@@ -6,7 +6,7 @@ import './Navbar.css';
 
 const DISCORD_USER_ID = '577248513654784020';
 
-const Navbar = ({ toggleMusic, isMusicPlaying }) => {
+const Navbar = () => {
   const location = useLocation();
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
   const [discordAvatar, setDiscordAvatar] = useState(null);
@@ -78,9 +78,6 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
     { name: 'CONTACT', path: '/contact', icon: <Mail size={20} /> },
   ];
 
-  const pressTimerRef = useRef(null);
-  const isLongPressActive = useRef(false);
-
   // Shared theme-switch logic (accepts coordinates directly)
   const applyThemeSwitch = (x, y) => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
@@ -97,33 +94,14 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
     });
   };
 
-  // ── Touch handlers (mobile long-press) ───────────────────────
-  const handleTouchStart = () => {
-    isLongPressActive.current = false;
-    pressTimerRef.current = setTimeout(() => {
-      toggleMusic();
-      isLongPressActive.current = true;
-    }, 600);
-  };
-
+  // ── Touch handler (mobile tap → toggle theme) ────────────────
   const handleTouchEnd = (e) => {
-    clearTimeout(pressTimerRef.current);
-    pressTimerRef.current = null;
-    if (!isLongPressActive.current) {
-      // Short tap → toggle theme
-      const touch = e.changedTouches?.[0];
-      applyThemeSwitch(
-        touch?.clientX ?? window.innerWidth / 2,
-        touch?.clientY ?? window.innerHeight / 2,
-      );
-    }
-    isLongPressActive.current = false;
+    const touch = e.changedTouches?.[0];
+    applyThemeSwitch(
+      touch?.clientX ?? window.innerWidth / 2,
+      touch?.clientY ?? window.innerHeight / 2,
+    );
     e.preventDefault(); // block ghost click that follows touchend
-  };
-
-  const handleTouchCancel = () => {
-    clearTimeout(pressTimerRef.current);
-    isLongPressActive.current = false;
   };
 
   return (
@@ -132,41 +110,23 @@ const Navbar = ({ toggleMusic, isMusicPlaying }) => {
         <motion.div
           className="nav-profile-link"
           style={{ cursor: 'pointer', touchAction: 'manipulation' }}
-          /* Desktop: left-click = theme, right-click = music */
+          /* Click / tap → toggle theme */
           onClick={(e) => {
             e.preventDefault();
-            if (isLongPressActive.current) {
-              isLongPressActive.current = false;
-              return;
-            }
             applyThemeSwitch(e.clientX ?? window.innerWidth / 2, e.clientY ?? window.innerHeight / 2);
           }}
-          onContextMenu={(e) => {
-            e.preventDefault();
-            toggleMusic(); // desktop right-click → toggle music
-          }}
-          /* Mobile: touch events handle tap (theme) and hold (music) */
-          onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          onTouchCancel={handleTouchCancel}
           whileTap={{ scale: 0.9 }}
         >
           <motion.img
             src={discordAvatar || '/profile2.png'}
-            alt="System Controls"
-            className={`nav-avatar ${isMusicPlaying ? 'playing' : ''}`}
+            alt="Toggle theme"
+            className="nav-avatar"
             onError={e => { e.target.src = '/profile2.png'; }}
-            animate={{
-              rotate: isMusicPlaying ? 360 : 0,
-            }}
-            transition={{
-              rotate: isMusicPlaying ? { duration: 4, repeat: Infinity, ease: 'linear' } : { duration: 0.5 },
-            }}
           />
-          <span className={`mono status-indicator ${isMusicPlaying ? 'active' : ''}`}></span>
           <div className="theme-tooltip mono">
-            <span className="desktop-info">{isMusicPlaying ? 'L: THEME | R: PAUSE' : 'L: THEME | R: PLAY'}</span>
-            <span className="mobile-info">{isMusicPlaying ? 'TAP: THEME | HOLD: PAUSE' : 'TAP: THEME | HOLD: PLAY'}</span>
+            <span className="desktop-info">CLICK: THEME</span>
+            <span className="mobile-info">TAP: THEME</span>
           </div>
         </motion.div>
       </div>

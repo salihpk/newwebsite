@@ -14,7 +14,6 @@ import BootLoader from './components/BootLoader';
 import { useLenis } from './hooks/useLenis';
 
 import CyberBackground from './components/CyberBackground';
-import MusicPlayer from './components/MusicPlayer';
 import MatrixRain from './components/MatrixRain';
 import { MapPin, ShieldCheck, Cpu } from 'lucide-react';
 import './App.css';
@@ -29,7 +28,6 @@ const randomPlanet = () => PLANETS[Math.floor(Math.random() * PLANETS.length)];
 function App() {
     const [isBooting, setIsBooting] = useState(() => !sessionStorage.getItem('booted'));
     const [locationData] = useState(randomPlanet);
-    const [isMusicPlaying, setIsMusicPlaying] = useState(false);
     const [showMatrix, setShowMatrix] = useState(false);
     const [vpnWarning, setVpnWarning] = useState(false);
     const [vpnDismissed, setVpnDismissed] = useState(false);
@@ -38,8 +36,6 @@ function App() {
 
     // Lenis smooth scroll — only active after boot
     useLenis();
-
-    const toggleMusic = () => setIsMusicPlaying(p => !p);
 
     useEffect(() => {
         const detectVPN = async () => {
@@ -136,7 +132,7 @@ function App() {
                             )}
                         </AnimatePresence>
 
-                        <Navbar toggleMusic={toggleMusic} isMusicPlaying={isMusicPlaying} />
+                        <Navbar />
 
                         <main>
                             <AnimatePresence mode="sync">
@@ -163,8 +159,6 @@ function App() {
                                 <span className="footer-stat-item"><MapPin size={10} /> LOC: {locationData.toUpperCase()}</span>
                             </div>
                         </footer>
-
-                        <MusicPlayer isPlaying={isMusicPlaying} />
                     </motion.div>
                 )}
             </AnimatePresence>
