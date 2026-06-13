@@ -103,11 +103,23 @@
 /* Status badge */
 .hero-status {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 5px;
     font-size: 0.6rem;
     letter-spacing: 2px;
     color: var(--text-dim);
+}
+
+.status-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-tags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     flex-wrap: wrap;
 }
 
@@ -138,6 +150,7 @@
 .status-tag {
     color: var(--text-dim);
     opacity: 0.75;
+    white-space: nowrap;
 }
 
 /* Name */
@@ -457,7 +470,13 @@
 
     .hero-status {
         font-size: 0.52rem;
-        gap: 6px;
+        gap: 4px;
+    }
+
+    .status-tags {
+        font-size: 0.48rem;
+        letter-spacing: 1px;
+        gap: 4px;
     }
 
     .hero-bio {

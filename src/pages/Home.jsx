@@ -90,10 +90,17 @@ const Home = () => {
           animate="visible"
         >
           <motion.div className="hero-status mono" variants={fadeLeft}>
-            <span className="status-dot" aria-hidden="true" />
-            <span className="status-online">ONLINE</span>
-            <span className="status-sep" aria-hidden="true">·</span>
-            <span className="status-tag">CYBERSEC_ASPIRANT · AI_ENTHUSIAST · CREATIVE_DEV</span>
+            <div className="status-main">
+              <span className="status-dot" aria-hidden="true" />
+              <span className="status-online">ONLINE</span>
+            </div>
+            <div className="status-tags">
+              <span className="status-tag">CYBERSEC_ASPIRANT</span>
+              <span className="status-sep" aria-hidden="true">·</span>
+              <span className="status-tag">AI_ENTHUSIAST</span>
+              <span className="status-sep" aria-hidden="true">·</span>
+              <span className="status-tag">CREATIVE_DEV</span>
+            </div>
           </motion.div>
 
           <motion.h1
